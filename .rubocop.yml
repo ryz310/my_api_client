@@ -6,3 +6,11 @@ inherit_from: .rubocop_todo.yml
 
 AllCops:
   TargetRubyVersion: 2.3
+
+Metrics/BlockLength:
+  Exclude:
+    - 'my_api_client.gemspec'
+    - 'spec/**/*'
+
+RSpec/NestedGroups:
+  Max: 4

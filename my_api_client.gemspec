@@ -11,7 +11,8 @@ Gem::Specification.new do |spec|
   spec.email         = ['ryz310@gmail.com']
 
   spec.summary       = 'Assists to create your API client'
-  spec.description   = 'Provides error handling, retry and other functions to your API Client'
+  spec.description   = 'Provides error handling, retry and other functions ' \
+                       'to your API Client'
   spec.homepage      = 'https://github.com/ryz310/my_api_client'
   spec.license       = 'MIT'
 
