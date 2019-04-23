@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# usage: bin/release VERSION
+
+require 'bundler/setup'
+require 'pr_comet'
+
+VERSION_FORMAT = /\A\d+\.\d+\.\d+(\.(pre|beta|rc)\d?)?\z/.freeze
+version = ARGV[0]
+pr_comet = PrComet.new(base: 'master', branch: "update/v#{version}")
+
+# Verifying
+abort 'usage: bin/release VERSION' if version.nil?
+abort 'A version must be like a `1.2.3`' unless version =~ VERSION_FORMAT
+
+# Modify a version file
+pr_comet.commit ':comet: Update version' do
+  File.write('lib/my_api_client/version.rb', <<~VERSION)
+    # frozen_string_literal: true
+
+    class MyApiClient
+      VERSION = '#{version}'
+    end
+  VERSION
+end
+
+# Bundle Update
+pr_comet.commit ':comet: Run $ bundle update' do
+  `bundle update`
+end
+
+# Create a pull request
+pr_comet.create!(title: "Update v#{version}", body: '')
