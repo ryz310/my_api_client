@@ -14,6 +14,10 @@ module MyApiClient
     end
     alias put patch
 
+    # NOTE: This class **MUST NOT** implement an `#initialize` because to let
+    #       the child classes free implement. It is not free to need calling
+    #       `super()`.
+
     private
 
     def instance
