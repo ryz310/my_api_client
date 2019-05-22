@@ -1,31 +1,40 @@
 # frozen_string_literal: true
 
 module MyApiClient
-  module Request
-    %i[get post patch delete].each do |http_method|
-      class_eval <<~METHOD, __FILE__, __LINE__ + 1
-        def #{http_method}(url, headers: nil, query: nil, body: nil)
-          request :#{http_method}, url, headers, query, body
-        end
-      METHOD
-    end
-    alias put patch
+  class Request
+    include MyApiClient::Exceptions
 
-    private
-
-    def core
-      @core ||= RequestCore.new(endpoint, error_handlers, faraday_options)
+    def initialize(endpoint, error_handlers, options)
+      @error_handlers = error_handlers
+      @faraday = Faraday.new(nil, request: options)
+      @agent = Sawyer::Agent.new(endpoint, faraday: faraday)
     end
 
     def request(method, url, headers, query, body)
-      core.request(method, url, headers, query, body)
+      @logger = Logger.new(faraday, method, url)
+      call(:execute, method, url, headers, query, body)
     end
 
-    def faraday_options
-      @faraday_options ||= {
-        timeout: (request_timeout if respond_to?(:request_timeout)),
-        open_timeout: (net_open_timeout if respond_to?(:net_open_timeout))
-      }.compact
+    private
+
+    attr_reader :error_handlers, :faraday, :agent, :logger
+
+    def execute(method, url, headers, query, body)
+      response = agent.call(method, url, body, headers: headers, query: query)
+      logger.info("Duration #{response.timing} sec")
+      params = [] # TODO: create a params
+      verify(params)
+      response.data
+    end
+
+    def verify(params)
+      error_handler = error_handlers.detect { |h| h.call(params.response) }
+      case error_handler
+      when Proc
+        error_handler.call(params, logger)
+      when Symbol
+        send(error_handler, params, logger)
+      end
     end
   end
 end
