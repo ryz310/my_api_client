@@ -5,8 +5,25 @@ module MyApiClient
     include MyApiClient::Exceptions
 
     def request(method, url, headers, query, body)
-      agent = Sawyer::Agent.new(endpoint)
-      agent.call(method, url, body, headers: headers, query: query).data
+      # TODO: Wrap with a factory class
+      logger = Logger.new(faraday, method, url)
+      agent = Sawyer::Agent.new(endpoint, faraday: faraday)
+      agent.call(method, url, body, headers: headers, query: query).tap do |response|
+        logger.info("Duration #{response.timing} sec")
+        params = [] # TODO: create a params
+        verify(params, logger)
+      end.data
+    end
+
+    def verify(params, logger)
+      error_handler = error_handlers.find { |h| h.call(params.response) }
+
+      case error_handler
+      when Proc
+        error_handler.call(params, logger)
+      when Symbol
+        send(error_handler, params, logger)
+      end
     end
 
     %i[get post patch delete].each do |http_method|
@@ -17,5 +34,18 @@ module MyApiClient
       METHOD
     end
     alias put patch
+
+    private
+
+    def faraday
+      Faraday.new(nil, request: request_option)
+    end
+
+    def request_option
+      @request_option ||= {
+        timeout: respond_to?(:request_timeout) ? request_timeout : nil,
+        open_timeout: respond_to?(:request_open_timeout) ? request_open_timeout : nil
+      }.compact
+    end
   end
 end

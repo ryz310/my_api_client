@@ -11,7 +11,7 @@ module MyApiClient
       # @param status_code [String, Range, Integer] default: nil
       # @param json [Hash] default: nil
       # @param with [Symbol] default: nil
-      # @return [Lambda, Symbol, nil] description_of_returned_object
+      # @return [Proc, Symbol, nil] description_of_returned_object
       def error_handling(status_code: nil, json: nil, with: nil)
         error_handlers << lambda { |response|
           if match?(status_code, response.status) || match_all?(json, response.data)
