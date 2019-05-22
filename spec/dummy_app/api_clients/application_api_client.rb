@@ -12,12 +12,7 @@ class ApplicationApiClient < MyApiClient::Base
     logger.warn error.message
   end
 
-  error_handling do |params, logger|
-    logger.fatal 'Unexpected error occurred!'
-    raise MyApiClient::Error, params
-  end
-
-  error_handling status_code: '>= 500' do |params|
+  error_handling status_code: 500..999 do |params|
     raise IgnorableError, params
   end
 end
