@@ -38,7 +38,7 @@ module MyApiClient
       define_method :net_open_timeout, -> { net_open_timeout }
     end
 
-    def self.error_handling(status_code: nil, json: nil, then: nil)
+    def self.error_handling(status_code: nil, json: nil, with: nil)
       # TODO: Implemnt this
     end
   end

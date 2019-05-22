@@ -27,7 +27,7 @@ class ExampleApiClient < ApplicationApiClient
   #     "message": "Some error occurred."
   #   }
   # }
-  error_handling json: { 'errors.code': 20..29 }, then: :my_error_handling
+  error_handling json: { 'errors.code': 20..29 }, with: :my_error_handling
 
   attr_reader :access_token
 
