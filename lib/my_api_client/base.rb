@@ -4,22 +4,14 @@ module MyApiClient
   class Base
     include MyApiClient::Exceptions
 
-    def get(url, headers: nil, query: nil, body: nil)
-      request :get, url, headers, query, body
-    end
-
-    def post(url, headers: nil, query: nil, body: nil)
-      request :post, url, headers, query, body
-    end
-
-    def patch(url, headers: nil, query: nil, body: nil)
-      request :patch, url, headers, query, body
+    %i[get post patch delete].each do |http_method|
+      class_eval <<~METHOD, __FILE__, __LINE__ + 1
+        def #{http_method}(url, headers: nil, query: nil, body: nil)
+          request :#{http_method}, url, headers, query, body
+        end
+      METHOD
     end
     alias put patch
-
-    def delete(url, headers: nil, query: nil, body: nil)
-      request :delete, url, headers, query, body
-    end
 
     def request(method, url, headers, query, body)
       agent = Sawyer::Agent.new(endpoint)
