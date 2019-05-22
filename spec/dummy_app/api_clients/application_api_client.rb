@@ -8,12 +8,8 @@ class ApplicationApiClient < MyApiClient::Base
 
   class IgnorableError < MyApiClient::Error; end
 
-  retry_on Net::OpenTimeout, wait: 0.1.seconds do |_client, error, logger|
+  retry_on_network_errors wait: 0.1.seconds do |_client, error, logger|
     logger.warn error.message
-  end
-
-  discard_on IgnorableError do |_client, error, logger|
-    logger.info error.message
   end
 
   error_handling do |params, logger|

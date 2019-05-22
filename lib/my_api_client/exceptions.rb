@@ -9,9 +9,16 @@ module MyApiClient
 
     attr_reader :retry_count, :method_name, :args
 
+    NETWORK_ERRORS = [
+      Faraday::ClientError,
+      OpenSSL::SSL::SSLError,
+      Net::OpenTimeout,
+      SocketError
+    ].freeze
+
     class_methods do
-      def retry_on(*exception, wait: 1.second, attempts: 3)
-        rescue_from(*exception) do |error|
+      def retry_on_network_errors(wait: 0.1.seconds, attempts: 3)
+        rescue_from(*NETWORK_ERRORS) do |error|
           if retry_count < attempts
             retry_call(error, wait)
           elsif block_given?
@@ -21,17 +28,6 @@ module MyApiClient
                          "which reoccurred on #{retry_count} attempts. " \
                          "The original exception was #{error.cause.inspect}."
             raise error
-          end
-        end
-      end
-
-      def discard_on(*exception)
-        rescue_from(*exception) do |error|
-          if block_given?
-            yield self, error
-          else
-            logger.error "Discarded #{self.class} due to a #{exception}. " \
-                         "The original exception was #{error.cause.inspect}."
           end
         end
       end
