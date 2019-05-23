@@ -10,11 +10,11 @@ RSpec.describe MyApiClient::ErrorHandling do
     error_handling status_code: 500..999 do
       puts 'Status code is detected which over 500'
     end
-    #
-    # error_handling json: { '$.errors.code': 404 }, with: :not_found
-    # error_handling json: { '$.errors.code': 500..999 } do
-    #   puts 'Status code is detected which over 500'
-    # end
+
+    error_handling json: { '$.errors.message': 'maintenance time' }, with: :maintenance_time
+    error_handling json: { '$.errors.message': /[sS]orry/ }, with: :server_error
+    error_handling json: { '$.errors.code': 10 }, with: :some_error
+    error_handling json: { '$.errors.code': 20..29 }, with: :other_error
   end
 
   let(:instance) { MockClass.new }
@@ -25,25 +25,17 @@ RSpec.describe MyApiClient::ErrorHandling do
     end
   end
   let(:response) do
-    Sawyer::Response.new(
-      instance_double(
-        Sawyer::Agent, decode_body: response_body, parse_links: []
-      ),
-      instance_double(
-        Faraday::Response,
-        status: status_code,
-        headers: { content_type: 'application/json; charset=utf-8' },
-        env: nil,
-        body: response_body.to_json
-      )
+    instance_double(
+      Sawyer::Response, status: status_code, body: response_body.to_json
     )
   end
 
   describe '.error_handling' do
     describe 'use `status_code`' do
+      let(:response_body) { nil }
+
       describe 'with Regexp' do
         let(:status_code) { 401 }
-        let(:response_body) { nil }
 
         it 'detects that given status code is matched with the pattern' do
           expect(error_handler).to eq :client_error
@@ -52,7 +44,6 @@ RSpec.describe MyApiClient::ErrorHandling do
 
       describe 'with Integer' do
         let(:status_code) { 404 }
-        let(:response_body) { nil }
 
         it 'detects that given status code is equal' do
           expect(error_handler).to eq :not_found
@@ -61,12 +52,75 @@ RSpec.describe MyApiClient::ErrorHandling do
 
       describe 'with Range' do
         let(:status_code) { 504 }
-        let(:response_body) { nil }
 
         it 'detects that given status code is included within handling range' do
           expect(error_handler)
             .to output("Status code is detected which over 500\n")
             .to_stdout
+        end
+      end
+    end
+
+    describe 'use `json`' do
+      let(:status_code) { 200 }
+
+      describe 'with String' do
+        let(:response_body) do
+          {
+            errors: {
+              code: 99,
+              message: 'maintenance time'
+            }
+          }
+        end
+
+        it 'detects that given JSON is equal with message in the jsonpath' do
+          expect(error_handler).to eq :maintenance_time
+        end
+      end
+
+      describe 'with Regexp' do
+        let(:response_body) do
+          {
+            errors: {
+              code: 99,
+              message: 'Sorry, something went wrong.'
+            }
+          }
+        end
+
+        it 'detects that given JSON is matched with pattern in the jsonpath' do
+          expect(error_handler).to eq :server_error
+        end
+      end
+
+      describe 'with Integer' do
+        let(:response_body) do
+          {
+            errors: {
+              code: 10,
+              message: 'some error occurred.'
+            }
+          }
+        end
+
+        it 'detects that given JSON is equal with number in the jsonpath' do
+          expect(error_handler).to eq :some_error
+        end
+      end
+
+      describe 'with Range' do
+        let(:response_body) do
+          {
+            errors: {
+              code: 23,
+              message: 'other error occurred.'
+            }
+          }
+        end
+
+        it 'detects that given JSON is included within range in the jsonpath' do
+          expect(error_handler).to eq :other_error
         end
       end
     end

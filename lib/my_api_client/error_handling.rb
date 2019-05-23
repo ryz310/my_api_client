@@ -35,7 +35,7 @@ module MyApiClient
 
       def match_all?(json, response_body)
         json&.all? do |path, operator|
-          target = JsonPath.new(path).first(response_body)
+          target = JsonPath.new(path.to_s).first(response_body)
           match?(operator, target)
         end
       end
