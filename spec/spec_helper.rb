@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'pry'
 require 'bundler/setup'
 require 'webmock/rspec'
 require 'my_api_client'
