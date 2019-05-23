@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe MyApiClient::ErrorHandling do
+  class SomeError < MyApiClient::Error; end
+
   class MockClass
     include MyApiClient::ErrorHandling
     class_attribute :error_handlers, default: []
@@ -13,8 +15,8 @@ RSpec.describe MyApiClient::ErrorHandling do
 
     error_handling json: { '$.errors.message': 'maintenance time' }, with: :maintenance_time
     error_handling json: { '$.errors.message': /[sS]orry/ }, with: :server_error
-    error_handling json: { '$.errors.code': 10 }, with: :some_error
-    error_handling json: { '$.errors.code': 20..29 }, with: :other_error
+    error_handling json: { '$.errors.code': 10 }, raise: SomeError
+    error_handling json: { '$.errors.code': 20..29 }
   end
 
   let(:instance) { MockClass.new }
@@ -103,9 +105,11 @@ RSpec.describe MyApiClient::ErrorHandling do
             }
           }
         end
+        let(:params) { instance_double(MyApiClient::Error) }
+        let(:logger) { instance_double(MyApiClient::Logger) }
 
         it 'detects that given JSON is equal with number in the jsonpath' do
-          expect(error_handler).to eq :some_error
+          expect { error_handler.call(params, logger) }.to raise_error(SomeError)
         end
       end
 
@@ -118,9 +122,11 @@ RSpec.describe MyApiClient::ErrorHandling do
             }
           }
         end
+        let(:params) { instance_double(MyApiClient::Error) }
+        let(:logger) { instance_double(MyApiClient::Logger) }
 
         it 'detects that given JSON is included within range in the jsonpath' do
-          expect(error_handler).to eq :other_error
+          expect { error_handler.call(params, logger) }.to raise_error(MyApiClient::Error)
         end
       end
     end
