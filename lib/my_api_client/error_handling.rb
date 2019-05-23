@@ -7,7 +7,7 @@ module MyApiClient
     class_methods do
       # Description of .error_handling
       #
-      # @param status_code [String, Range, Integer] default: nil
+      # @param status_code [String, Range, Integer, Regexp] default: nil
       # @param json [Hash] default: nil
       # @param with [Symbol] default: nil
       # @return [Proc, Symbol, nil] description_of_returned_object
@@ -27,6 +27,8 @@ module MyApiClient
           operator == target
         when Range
           operator.include?(target)
+        when Regexp
+          operator =~ target.to_s
         else
           false
         end
