@@ -27,7 +27,7 @@ module MyApiClient
     private
 
     def logger
-      MyApiClient.logger
+      MyApiClient::Base.logger
     end
 
     def format(message)

@@ -5,6 +5,9 @@ module MyApiClient
     include MyApiClient::Config
     include MyApiClient::ErrorHandling
 
+    class_attribute :logger, instance_writer: false, default: ::Logger.new(STDOUT)
+    class_attribute :error_handlers, instance_writer: false, default: []
+
     %i[get post patch delete].each do |http_method|
       class_eval <<~METHOD, __FILE__, __LINE__ + 1
         def #{http_method}(url, headers: nil, query: nil, body: nil)

@@ -3,7 +3,6 @@
 module MyApiClient
   module ErrorHandling
     extend ActiveSupport::Concern
-    class_attribute :error_handlers, instance_writer: false, default: []
 
     class_methods do
       # Description of .error_handling
