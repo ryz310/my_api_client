@@ -12,7 +12,7 @@ module MyApiClient
       # @param with [Symbol] default: nil
       def error_handling(status_code: nil, json: nil, with: nil, &block)
         error_handlers << lambda { |response|
-          if match?(status_code, response.status) || match_all?(json, response.data)
+          if match?(status_code, response.status) || match_all?(json, response.body)
             return block_given? ? block : with || -> { raise MyApiClient::Error }
           end
         }

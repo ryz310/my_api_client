@@ -15,3 +15,13 @@ require 'my_api_client/params/params'
 require 'my_api_client/params/request'
 require 'my_api_client/request'
 require 'my_api_client/base'
+
+if Sawyer::VERSION < '0.8.2'
+  module Sawyer
+    # NOTE: Old sawyer does not have attribute reader for response body.
+    #       But new version sawyer is conflict some gems (e.g. octkit).
+    class Response
+      attr_reader :body, :env
+    end
+  end
+end
