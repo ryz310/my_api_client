@@ -12,17 +12,18 @@ module MyApiClient
 
     def request(method, url, headers, query, body)
       @logger = Logger.new(faraday, method, url)
-      call(:execute, method, url, headers, query, body)
+      request_params = Params::Request.new(method, url, headers, query, body)
+      call(:execute, request_params)
     end
 
     private
 
     attr_reader :error_handlers, :faraday, :agent, :logger
 
-    def execute(method, url, headers, query, body)
-      response = agent.call(method, url, body, headers: headers, query: query)
+    def execute(request_params)
+      response = agent.call(*request_params.to_sawyer_args)
       logger.info("Duration #{response.timing} sec")
-      params = [] # TODO: create a params
+      params = Params::Params.new(request_params, response)
       verify(params)
       response.data
     end
