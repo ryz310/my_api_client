@@ -1,26 +1,31 @@
 # frozen_string_literal: true
 
 module MyApiClient
-  class Request
-    include MyApiClient::Exceptions
-
-    def initialize(endpoint, error_handlers, options)
-      @error_handlers = error_handlers
-      @faraday = Faraday.new(nil, request: options)
-      @agent = Sawyer::Agent.new(endpoint, faraday: faraday)
-    end
-
+  module Request
     def request(method, url, headers, query, body)
-      @logger = Logger.new(faraday, method, url)
       request_params = Params::Request.new(method, url, headers, query, body)
-      call(:execute, request_params)
+      logger = Logger.new(faraday, method, url)
+      call(:execute, request_params, logger)
     end
 
     private
 
-    attr_reader :error_handlers, :faraday, :agent, :logger
+    def agent
+      @agent ||= Sawyer::Agent.new(endpoint, faraday: faraday)
+    end
 
-    def execute(request_params)
+    def faraday
+      @faraday ||=
+        Faraday.new(
+          nil,
+          request: {
+            timeout: (request_timeout if respond_to?(:request_timeout)),
+            open_timeout: (net_open_timeout if respond_to?(:net_open_timeout))
+          }.compact
+        )
+    end
+
+    def execute(request_params, logger)
       response = agent.call(*request_params.to_sawyer_args)
       logger.info("Duration #{response.timing} sec")
       params = Params::Params.new(request_params, response)
