@@ -12,5 +12,14 @@ Metrics/BlockLength:
     - 'my_api_client.gemspec'
     - 'spec/**/*'
 
+Metrics/BlockLength:
+  Max: 26
+
+Metrics/MethodLength:
+  Max: 12
+
+Metrics/LineLength:
+  Max: 100
+
 RSpec/NestedGroups:
   Max: 4
