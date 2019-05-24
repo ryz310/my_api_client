@@ -232,6 +232,15 @@ RSpec.describe MyApiClient::ErrorHandling do
       end
     end
 
+    describe 'inheritance' do
+      let(:status_code) { 500 }
+      let(:response_body) { nil }
+
+      it 'can be used super class error handlers' do
+        expect(error_handler).to eq :commonized_error_handling
+      end
+    end
+
     describe 'definition' do
       it 'is isolate defined for each classes' do
         expect(SuperMockClass.error_handlers.count).to eq 1
