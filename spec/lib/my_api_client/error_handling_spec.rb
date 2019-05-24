@@ -34,6 +34,8 @@ RSpec.describe MyApiClient::ErrorHandling do
       Sawyer::Response, status: status_code, body: response_body.to_json
     )
   end
+  let(:params) { instance_double(MyApiClient::Params::Params) }
+  let(:logger) { instance_double(MyApiClient::Logger) }
 
   describe '.error_handling' do
     describe 'use `status_code`' do
@@ -59,7 +61,7 @@ RSpec.describe MyApiClient::ErrorHandling do
         let(:status_code) { 504 }
 
         it 'detects that given status code is included within handling range' do
-          expect(error_handler)
+          expect { error_handler.call(params, logger) }
             .to output("Status code is detected which over 500\n")
             .to_stdout
         end
@@ -108,8 +110,6 @@ RSpec.describe MyApiClient::ErrorHandling do
             }
           }
         end
-        let(:params) { instance_double(MyApiClient::Error) }
-        let(:logger) { instance_double(MyApiClient::Logger) }
 
         it 'detects that given JSON is equal with number in the jsonpath' do
           expect { error_handler.call(params, logger) }.to raise_error(SomeError)
@@ -125,8 +125,6 @@ RSpec.describe MyApiClient::ErrorHandling do
             }
           }
         end
-        let(:params) { instance_double(MyApiClient::Error) }
-        let(:logger) { instance_double(MyApiClient::Logger) }
 
         it 'detects that given JSON is included within range in the jsonpath' do
           expect { error_handler.call(params, logger) }.to raise_error(MyApiClient::Error)
