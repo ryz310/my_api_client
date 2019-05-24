@@ -47,23 +47,17 @@ RSpec.describe MyApiClient::ErrorHandling do
     error_handling json: { '$.errors.code': 30 }
   end
 
-  let(:instance) { MockClass.new }
-  let(:error_handler) do
-    instance.error_handlers.each do |error_handler|
-      result = error_handler.call(response)
-      return result unless result.nil?
-    end
-    nil
-  end
-  let(:response) do
-    instance_double(
-      Sawyer::Response, status: status_code, body: response_body.to_json
-    )
-  end
-  let(:params) { instance_double(MyApiClient::Params::Params) }
-  let(:logger) { instance_double(MyApiClient::Logger) }
-
   describe '.error_handling' do
+    let(:instance) { MockClass.new }
+    let(:error_handler) { instance.error_handling(response) }
+    let(:response) do
+      instance_double(
+        Sawyer::Response, status: status_code, body: response_body.to_json
+      )
+    end
+    let(:params) { instance_double(MyApiClient::Params::Params) }
+    let(:logger) { instance_double(MyApiClient::Logger) }
+
     describe 'use `status_code`' do
       let(:response_body) { nil }
 
@@ -247,6 +241,80 @@ RSpec.describe MyApiClient::ErrorHandling do
         expect(MockClass.error_handlers.count).to eq 13
         expect(AnotherMockClass.error_handlers.count).to eq 4
       end
+    end
+  end
+
+  class ParentMockClass
+    include MyApiClient::ErrorHandling
+    class_attribute :error_handlers, default: []
+
+    error_handling status_code: 400,
+                   with: :bad_request
+  end
+
+  class ChildMockClass < ParentMockClass
+    error_handling status_code: 400,
+                   json: { '$.errors.code': 10..19 },
+                   with: :error_number_1x
+    error_handling status_code: 400,
+                   json: { '$.errors.code': 13 },
+                   with: :error_number_13
+  end
+
+  class GrandchildMockClass < ChildMockClass
+    error_handling status_code: 400,
+                   json: { '$.errors.code': 13, '$.errors.message': 'error' },
+                   with: :error_number_13_with_error_message
+  end
+
+  describe '#error_handling' do
+    # subject { GrandchildMockClass.new.error_handling(response) }
+    let(:instance) { GrandchildMockClass.new }
+    let(:response_1) do
+      instance_double(
+        Sawyer::Response, status: 400, body: {
+          errors: { code: 13, message: 'error' }
+        }.to_json
+      )
+    end
+
+    let(:response_2) do
+      instance_double(
+        Sawyer::Response, status: 400, body: {
+          errors: { code: 13, message: 'warning' }
+        }.to_json
+      )
+    end
+
+    let(:response_3) do
+      instance_double(
+        Sawyer::Response, status: 400, body: {
+          errors: { code: 15, message: 'error' }
+        }.to_json
+      )
+    end
+
+    let(:response_4) do
+      instance_double(
+        Sawyer::Response, status: 400, body: {
+          errors: { code: 20, message: 'error' }
+        }.to_json
+      )
+    end
+
+    let(:response_5) do
+      instance_double(Sawyer::Response, status: 200, body: nil)
+    end
+
+    it 'prioritizes error handlers which defined later' do
+      expect(instance.error_handling(response_1)).to eq :error_number_13_with_error_message
+      expect(instance.error_handling(response_2)).to eq :error_number_13
+      expect(instance.error_handling(response_3)).to eq :error_number_1x
+      expect(instance.error_handling(response_4)).to eq :bad_request
+    end
+
+    it 'returns nil when detected nothing' do
+      expect(instance.error_handling(response_5)).to be_nil
     end
   end
 end

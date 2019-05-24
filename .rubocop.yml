@@ -23,4 +23,4 @@ RSpec/NestedGroups:
   Max: 4
 
 RSpec/MultipleExpectations:
-  Max: 3
+  Max: 4

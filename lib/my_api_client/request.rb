@@ -34,8 +34,7 @@ module MyApiClient
     end
 
     def verify(params)
-      error_handler = error_handlers.detect { |h| h.call(params.response) }
-      case error_handler
+      case error_handler = error_handling(params.response)
       when Proc
         error_handler.call(params, logger)
       when Symbol
