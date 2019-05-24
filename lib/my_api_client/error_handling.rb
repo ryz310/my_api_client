@@ -12,7 +12,7 @@ module MyApiClient
       # @param with [Symbol] default: nil
       # @param raise [MyApiClient::Error] default: MyApiClient::Error
       # @param block [Proc] describe_block_here
-      def error_handling(status_code: nil, json: nil, with: nil, raise: MyApiClient::Error, &block)
+      def error_handling(status_code: nil, json: nil, with: nil, raise: MyApiClient::Error)
         temp = error_handlers.dup
         temp << lambda { |response|
           if match?(status_code, response.status) && match_all?(json, response.body)
