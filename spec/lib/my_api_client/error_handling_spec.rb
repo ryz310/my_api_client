@@ -7,19 +7,38 @@ RSpec.describe MyApiClient::ErrorHandling do
     include MyApiClient::ErrorHandling
     class_attribute :error_handlers, default: []
 
-    error_handling status_code: 500..999 do
-      puts 'Status code is detected which over 500'
-    end
+    # Commonized error handling
+    error_handling status_code: 500, with: :commonized_error_handling
   end
 
   class MockClass < SuperMockClass
-    error_handling status_code: /40[0-3]/, with: :client_error
-    error_handling status_code: 404, with: :not_found
+    # Use `status_code`
+    error_handling status_code: /40[0-3]/, with: :status_code_is_monitored_by_regex
+    error_handling status_code: 404, with: :status_code_is_monitored_by_number
+    error_handling status_code: 405..499, with: :status_code_is_monitored_by_range
 
-    error_handling json: { '$.errors.message': 'maintenance time' }, with: :maintenance_time
-    error_handling json: { '$.errors.message': /[sS]orry/ }, with: :server_error
-    error_handling json: { '$.errors.code': 10 }, raise: SomeError
-    error_handling json: { '$.errors.code': 20..29 }
+    # Use `json`
+    error_handling json: { '$.errors.message': 'maintenance' }, with: :json_is_monitored_by_string
+    error_handling json: { '$.errors.message': /[sS]orry/ }, with: :json_is_monitored_by_regex
+    error_handling json: { '$.errors.code': 10 }, with: :json_is_monitored_by_number
+    error_handling json: { '$.errors.code': 20..29 }, with: :json_is_monitored_by_range
+
+    # Use complex patterns
+    error_handling status_code: 200, json: { '$.errors.code': 30 },
+                   with: :monitoring_with_status_code_and_json
+    error_handling json: { '$.errors.code': 31, '$.errors.message': /[Uu]nknown/ },
+                   with: :monitoring_with_json_multiple_conditions
+
+    # Use `raise`
+    error_handling json: { '$.errors.code': 40 }, raise: SomeError
+
+    # Use `block`
+    error_handling json: { '$.errors.code': 50 } do
+      puts 'Error code 50 is detected'
+    end
+
+    # Default handling action
+    error_handling json: { '$.errors.code': 60 }
   end
 
   let(:instance) { MockClass.new }
@@ -28,6 +47,7 @@ RSpec.describe MyApiClient::ErrorHandling do
       result = error_handler.call(response)
       return result unless result.nil?
     end
+    nil
   end
   let(:response) do
     instance_double(
@@ -44,26 +64,24 @@ RSpec.describe MyApiClient::ErrorHandling do
       describe 'with Regexp' do
         let(:status_code) { 401 }
 
-        it 'detects that given status code is matched with the pattern' do
-          expect(error_handler).to eq :client_error
+        it 'monitors given status code with the regex pattern' do
+          expect(error_handler).to eq :status_code_is_monitored_by_regex
         end
       end
 
       describe 'with Integer' do
         let(:status_code) { 404 }
 
-        it 'detects that given status code is equal' do
-          expect(error_handler).to eq :not_found
+        it 'monitors given status code with the number' do
+          expect(error_handler).to eq :status_code_is_monitored_by_number
         end
       end
 
       describe 'with Range' do
-        let(:status_code) { 504 }
+        let(:status_code) { 408 }
 
-        it 'detects that given status code is included within handling range' do
-          expect { error_handler.call(params, logger) }
-            .to output("Status code is detected which over 500\n")
-            .to_stdout
+        it 'monitors given status code within the range' do
+          expect(error_handler).to eq :status_code_is_monitored_by_range
         end
       end
     end
@@ -75,14 +93,13 @@ RSpec.describe MyApiClient::ErrorHandling do
         let(:response_body) do
           {
             errors: {
-              code: 99,
-              message: 'maintenance time'
+              message: 'maintenance'
             }
           }
         end
 
-        it 'detects that given JSON is equal with message in the jsonpath' do
-          expect(error_handler).to eq :maintenance_time
+        it 'monitors given JSON with string' do
+          expect(error_handler).to eq :json_is_monitored_by_string
         end
       end
 
@@ -90,14 +107,13 @@ RSpec.describe MyApiClient::ErrorHandling do
         let(:response_body) do
           {
             errors: {
-              code: 99,
               message: 'Sorry, something went wrong.'
             }
           }
         end
 
-        it 'detects that given JSON is matched with pattern in the jsonpath' do
-          expect(error_handler).to eq :server_error
+        it 'monitors given JSON with regex pattern' do
+          expect(error_handler).to eq :json_is_monitored_by_regex
         end
       end
 
@@ -105,14 +121,13 @@ RSpec.describe MyApiClient::ErrorHandling do
         let(:response_body) do
           {
             errors: {
-              code: 10,
-              message: 'some error occurred.'
+              code: 10
             }
           }
         end
 
-        it 'detects that given JSON is equal with number in the jsonpath' do
-          expect { error_handler.call(params, logger) }.to raise_error(SomeError)
+        it 'monitors given JSON with number' do
+          expect(error_handler).to eq :json_is_monitored_by_number
         end
       end
 
@@ -120,15 +135,94 @@ RSpec.describe MyApiClient::ErrorHandling do
         let(:response_body) do
           {
             errors: {
-              code: 23,
-              message: 'other error occurred.'
+              code: 23
             }
           }
         end
 
-        it 'detects that given JSON is included within range in the jsonpath' do
-          expect { error_handler.call(params, logger) }.to raise_error(MyApiClient::Error)
+        it 'monitors given JSON within range' do
+          expect(error_handler).to eq :json_is_monitored_by_range
         end
+      end
+    end
+
+    describe 'use complex patterns' do
+      describe 'status code and JSON' do
+        let(:status_code) { 200 }
+        let(:response_body) do
+          {
+            errors: {
+              code: 30
+            }
+          }
+        end
+
+        it 'monitors given status code and JSON' do
+          expect(error_handler).to eq :monitoring_with_status_code_and_json
+        end
+      end
+
+      describe 'JSON multiple conditions' do
+        let(:status_code) { 200 }
+        let(:response_body) do
+          {
+            errors: {
+              code: 31,
+              message: 'Unknown error'
+            }
+          }
+        end
+
+        it 'monitors given JSON for each path' do
+          expect(error_handler).to eq :monitoring_with_json_multiple_conditions
+        end
+      end
+    end
+
+    describe 'use `raise`' do
+      let(:status_code) { 200 }
+      let(:response_body) do
+        {
+          errors: {
+            code: 40
+          }
+        }
+      end
+
+      it 'raises the error when detected' do
+        expect { error_handler.call(params, logger) }.to raise_error(SomeError)
+      end
+    end
+
+    describe 'use `block`' do
+      let(:status_code) { 200 }
+      let(:response_body) do
+        {
+          errors: {
+            code: 50
+          }
+        }
+      end
+
+      it 'executes the block when detected' do
+        expect { error_handler.call(params, logger) }
+          .to output("Error code 50 is detected\n")
+          .to_stdout
+      end
+    end
+
+    describe 'default handling action' do
+      let(:status_code) { 200 }
+      let(:response_body) do
+        {
+          errors: {
+            code: 60
+          }
+        }
+      end
+
+      it 'raises default error when detected' do
+        expect { error_handler.call(params, logger) }.to raise_error(MyApiClient::Error)
       end
     end
   end
