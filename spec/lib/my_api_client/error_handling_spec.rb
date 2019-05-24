@@ -41,6 +41,12 @@ RSpec.describe MyApiClient::ErrorHandling do
     error_handling json: { '$.errors.code': 60 }
   end
 
+  class AnotherMockClass < SuperMockClass
+    error_handling json: { '$.errors.code': 10 }
+    error_handling json: { '$.errors.code': 20 }
+    error_handling json: { '$.errors.code': 30 }
+  end
+
   let(:instance) { MockClass.new }
   let(:error_handler) do
     instance.error_handlers.each do |error_handler|
@@ -223,6 +229,14 @@ RSpec.describe MyApiClient::ErrorHandling do
 
       it 'raises default error when detected' do
         expect { error_handler.call(params, logger) }.to raise_error(MyApiClient::Error)
+      end
+    end
+
+    describe 'definition' do
+      it 'is isolate defined for each classes' do
+        expect(SuperMockClass.error_handlers.count).to eq 1
+        expect(MockClass.error_handlers.count).to eq 13
+        expect(AnotherMockClass.error_handlers.count).to eq 4
       end
     end
   end
