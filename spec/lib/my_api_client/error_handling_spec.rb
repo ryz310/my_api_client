@@ -3,15 +3,18 @@
 RSpec.describe MyApiClient::ErrorHandling do
   class SomeError < MyApiClient::Error; end
 
-  class MockClass
+  class SuperMockClass
     include MyApiClient::ErrorHandling
     class_attribute :error_handlers, default: []
 
-    error_handling status_code: /40[0-3]/, with: :client_error
-    error_handling status_code: 404, with: :not_found
     error_handling status_code: 500..999 do
       puts 'Status code is detected which over 500'
     end
+  end
+
+  class MockClass < SuperMockClass
+    error_handling status_code: /40[0-3]/, with: :client_error
+    error_handling status_code: 404, with: :not_found
 
     error_handling json: { '$.errors.message': 'maintenance time' }, with: :maintenance_time
     error_handling json: { '$.errors.message': /[sS]orry/ }, with: :server_error
