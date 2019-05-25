@@ -34,7 +34,7 @@ module MyApiClient
           nil,
           request: {
             timeout: (request_timeout if respond_to?(:request_timeout)),
-            open_timeout: (net_open_timeout if respond_to?(:net_open_timeout))
+            open_timeout: (net_open_timeout if respond_to?(:net_open_timeout)),
           }.compact
         )
     end

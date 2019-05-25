@@ -93,8 +93,8 @@ RSpec.describe MyApiClient::ErrorHandling do
         let(:response_body) do
           {
             errors: {
-              message: 'maintenance'
-            }
+              message: 'maintenance',
+            },
           }
         end
 
@@ -107,8 +107,8 @@ RSpec.describe MyApiClient::ErrorHandling do
         let(:response_body) do
           {
             errors: {
-              message: 'Sorry, something went wrong.'
-            }
+              message: 'Sorry, something went wrong.',
+            },
           }
         end
 
@@ -121,8 +121,8 @@ RSpec.describe MyApiClient::ErrorHandling do
         let(:response_body) do
           {
             errors: {
-              code: 10
-            }
+              code: 10,
+            },
           }
         end
 
@@ -135,8 +135,8 @@ RSpec.describe MyApiClient::ErrorHandling do
         let(:response_body) do
           {
             errors: {
-              code: 23
-            }
+              code: 23,
+            },
           }
         end
 
@@ -152,8 +152,8 @@ RSpec.describe MyApiClient::ErrorHandling do
         let(:response_body) do
           {
             errors: {
-              code: 30
-            }
+              code: 30,
+            },
           }
         end
 
@@ -168,8 +168,8 @@ RSpec.describe MyApiClient::ErrorHandling do
           {
             errors: {
               code: 31,
-              message: 'Unknown error'
-            }
+              message: 'Unknown error',
+            },
           }
         end
 
@@ -184,8 +184,8 @@ RSpec.describe MyApiClient::ErrorHandling do
       let(:response_body) do
         {
           errors: {
-            code: 40
-          }
+            code: 40,
+          },
         }
       end
 
@@ -199,8 +199,8 @@ RSpec.describe MyApiClient::ErrorHandling do
       let(:response_body) do
         {
           errors: {
-            code: 50
-          }
+            code: 50,
+          },
         }
       end
 
@@ -216,8 +216,8 @@ RSpec.describe MyApiClient::ErrorHandling do
       let(:response_body) do
         {
           errors: {
-            code: 60
-          }
+            code: 60,
+          },
         }
       end
 
@@ -273,7 +273,7 @@ RSpec.describe MyApiClient::ErrorHandling do
     let(:response_1) do
       instance_double(
         Sawyer::Response, status: 400, body: {
-          errors: { code: 13, message: 'error' }
+          errors: { code: 13, message: 'error' },
         }.to_json
       )
     end
@@ -281,7 +281,7 @@ RSpec.describe MyApiClient::ErrorHandling do
     let(:response_2) do
       instance_double(
         Sawyer::Response, status: 400, body: {
-          errors: { code: 13, message: 'warning' }
+          errors: { code: 13, message: 'warning' },
         }.to_json
       )
     end
@@ -289,7 +289,7 @@ RSpec.describe MyApiClient::ErrorHandling do
     let(:response_3) do
       instance_double(
         Sawyer::Response, status: 400, body: {
-          errors: { code: 15, message: 'error' }
+          errors: { code: 15, message: 'error' },
         }.to_json
       )
     end
@@ -297,7 +297,7 @@ RSpec.describe MyApiClient::ErrorHandling do
     let(:response_4) do
       instance_double(
         Sawyer::Response, status: 400, body: {
-          errors: { code: 20, message: 'error' }
+          errors: { code: 20, message: 'error' },
         }.to_json
       )
     end

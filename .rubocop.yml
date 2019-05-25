@@ -19,6 +19,12 @@ Metrics/MethodLength:
 Metrics/LineLength:
   Max: 100
 
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+
+RSpec/ExampleLength:
+  Max: 10
+
 RSpec/NestedGroups:
   Max: 4
 

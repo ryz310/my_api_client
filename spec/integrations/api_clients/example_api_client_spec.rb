@@ -19,7 +19,7 @@ RSpec.describe ExampleApiClient, type: :api_client do
     let(:request_headers) do
       {
         'Content-Type': 'application/json;charset=UTF-8',
-        'Authorization': 'Bearer access_token'
+        'Authorization': 'Bearer access_token',
       }
     end
     let(:request_body) do
@@ -31,7 +31,7 @@ RSpec.describe ExampleApiClient, type: :api_client do
         {
           status: 201,
           headers: { 'Content-Type': 'application/json' },
-          body: response_body
+          body: response_body,
         }
       end
       let(:response_body) do
