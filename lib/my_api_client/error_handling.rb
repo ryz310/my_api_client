@@ -62,6 +62,7 @@ module MyApiClient
 
       def match_all?(json, response_body)
         return true if json.nil?
+        return false if response_body.blank?
 
         json.all? do |path, operator|
           target = JsonPath.new(path.to_s).first(response_body)

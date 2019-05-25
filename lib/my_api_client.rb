@@ -22,6 +22,13 @@ if Sawyer::VERSION < '0.8.2'
     #       But new version sawyer is conflict some gems (e.g. octkit).
     class Response
       attr_reader :body, :env
+
+      alias _original_initialize initialize
+
+      def initialize(agent, res, options = {})
+        @body = res.body
+        _original_initialize(agent, res, options)
+      end
     end
   end
 end
