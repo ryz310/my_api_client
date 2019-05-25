@@ -8,7 +8,7 @@ module MyApiClient
       # Description of #initialize
       #
       # @param request [MyApiClient::Params::Request] describe_request_here
-      # @param response [Sawyer::Response] describe_response_here
+      # @param response [Sawyer::Response, nil] describe_response_here
       def initialize(request, response)
         @request = request
         @response = response

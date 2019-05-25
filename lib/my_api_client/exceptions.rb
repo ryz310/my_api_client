@@ -21,18 +21,7 @@ module MyApiClient
 
     attr_reader :retry_count, :method_name, :args
 
-    NETWORK_ERRORS = [
-      Faraday::ClientError,
-      OpenSSL::SSL::SSLError,
-      Net::OpenTimeout,
-      SocketError,
-    ].freeze
-
     class_methods do
-      def retry_on_network_errors(wait: 0.1.second, attempts: 3, &block)
-        retry_on(*NETWORK_ERRORS, wait: wait, attempts: attempts, &block)
-      end
-
       def retry_on(*exception, wait: 1.second, attempts: 3)
         rescue_from(*exception) do |error|
           if retry_count < attempts
@@ -45,6 +34,12 @@ module MyApiClient
         end
       end
 
+      # Description of #discard_on
+      #
+      # @note
+      #   !! It is implemented following ActiveJob, but I think this method is
+      #   not useful in this gem. !!
+      # @param exception [Type] describe_exception_here
       def discard_on(*exception)
         rescue_from(*exception) do |error|
           yield self, error if block_given?
