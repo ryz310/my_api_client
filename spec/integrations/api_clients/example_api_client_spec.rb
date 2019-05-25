@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'dummy_app/api_clients/example_api_client'
 
 RSpec.describe ExampleApiClient, type: :api_client do
   let(:api_client) { described_class.new(access_token) }
