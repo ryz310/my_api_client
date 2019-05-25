@@ -117,6 +117,14 @@ RSpec.describe MyApiClient::Request do
       end
     end
 
+    context 'when detects some network error' do
+      before { allow(agent).to receive(:call).and_raise(Net::OpenTimeout) }
+
+      it 'raises MyApiClient::NetworkError' do
+        expect { request! }.to raise_error(MyApiClient::NetworkError)
+      end
+    end
+
     context 'when raises a error which inherit MyApiClient::Error' do
       before { allow(instance).to receive(:error_handling).and_return(proc) }
 

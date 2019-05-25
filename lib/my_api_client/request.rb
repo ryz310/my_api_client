@@ -54,6 +54,10 @@ module MyApiClient
       request_logger.info("Duration #{response.timing} sec")
       params = Params::Params.new(request_params, response)
       verify(params, request_logger)
+    rescue *NETWORK_ERRORS => e
+      params ||= Params::Params.new(request_params, nil)
+      request_logger.warn("Network Error (#{e.message})")
+      raise MyApiClient::NetworkError.new(params, e)
     rescue MyApiClient::Error => e
       request_logger.warn("Failure (#{response.status})")
       raise e
