@@ -18,10 +18,16 @@ module MyApiClient
 
     private
 
+    # Description of #agent
+    #
+    # @return [Sawyer::Agent] description_of_returned_object
     def agent
       @agent ||= Sawyer::Agent.new(endpoint, faraday: faraday)
     end
 
+    # Description of #faraday
+    #
+    # @return [Faraday::Connection] description_of_returned_object
     def faraday
       @faraday ||=
         Faraday.new(
@@ -33,6 +39,12 @@ module MyApiClient
         )
     end
 
+    # Description of #execute
+    #
+    # @param request_params [MyApiClient::Params::Request] describe_request_params_here
+    # @param logger [MyApiClient::Logger] describe_logger_here
+    # @return [Sawyer::Resource] description_of_returned_object
+    # @raise [MyApiClient::Error]
     def execute(request_params, logger)
       logger.info('Start')
       response = agent.call(*request_params.to_sawyer_args)
@@ -47,6 +59,12 @@ module MyApiClient
       response.data
     end
 
+    # Description of #verify
+    #
+    # @param params [MyApiClient::Params::Params] describe_params_here
+    # @param logger [MyApiClient::Logger] describe_logger_here
+    # @return [nil] description_of_returned_object
+    # @raise [MyApiClient::Error]
     def verify(params, logger)
       case error_handler = error_handling(params.response)
       when Proc
