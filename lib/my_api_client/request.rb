@@ -56,7 +56,7 @@ module MyApiClient
       verify(params, request_logger)
     rescue *NETWORK_ERRORS => e
       params ||= Params::Params.new(request_params, nil)
-      request_logger.warn("Network Error (#{e.message})")
+      request_logger.error("Network Error (#{e.message})")
       raise MyApiClient::NetworkError.new(params, e)
     rescue MyApiClient::Error => e
       request_logger.warn("Failure (#{response.status})")

@@ -47,7 +47,7 @@ RSpec.describe MyApiClient::Request do
     let(:response) { instance_double(Sawyer::Response, status: 200, data: resource, timing: 0.1) }
     let(:resource) { instance_double(Sawyer::Resource) }
     let(:logger) { instance_double(::Logger) }
-    let(:request_logger) { instance_double(MyApiClient::Logger, info: nil, warn: nil) }
+    let(:request_logger) { instance_double(MyApiClient::Logger, info: nil, warn: nil, error: nil) }
 
     it 'builds request parameter instance with arguments' do
       request!
