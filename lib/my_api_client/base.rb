@@ -10,6 +10,10 @@ module MyApiClient
     class_attribute :logger, instance_writer: false, default: ::Logger.new(STDOUT)
     class_attribute :error_handlers, instance_writer: false, default: []
 
+    # NOTE: This class **MUST NOT** implement #initialize method. Because it
+    #       will become constraint that need call #super in the #initialize at
+    #       definition of the child classes.
+
     HTTP_METHODS = %i[get post patch delete].freeze
 
     HTTP_METHODS.each do |http_method|
