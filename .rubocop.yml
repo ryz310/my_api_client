@@ -23,6 +23,9 @@ Style/ClassAndModuleChildren:
   Exclude:
     - 'spec/**/*'
 
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: comma
 

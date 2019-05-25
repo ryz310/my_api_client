@@ -19,7 +19,7 @@ RSpec.describe MyApiClient::Params::Request do
         {
           headers: { 'Content-Type': 'application/json; charset=utf-8' },
           query: { key: 'value' },
-        }
+        },
       ]
     end
   end
