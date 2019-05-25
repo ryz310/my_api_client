@@ -13,6 +13,13 @@ module MyApiClient
         @request = request
         @response = response
       end
+
+      # Returns contents as string for to be readable for human
+      #
+      # @return [String] Contents as string
+      def inspect
+        { request: request, response: response }.inspect
+      end
     end
   end
 end

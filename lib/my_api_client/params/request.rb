@@ -16,6 +16,13 @@ module MyApiClient
       def to_sawyer_args
         [method, url, body, { headers: headers, query: query }]
       end
+
+      # Returns contents as string for to be readable for human
+      #
+      # @return [String] Contents as string
+      def inspect
+        { method: method, url: url, headers: headers, query: query, body: body }.inspect
+      end
     end
   end
 end
