@@ -57,7 +57,7 @@ module MyApiClient
 
     # The error handlers defined later takes precedence
     #
-    # @param params [Sawyer::Response] describe_params_here
+    # @param response [Sawyer::Response] describe_params_here
     # @return [Proc, Symbol, nil] description_of_returned_object
     def error_handling(response)
       error_handlers.reverse_each do |error_handler|
