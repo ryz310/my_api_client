@@ -6,28 +6,11 @@ class ExampleApiClient < ApplicationApiClient
   endpoint 'https://example.com'
   request_timeout 2.seconds
 
-  class InvalidParameters < MyApiClient::Error; end
+  retry_on MyApiClient::ApiLimitError, wait: 10.seconds, attempts: 2
 
-  # For example
-  # {
-  #   "errors": {
-  #     "code": 10,
-  #     "message": "Invalid parameters."
-  #   }
-  # }
-  error_handling json: { 'errors.code': 10 } do |params, logger|
-    logger.error params.response.body.errors.message
-    raise InvalidParameters, params
-  end
-
-  # For example
-  # {
-  #   "errors": {
-  #     "code": 20,
-  #     "message": "Some error occurred."
-  #   }
-  # }
-  error_handling json: { 'errors.code': 20..29 }, with: :my_error_handling
+  error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
+  error_handling json: { '$.errors.code': 20 }, raise: MyApiClient::ApiLimitError
+  error_handling json: { '$.errors.message': /Sorry/ }, raise: MyApiClient::ServerError
 
   attr_reader :access_token
 
@@ -86,5 +69,6 @@ class ExampleApiClient < ApplicationApiClient
   # @param logger [MyApiClient::Logger] Logger for a request processing
   def my_error_handling(params, logger)
     logger.warn "Response Body: #{params.response.body.inspect}"
+    raise MyApiClient::ClientError, params
   end
 end

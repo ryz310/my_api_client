@@ -1,6 +1,21 @@
 # frozen_string_literal: true
 
 module MyApiClient
+  # Provides `error_handling` as DSL.
+  #
+  # @note
+  #   You need to define `class_attribute: error_handler, default: []` for the
+  #   included class.
+  # @example
+  #   error_handling status_code: 400..499, raise: MyApiClient::ClientError
+  #   error_handling status_code: 500..599 do |params, logger|
+  #     logger.warn 'Server error occurred.'
+  #     raise MyApiClient::ServerError, params
+  #   end
+  #
+  #   error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
+  #   error_handling json: { '$.errors.code': 20 }, raise: MyApiClient::ApiLimitError
+  #   error_handling json: { '$.errors.message': /Sorry/ }, raise: MyApiClient::ServerError
   module ErrorHandling
     extend ActiveSupport::Concern
 
