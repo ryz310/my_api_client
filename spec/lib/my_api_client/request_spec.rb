@@ -116,7 +116,7 @@ RSpec.describe MyApiClient::Request do
       end
     end
 
-    context 'when raises error which inherit MyApiClient::Error' do
+    context 'when raises a error which inherit MyApiClient::Error' do
       before { allow(instance).to receive(:error_handling).and_return(proc) }
 
       let(:proc) { ->(params, _logger) { raise MyApiClient::Error, params } }
