@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe MyApiClient::ErrorHandling do
-  class SomeError < MyApiClient::Error; end
+  class self::SomeError < MyApiClient::Error; end
 
-  class SuperMockClass
+  class self::SuperMockClass
     include MyApiClient::ErrorHandling
     class_attribute :error_handlers, default: []
 
@@ -11,7 +11,7 @@ RSpec.describe MyApiClient::ErrorHandling do
     error_handling status_code: 500, with: :commonized_error_handling
   end
 
-  class MockClass < SuperMockClass
+  class self::MockClass < self::SuperMockClass
     # Use `status_code`
     error_handling status_code: /40[0-3]/, with: :status_code_is_monitored_by_regex
     error_handling status_code: 404, with: :status_code_is_monitored_by_number
@@ -30,7 +30,8 @@ RSpec.describe MyApiClient::ErrorHandling do
                    with: :monitoring_with_json_multiple_conditions
 
     # Use `raise`
-    error_handling json: { '$.errors.code': 40 }, raise: SomeError
+    error_handling json: { '$.errors.code': 40 },
+                   raise: RSpec::ExampleGroups::MyApiClientErrorHandling::SomeError
 
     # Use `block`
     error_handling json: { '$.errors.code': 50 } do
@@ -41,14 +42,14 @@ RSpec.describe MyApiClient::ErrorHandling do
     error_handling json: { '$.errors.code': 60 }
   end
 
-  class AnotherMockClass < SuperMockClass
+  class self::AnotherMockClass < self::SuperMockClass
     error_handling json: { '$.errors.code': 10 }
     error_handling json: { '$.errors.code': 20 }
     error_handling json: { '$.errors.code': 30 }
   end
 
   describe '.error_handling' do
-    let(:instance) { MockClass.new }
+    let(:instance) { self.class::MockClass.new }
     let(:error_handler) { instance.error_handling(response) }
     let(:response) do
       instance_double(
@@ -190,7 +191,7 @@ RSpec.describe MyApiClient::ErrorHandling do
       end
 
       it 'raises the error when detected' do
-        expect { error_handler.call(params, logger) }.to raise_error(SomeError)
+        expect { error_handler.call(params, logger) }.to raise_error(self.class::SomeError)
       end
     end
 
@@ -237,14 +238,14 @@ RSpec.describe MyApiClient::ErrorHandling do
 
     describe 'definition' do
       it 'is isolate defined for each classes' do
-        expect(SuperMockClass.error_handlers.count).to eq 1
-        expect(MockClass.error_handlers.count).to eq 13
-        expect(AnotherMockClass.error_handlers.count).to eq 4
+        expect(self.class::SuperMockClass.error_handlers.count).to eq 1
+        expect(self.class::MockClass.error_handlers.count).to eq 13
+        expect(self.class::AnotherMockClass.error_handlers.count).to eq 4
       end
     end
   end
 
-  class ParentMockClass
+  class self::ParentMockClass
     include MyApiClient::ErrorHandling
     class_attribute :error_handlers, default: []
 
@@ -252,7 +253,7 @@ RSpec.describe MyApiClient::ErrorHandling do
                    with: :bad_request
   end
 
-  class ChildMockClass < ParentMockClass
+  class self::ChildMockClass < self::ParentMockClass
     error_handling status_code: 400,
                    json: { '$.errors.code': 10..19 },
                    with: :error_number_1x
@@ -261,15 +262,14 @@ RSpec.describe MyApiClient::ErrorHandling do
                    with: :error_number_13
   end
 
-  class GrandchildMockClass < ChildMockClass
+  class self::GrandchildMockClass < self::ChildMockClass
     error_handling status_code: 400,
                    json: { '$.errors.code': 13, '$.errors.message': 'error' },
                    with: :error_number_13_with_error_message
   end
 
   describe '#error_handling' do
-    # subject { GrandchildMockClass.new.error_handling(response) }
-    let(:instance) { GrandchildMockClass.new }
+    let(:instance) { self.class::GrandchildMockClass.new }
     let(:response_1) do
       instance_double(
         Sawyer::Response, status: 400, body: {

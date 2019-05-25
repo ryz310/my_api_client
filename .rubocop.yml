@@ -19,6 +19,10 @@ Metrics/MethodLength:
 Metrics/LineLength:
   Max: 100
 
+Style/ClassAndModuleChildren:
+  Exclude:
+    - 'spec/**/*'
+
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: comma
 

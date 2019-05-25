@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe MyApiClient::Request do
-  class MockClass
+  class self::MockClass
     include MyApiClient::Request
     include MyApiClient::Config
     include MyApiClient::Exceptions
@@ -35,7 +35,7 @@ RSpec.describe MyApiClient::Request do
         .to_return(body: response_body, headers: headers)
     end
 
-    let(:instance) { MockClass.new }
+    let(:instance) { self.class::MockClass.new }
     let(:endpoint) { 'https://example.com' }
     let(:http_method) { :get }
     let(:url) { 'path/to/resource' }
