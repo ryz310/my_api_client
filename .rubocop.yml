@@ -32,6 +32,10 @@ Style/TrailingCommaInHashLiteral:
 RSpec/ExampleLength:
   Max: 10
 
+RSpec/FilePath:
+  Exclude:
+    - 'spec/lib/my_api_client/errors/**/*'
+
 RSpec/NestedGroups:
   Max: 4
 

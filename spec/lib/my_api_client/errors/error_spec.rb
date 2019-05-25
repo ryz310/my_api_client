@@ -8,6 +8,12 @@ RSpec.describe MyApiClient::Error do
     )
   end
 
+  describe '#params' do
+    it 'returns a params instance' do
+      expect(instance.params).to eq params
+    end
+  end
+
   describe '#inspect' do
     it 'returns contents as string for to be readable for human' do
       expect(instance.inspect)
