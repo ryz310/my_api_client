@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
 module MyApiClient
+  # The ancestor class for all API request error
   class Error < StandardError
     attr_reader :params
 
+    # Description of #initialize
+    #
+    # @param params [MyApiClient::Params::Params] describe_params_here
+    # @param error_message [String] default: nil
     def initialize(params, error_message = nil)
       @params = params
       super error_message
@@ -16,4 +21,17 @@ module MyApiClient
       { error: super, params: params }.inspect
     end
   end
+
+  # NOTE: The built-in error classes are following. Although they are prepared
+  #       to save the trouble of defining, but you can create any error classes
+  #       which inherit the ancestor error class.
+
+  # For 4xx client error
+  class ClientError < Error; end
+
+  # For 5xx server error
+  class ServerError < Error; end
+
+  # For API request limit error
+  class ApiLimitError < Error; end
 end
