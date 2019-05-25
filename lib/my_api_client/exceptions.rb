@@ -5,6 +5,18 @@ module MyApiClient
     extend ActiveSupport::Concern
     include ActiveSupport::Rescuable
 
+    # Description of #call
+    #
+    # @param args [Array<Object>] describe_args_here
+    # @return [Object] description_of_returned_object
+    def call(*args)
+      @args = args
+      send(*args)
+    rescue StandardError => e
+      @retry_count ||= 0
+      raise unless rescue_with_handler(e)
+    end
+
     private
 
     attr_reader :retry_count, :method_name, :args
@@ -17,35 +29,33 @@ module MyApiClient
     ].freeze
 
     class_methods do
-      def retry_on_network_errors(wait: 0.1.seconds, attempts: 3)
-        rescue_from(*NETWORK_ERRORS) do |error|
+      def retry_on_network_errors(wait: 0.1.second, attempts: 3, &block)
+        retry_on(*NETWORK_ERRORS, wait: wait, attempts: attempts, &block)
+      end
+
+      def retry_on(*exception, wait: 1.second, attempts: 3)
+        rescue_from(*exception) do |error|
           if retry_count < attempts
-            retry_call(error, wait)
+            retry_calling(wait)
           elsif block_given?
             yield self, error
           else
-            logger.error "Stopped retrying #{self.class} due to a #{exception}, " \
-                         "which reoccurred on #{retry_count} attempts. " \
-                         "The original exception was #{error.cause.inspect}."
             raise error
           end
         end
       end
+
+      def discard_on(*exception)
+        rescue_from(*exception) do |error|
+          yield self, error if block_given?
+        end
+      end
     end
 
-    def call(method_name, *args)
-      @method_name = method_name
-      @args = args
-      send(method_name, *args)
-    rescue StandardError => e
-      @retry_count ||= 0
-      raise unless rescue_with_handler(e)
-    end
-
-    def retry_call(_error, wait)
+    def retry_calling(wait)
       sleep(wait)
       @retry_count += 1
-      call(method_name, *args)
+      call(*args)
     end
   end
 end
