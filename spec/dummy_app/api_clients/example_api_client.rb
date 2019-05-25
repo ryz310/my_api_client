@@ -6,7 +6,7 @@ class ExampleApiClient < ApplicationApiClient
   endpoint 'https://example.com'
   request_timeout 2.seconds
 
-  retry_on MyApiClient::ApiLimitError, wait: 10.seconds, attempts: 2
+  retry_on MyApiClient::ApiLimitError, wait: 0.seconds, attempts: 2
 
   error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
   error_handling json: { '$.errors.code': 20 }, raise: MyApiClient::ApiLimitError
