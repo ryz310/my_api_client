@@ -21,15 +21,23 @@ class ExampleApiClient < ApplicationApiClient
   # POST https://example.com/users
   #
   # @param name [String] Username which want to create
-  # @return [MyApiClient::Params::Response] HTTP response parameter
+  # @return [Sawyer::Response] HTTP response parameter
   def create_user(name)
     post 'users', headers: headers, body: { name: name }
+  end
+
+  # GET https://example.com/users
+  #
+  # @param user_id [Integer] User ID which want to read
+  # @return [Sawyer::Response] HTTP response parameter
+  def read_users
+    get 'users', headers: headers
   end
 
   # GET https://example.com/users/1
   #
   # @param user_id [Integer] User ID which want to read
-  # @return [MyApiClient::Params::Response] HTTP response parameter
+  # @return [Sawyer::Response] HTTP response parameter
   def read_user(user_id)
     get "users/#{user_id}", headers: headers
   end
@@ -38,7 +46,7 @@ class ExampleApiClient < ApplicationApiClient
   #
   # @param user_id [Integer] User ID which want to read
   # @param name [String] Username which want to be updated
-  # @return [MyApiClient::Params::Response] HTTP response parameter
+  # @return [Sawyer::Response] HTTP response parameter
   def update_user(user_id, name)
     patch "users/#{user_id}", headers: headers, body: { name: name }
   end
@@ -46,7 +54,7 @@ class ExampleApiClient < ApplicationApiClient
   # DELETE https://example.com/users/1
   #
   # @param user_id [Integer] User ID which want to delete
-  # @return [MyApiClient::Params::Response] HTTP response parameter
+  # @return [Sawyer::Response] HTTP response parameter
   def delete_user(user_id)
     delete "users/#{user_id}", headers: headers
   end
