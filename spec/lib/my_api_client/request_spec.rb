@@ -21,12 +21,12 @@ RSpec.describe MyApiClient::Request do
   end
 
   describe '#request' do
-    subject(:request!) { instance.request(http_method, url, headers, query, body) }
+    subject(:request!) { instance.request(http_method, url, headers, query, body, logger) }
 
     before do
       allow(MyApiClient::Params::Request).to receive(:new).and_call_original
       allow(MyApiClient::Params::Params).to receive(:new).and_call_original
-      allow(MyApiClient::Logger).to receive(:new).and_return(logger)
+      allow(MyApiClient::Logger).to receive(:new).and_return(request_logger)
       allow(Sawyer::Agent).to receive(:new).and_return(agent)
       allow(Faraday).to receive(:new).and_call_original
       allow(instance).to receive(:error_handling).and_call_original
@@ -46,7 +46,8 @@ RSpec.describe MyApiClient::Request do
     let(:agent) { instance_double(Sawyer::Agent, call: response) }
     let(:response) { instance_double(Sawyer::Response, status: 200, data: resource, timing: 0.1) }
     let(:resource) { instance_double(Sawyer::Resource) }
-    let(:logger) { instance_double(MyApiClient::Logger, info: nil, warn: nil) }
+    let(:logger) { instance_double(::Logger) }
+    let(:request_logger) { instance_double(MyApiClient::Logger, info: nil, warn: nil) }
 
     it 'builds request parameter instance with arguments' do
       request!
@@ -54,11 +55,11 @@ RSpec.describe MyApiClient::Request do
         .to have_received(:new).with(http_method, url, headers, query, body)
     end
 
-    it 'builds logger instandce with arguments' do
+    it 'builds a request logger instandce with arguments' do
       request!
       expect(MyApiClient::Logger)
         .to have_received(:new)
-        .with(instance_of(Faraday::Connection), http_method, url)
+        .with(logger, instance_of(Faraday::Connection), http_method, url)
     end
 
     it 'builds Sawyer::Agent instance with the configuration parameter' do
@@ -101,7 +102,7 @@ RSpec.describe MyApiClient::Request do
     context 'when #error_handling returns Proc' do
       before { allow(instance).to receive(:error_handling).and_return(proc) }
 
-      let(:proc) { ->(_params, _logger) { puts 'The procedure is called' } }
+      let(:proc) { ->(_params, _request_logger) { puts 'The procedure is called' } }
 
       it 'calls received procedure' do
         expect { request! }.to output("The procedure is called\n").to_stdout
@@ -119,7 +120,7 @@ RSpec.describe MyApiClient::Request do
     context 'when raises a error which inherit MyApiClient::Error' do
       before { allow(instance).to receive(:error_handling).and_return(proc) }
 
-      let(:proc) { ->(params, _logger) { raise MyApiClient::Error, params } }
+      let(:proc) { ->(params, _request_logger) { raise MyApiClient::Error, params } }
 
       it 'escalates the error' do
         expect { request! }.to raise_error(MyApiClient::Error)
