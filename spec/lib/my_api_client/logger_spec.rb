@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe MyApiClient::Logger do
-  let(:instance) { described_class.new(logger, faraday, method, url) }
+  let(:instance) { described_class.new(logger, faraday, method, pathname) }
   let(:logger) { instance_double(::Logger, logging_methods) }
   let(:logging_methods) { MyApiClient::Logger::LOG_LEVEL.zip([]).to_h }
   let(:faraday) { instance_double(Faraday::Connection, build_exclusive_url: endpoint) }
-  let(:endpoint) { "https://example.com/#{url}" }
+  let(:endpoint) { "https://example.com/#{pathname}" }
   let(:method) { :get }
-  let(:url) { 'path/to/resouce' }
+  let(:pathname) { 'path/to/resouce' }
 
   MyApiClient::Logger::LOG_LEVEL.each do |log_level|
     describe "##{log_level}" do

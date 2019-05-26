@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe MyApiClient::Params::Request do
-  let(:instance) { described_class.new(method, url, headers, query, body) }
+  let(:instance) { described_class.new(method, pathname, headers, query, body) }
   let(:method) { 'GET' }
-  let(:url) { 'path/to/resource' }
+  let(:pathname) { 'path/to/resource' }
   let(:headers) { { 'Content-Type': 'application/json; charset=utf-8' } }
   let(:query) { { key: 'value' } }
   let(:body) { nil }
@@ -28,7 +28,7 @@ RSpec.describe MyApiClient::Params::Request do
     it 'returns contents as string for to be readable for human' do
       expect(instance.inspect)
         .to eq '{:method=>"GET", ' \
-               ':url=>"path/to/resource", ' \
+               ':pathname=>"path/to/resource", ' \
                ':headers=>{:"Content-Type"=>"application/json; charset=utf-8"}, ' \
                ':query=>{:key=>"value"}, :body=>nil}'
     end

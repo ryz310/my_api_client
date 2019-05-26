@@ -20,13 +20,13 @@ module MyApiClient
       class_eval <<~METHOD, __FILE__, __LINE__ + 1
         # Description of #undefined
         #
-        # @param url [String]
+        # @param pathname [String]
         # @param headers [Hash, nil]
         # @param query [Hash, nil]
         # @param body [Hash, nil]
         # @return [Sawyer::Resouce] description_of_returned_object
-        def #{http_method}(url, headers: nil, query: nil, body: nil)
-          request :#{http_method}, url, headers, query, body, logger
+        def #{http_method}(pathname, headers: nil, query: nil, body: nil)
+          request :#{http_method}, pathname, headers, query, body, logger
         end
       METHOD
     end
