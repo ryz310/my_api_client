@@ -4,6 +4,9 @@ class ApplicationApiClient < MyApiClient::Base
   # This is a super class for all API Client classes.
   # Almost settings are inherited to child classes.
 
+  # Set the log output destination. The default is `Logger.new(STDOUT)`.
+  logger = Rails.logger
+
   # Set the maximum number of seconds to wait on HTTP connection. If the
   # connection does not open even after this number of seconds, the exception
   # `MyApiClient::NetworkError` will raise. Setting nil will not time out.
