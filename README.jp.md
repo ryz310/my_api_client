@@ -63,9 +63,15 @@ api_clinet.get_users #=> #<Sawyer::Response>
 
 ### Error handling
 
+WIP
+
 ### Retry
 
+WIP
+
 #### MyApiClient::NetworkError
+
+WIP
 
 ### One request for one class
 
@@ -119,7 +125,7 @@ end
 
 ### Timeout
 
-
+WIP
 
 ## Contributing
 
