@@ -10,8 +10,8 @@ RSpec.describe MyApiClient::Request do
     class_attribute :error_handlers, default: []
 
     endpoint 'https://example.com'
-    http_read_timeout 3.seconds
     http_open_timeout 2.seconds
+    http_read_timeout 3.seconds
 
     private
 
