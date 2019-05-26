@@ -2,7 +2,7 @@
 
 class ApplicationApiClient < MyApiClient::Base
   http_read_timeout 3.seconds
-  net_open_timeout 2.seconds
+  http_open_timeout 2.seconds
 
   retry_on MyApiClient::NetworkError, wait: 0.seconds, attempts: 3
 

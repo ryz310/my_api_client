@@ -37,7 +37,7 @@ module MyApiClient
           nil,
           request: {
             timeout: (http_read_timeout if respond_to?(:http_read_timeout)),
-            open_timeout: (net_open_timeout if respond_to?(:net_open_timeout)),
+            open_timeout: (http_open_timeout if respond_to?(:http_open_timeout)),
           }.compact
         )
     end

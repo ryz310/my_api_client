@@ -11,7 +11,7 @@ RSpec.describe MyApiClient::Request do
 
     endpoint 'https://example.com'
     http_read_timeout 3.seconds
-    net_open_timeout 2.seconds
+    http_open_timeout 2.seconds
 
     private
 
