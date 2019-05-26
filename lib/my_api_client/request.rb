@@ -2,7 +2,7 @@
 
 module MyApiClient
   module Request
-    # Description of #request
+    # Description of #_request
     #
     # @param http_method [Symbol] describe_http_method_here
     # @param pathname [String] describe_pathname_here
@@ -12,10 +12,10 @@ module MyApiClient
     # @param logger [::Logger] describe_logger_here
     # @return [Sawyer::Resource] description_of_returned_object
     # rubocop:disable Metrics/ParameterLists
-    def request(http_method, pathname, headers, query, body, logger)
+    def _request(http_method, pathname, headers, query, body, logger)
       request_params = Params::Request.new(http_method, pathname, headers, query, body)
       request_logger = Logger.new(logger, faraday, http_method, pathname)
-      call(:execute, request_params, request_logger)
+      call(:_execute, request_params, request_logger)
     end
     # rubocop:enable Metrics/ParameterLists
 
@@ -42,18 +42,18 @@ module MyApiClient
         )
     end
 
-    # Description of #execute
+    # Description of #_execute
     #
     # @param request_params [MyApiClient::Params::Request] describe_request_params_here
     # @param request_logger [MyApiClient::Logger] describe_request_logger_here
     # @return [Sawyer::Resource] description_of_returned_object
     # @raise [MyApiClient::Error]
-    def execute(request_params, request_logger)
+    def _execute(request_params, request_logger)
       request_logger.info('Start')
       response = agent.call(*request_params.to_sawyer_args)
       request_logger.info("Duration #{response.timing} sec")
       params = Params::Params.new(request_params, response)
-      verify(params, request_logger)
+      _verify(params, request_logger)
     rescue *NETWORK_ERRORS => e
       params ||= Params::Params.new(request_params, nil)
       request_logger.error("Network Error (#{e.message})")
@@ -66,13 +66,13 @@ module MyApiClient
       response.data
     end
 
-    # Description of #verify
+    # Description of #_verify
     #
     # @param params [MyApiClient::Params::Params] describe_params_here
     # @param request_logger [MyApiClient::Logger] describe_request_logger_here
     # @return [nil] description_of_returned_object
     # @raise [MyApiClient::Error]
-    def verify(params, request_logger)
+    def _verify(params, request_logger)
       case error_handler = error_handling(params.response)
       when Proc
         error_handler.call(params, request_logger)

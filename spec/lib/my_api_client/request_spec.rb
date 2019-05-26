@@ -20,8 +20,8 @@ RSpec.describe MyApiClient::Request do
     end
   end
 
-  describe '#request' do
-    subject(:request!) { instance.request(http_method, pathname, headers, query, body, logger) }
+  describe '#_request' do
+    subject(:request!) { instance._request(http_method, pathname, headers, query, body, logger) }
 
     before do
       allow(MyApiClient::Params::Request).to receive(:new).and_call_original

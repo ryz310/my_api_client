@@ -90,11 +90,11 @@ RSpec.describe ExampleApiClient, type: :api_client do
         }
       end
 
-      before { allow(api_client).to receive(:verify).and_call_original }
+      before { allow(api_client).to receive(:_verify).and_call_original }
 
       it 'retries twice and raises an error at last' do
         expect { api_request! }.to raise_error(MyApiClient::ApiLimitError)
-        expect(api_client).to have_received(:verify).exactly(3).times
+        expect(api_client).to have_received(:_verify).exactly(3).times
       end
     end
 

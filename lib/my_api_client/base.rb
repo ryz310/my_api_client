@@ -26,7 +26,7 @@ module MyApiClient
         # @param body [Hash, nil]
         # @return [Sawyer::Resouce] description_of_returned_object
         def #{http_method}(pathname, headers: nil, query: nil, body: nil)
-          request :#{http_method}, pathname, headers, query, body, logger
+          _request :#{http_method}, pathname, headers, query, body, logger
         end
       METHOD
     end
