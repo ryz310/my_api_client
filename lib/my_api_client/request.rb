@@ -36,7 +36,7 @@ module MyApiClient
         Faraday.new(
           nil,
           request: {
-            timeout: (request_timeout if respond_to?(:request_timeout)),
+            timeout: (http_read_timeout if respond_to?(:http_read_timeout)),
             open_timeout: (net_open_timeout if respond_to?(:net_open_timeout)),
           }.compact
         )

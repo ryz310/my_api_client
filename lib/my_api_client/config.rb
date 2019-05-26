@@ -4,7 +4,7 @@ module MyApiClient
   module Config
     extend ActiveSupport::Concern
 
-    CONFIG_METHODS = %i[endpoint request_timeout net_open_timeout].freeze
+    CONFIG_METHODS = %i[endpoint http_read_timeout net_open_timeout].freeze
 
     class_methods do
       CONFIG_METHODS.each do |config_method|

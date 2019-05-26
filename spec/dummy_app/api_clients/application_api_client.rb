@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ApplicationApiClient < MyApiClient::Base
-  request_timeout 3.seconds
+  http_read_timeout 3.seconds
   net_open_timeout 2.seconds
 
   retry_on MyApiClient::NetworkError, wait: 0.seconds, attempts: 3

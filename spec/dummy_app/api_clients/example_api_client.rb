@@ -4,7 +4,7 @@ require 'dummy_app/api_clients/application_api_client'
 
 class ExampleApiClient < ApplicationApiClient
   endpoint 'https://example.com'
-  request_timeout 2.seconds
+  http_read_timeout 2.seconds
 
   retry_on MyApiClient::ApiLimitError, wait: 0.seconds, attempts: 2
 
