@@ -12,7 +12,7 @@ class <%= "#{class_name}ApiClient" %> < ::ApplicationApiClient
 
 <% requests.each do |request| -%>
 <% action, http_method, pathname = request.sepalate(':') -%>
-  # Description of #<%= action %>
+  # <%= "#{http_method.upcase} #{endpoint}/#{pathname}" %>
   #
   # @return [Sawyer::Resource] Description of the API response
   # @raise [MyApiClient::Error] Description of the error
