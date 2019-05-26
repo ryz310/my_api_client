@@ -11,13 +11,13 @@ module MyApiClient
     # @param body [Hash, nil] describe_body_here
     # @param logger [::Logger] describe_logger_here
     # @return [Sawyer::Resource] description_of_returned_object
-    # rubocop:disable Metrics/ParameterLists:
+    # rubocop:disable Metrics/ParameterLists
     def request(http_method, pathname, headers, query, body, logger)
       request_params = Params::Request.new(http_method, pathname, headers, query, body)
       request_logger = Logger.new(logger, faraday, http_method, pathname)
       call(:execute, request_params, request_logger)
     end
-    # rubocop:enable Metrics/ParameterLists:
+    # rubocop:enable Metrics/ParameterLists
 
     private
 
