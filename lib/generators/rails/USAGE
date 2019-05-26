@@ -1,0 +1,11 @@
+Description:
+    Generate a new api client class files.
+
+Example:
+    `rails g api_client path/to/resource https://example.com get_user:get:path/to/resource`
+
+    This will create:
+        create  app/api_clients/application_api_client.rb
+        create  app/api_clients/path/to/resource_api_client.rb
+        invoke  rspec
+        create    spec/api_clients/path/to/resource_api_client_spec.rb

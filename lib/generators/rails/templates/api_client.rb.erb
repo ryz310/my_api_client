@@ -1,0 +1,38 @@
+# frozen_string_literal: true
+
+class <%= "#{class_name}ApiClient" %> < ::ApplicationApiClient
+  endpoint '<%= endpoint %>'
+
+  # error_handling json: { '$.errors.code': 10 } do |params, logger|
+  #   # Behavior when detected an error.
+  # end
+
+  def initialize
+  end
+
+<% requests.each do |request| -%>
+<% action, http_method, pathname = request.sepalate(':') -%>
+  # Description of #<%= action %>
+  #
+  # @return [Sawyer::Resource] Description of the API response
+  # @raise [MyApiClient::Error] Description of the error
+  # @see Reference of the API
+  def <%= action %>
+<% if http_method == 'get' -%>
+    query = {}
+    <%= http_method %> '<%= path %>', query: query, headers: headers
+<% else -%>
+    body = {}
+    <%= http_method %> '<%= path %>', body: body, headers: headers
+<% end -%>
+  end
+<% end -%>
+
+  private
+
+  def headers
+    {
+      'Content-Type': 'application/json',
+    }
+  end
+end

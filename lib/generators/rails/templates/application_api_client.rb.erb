@@ -1,0 +1,31 @@
+# frozen_string_literal: true
+
+class ApplicationApiClient < MyApiClient::Base
+  # This is a super class for all API Client classes.
+  # Almost settings are inherited to child classes.
+
+  # Set the maximum number of seconds to wait on HTTP connection. If the
+  # connection does not open even after this number of seconds, the exception
+  # `MyApiClient::NetworkError` will raise. Setting nil will not time out.
+  # The default is 60 seconds.
+  #
+  # http_open_timeout 2.seconds
+
+  # Set the maximum number of seconds to block at one HTTP read. If it does not
+  # read even after this number of seconds, it will raise the exception
+  # MyApiClient::NetworkError. Setting nil will not time out. The default is 60
+  # seconds.
+  #
+  # http_read_timeout 3.seconds
+
+  # Catch the exception and re-execution after any seconds, like as ActiveJob.
+  # Please note that it is executed as a synchronous process unlike ActiveJob.
+  #
+  # retry_on MyApiClient::NetworkError, wait: 5.seconds, attempts: 3
+
+  # Set a HTTP response verifyment and behavior. If conflicting conditions are
+  # set, the processing defined later takes precedence
+  #
+  # error_handling status_code: 400..499, raise: MyApiClient::ClientError
+  # error_handling status_code: 500..599, raise: MyApiClient::ServerError
+end
