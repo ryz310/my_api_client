@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'activesupport', '>= 4.2.0'
+  spec.add_dependency 'jsonpath'
   spec.add_dependency 'sawyer'
 
   spec.add_development_dependency 'bundler', '~> 1.16'
@@ -36,5 +37,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop-performance'
   spec.add_development_dependency 'rubocop-rspec'
   spec.add_development_dependency 'simplecov'
+  spec.add_development_dependency 'webmock'
   spec.add_development_dependency 'yard'
 end

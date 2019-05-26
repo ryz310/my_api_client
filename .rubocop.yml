@@ -7,10 +7,40 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   TargetRubyVersion: 2.3
 
+Metrics/AbcSize:
+  Max: 20
+
 Metrics/BlockLength:
+  Max: 50
   Exclude:
     - 'my_api_client.gemspec'
     - 'spec/**/*'
 
+Metrics/MethodLength:
+  Max: 15
+
+Metrics/LineLength:
+  Max: 100
+
+Style/ClassAndModuleChildren:
+  Exclude:
+    - 'spec/**/*'
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+
+RSpec/ExampleLength:
+  Max: 10
+
+RSpec/FilePath:
+  Exclude:
+    - 'spec/lib/my_api_client/errors/**/*'
+
 RSpec/NestedGroups:
+  Max: 4
+
+RSpec/MultipleExpectations:
   Max: 4
