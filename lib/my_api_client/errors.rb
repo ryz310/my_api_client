@@ -26,6 +26,7 @@ module MyApiClient
     Faraday::ClientError,
     OpenSSL::SSL::SSLError,
     Net::OpenTimeout,
+    Net::ReadTimeout,
     SocketError,
   ].freeze
 
