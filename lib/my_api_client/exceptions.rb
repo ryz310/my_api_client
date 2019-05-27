@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module MyApiClient
+  # Description of Exceptions
   module Exceptions
     extend ActiveSupport::Concern
     include ActiveSupport::Rescuable

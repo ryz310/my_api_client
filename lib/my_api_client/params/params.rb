@@ -2,6 +2,7 @@
 
 module MyApiClient
   module Params
+    # Description of Params
     class Params
       attr_reader :request, :response
 

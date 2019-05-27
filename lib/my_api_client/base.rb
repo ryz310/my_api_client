@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module MyApiClient
+  # Description of Base
   class Base
     include MyApiClient::Config
     include MyApiClient::ErrorHandling

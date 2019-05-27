@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module MyApiClient
+  # Description of Config
   module Config
     extend ActiveSupport::Concern
 

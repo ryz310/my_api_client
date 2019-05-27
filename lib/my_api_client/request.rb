@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module MyApiClient
+  # Description of Request
   module Request
     # Description of #_request
     #
