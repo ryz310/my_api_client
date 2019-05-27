@@ -221,6 +221,10 @@ end
 
 WIP
 
+### Logger
+
+WIP
+
 ## Contributing
 
 不具合の報告や Pull Request を歓迎しています。OSS という事で自分はなるべく頑張って英語を使うようにしていますが、日本語での報告でも大丈夫です :+1:
