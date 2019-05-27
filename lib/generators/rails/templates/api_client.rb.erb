@@ -11,7 +11,7 @@ class <%= "#{class_name}ApiClient" %> < ::ApplicationApiClient
   end
 
 <% requests.each do |request| -%>
-<% action, http_method, pathname = request.separate(':') -%>
+<% action, http_method, pathname = request.split(':') -%>
   # <%= "#{http_method.upcase} #{endpoint}/#{pathname}" %>
   #
   # @return [Sawyer::Resource] Description of the API response
