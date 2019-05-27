@@ -1,0 +1,172 @@
+# Ruby CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-ruby/ for more details
+#
+version: 2
+
+references:
+  - &download_cc_test_reporter
+    run:
+        name: Download cc-test-reporter
+        command: |
+          mkdir -p tmp/
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
+          chmod +x ./tmp/cc-test-reporter
+  - &restore_bundle_install_cache
+    restore_cache:
+        keys:
+        - v1-dependencies-{{ checksum "Gemfile.lock" }}
+        - v1-dependencies-
+  - &bundle_install
+    run:
+        name: Bundle Install
+        command: |
+          bundle install --jobs=4 --retry=3 --path vendor/bundle
+  - &save_bundle_install_cache
+    save_cache:
+      paths:
+        - ./vendor/bundle
+      key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+  - &run_rspec
+    run:
+        name: Run Rspec
+        command: |
+          mkdir /tmp/test-results
+          TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+          ./tmp/cc-test-reporter before-build
+          bundle exec rspec --format documentation \
+                            --color \
+                            --format RspecJunitFormatter \
+                            --out /tmp/test-results/rspec.xml \
+                            $TEST_FILES
+          ./tmp/cc-test-reporter after-build --coverage-input-type simplecov --exit-code $?
+  - &build
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - *download_cc_test_reporter
+      - *restore_bundle_install_cache
+      - *bundle_install
+      - *save_bundle_install_cache
+      - *run_rspec
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
+      - run:
+          name: Rake Build
+          command: |
+            bundle exec rake build
+  - &rubocop
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - *restore_bundle_install_cache
+      - *bundle_install
+      - *save_bundle_install_cache
+      - run: bundle exec rubocop
+
+  - &yardoc
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - *restore_bundle_install_cache
+      - *bundle_install
+      - *save_bundle_install_cache
+      - run:  bundle exec yardoc -o ./yardoc
+      - store_artifacts:
+          path: ./yardoc
+          destination: yardoc
+
+jobs:
+  build_on_ruby_2.4:
+    docker:
+       - image: circleci/ruby:2.4-node-browsers
+    <<: *build
+  build_on_ruby_2.5:
+    docker:
+       - image: circleci/ruby:2.5-node-browsers
+    <<: *build
+  build_on_ruby_2.6:
+    docker:
+       - image: circleci/ruby:2.6-node-browsers
+    <<: *build
+  build_on_ruby_latest:
+    docker:
+       - image: circleci/ruby:latest-node-browsers-legacy
+    <<: *build
+  rubocop:
+    docker:
+       - image: circleci/ruby:2.4-node-browsers
+    <<: *rubocop
+  yardoc:
+    docker:
+       - image: circleci/ruby:2.4-node-browsers
+    <<: *yardoc
+
+  rubocop_challenge:
+    docker:
+      - image: circleci/ruby:2.4-node-browsers
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Rubocop Challenge
+          command: |
+            gem install rubocop_challenger --pre
+            rubocop_challenger go --email=ryz310@gmail.com --name=ryz310
+  release:
+    docker:
+       - image: circleci/ruby:2.4-node-browsers
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - *restore_bundle_install_cache
+      - *bundle_install
+      - *save_bundle_install_cache
+      - run:
+          name: Create Rubygems Credentials
+          command: |
+            mkdir ~/.gem
+            echo -e "---\n:rubygems_api_key: ${RUBYGEMS_API_KEY}" > ~/.gem/credentials
+            chmod 0600 ~/.gem/credentials
+      - run:
+          name: Release Gem
+          command: |
+            git push --set-upstream origin ${CIRCLE_BRANCH}
+            bundle exec rake release --trace
+workflows:
+  version: 2
+
+  commit:
+    jobs:
+      - build_on_ruby_2.4
+      - build_on_ruby_2.5
+      - build_on_ruby_2.6
+      - build_on_ruby_latest
+      - rubocop
+      - yardoc
+      - release:
+          context: RubyGems API Key
+          requires:
+            - build_on_ruby_2.4
+            - build_on_ruby_2.5
+            - build_on_ruby_2.6
+            - build_on_ruby_latest
+            - rubocop
+          filters:
+            branches:
+              only:
+                - production
+
+  challenge:
+    triggers:
+      - schedule:
+          cron: "30 23 * * *" # 8:30am every day (JST)
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - rubocop_challenge

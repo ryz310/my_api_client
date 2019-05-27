@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module MyApiClient
+  # Description of Logger
   class Logger
     attr_reader :logger, :method, :pathname
 
