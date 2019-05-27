@@ -211,7 +211,7 @@ class PostUserApiClient < ExampleApiClient
   #
   # @param name [String] Username which want to create
   # @return [Sawyer::Response] HTTP response parameter
-  def request(name)
+  def request(name:)
     post 'users', headers: headers, body: { name: name }
   end
 end
