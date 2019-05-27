@@ -108,9 +108,9 @@ end
 error_handling status_code: 400..499, raise: MyApiClient::ClientError
 ```
 
-これは `ExampleApiClient` からのリクエスト全てにおいて、レスポンスのステータスコードが `400..499` であった場合に `MyApiClient::ClientError` が例外として発生するようになります。 `ExampleApiClient` を継承したクラスにもエラーハンドリングは適用されます。ステータスコードのエラーハンドリングは親クラスで定義すると良いと思います。
+これは `ExampleApiClient` からのリクエスト全てにおいて、レスポンスのステータスコードが `400..499` であった場合に `MyApiClient::ClientError` が例外として発生するようになります。 `ExampleApiClient` を継承したクラスにもエラーハンドリングは適用されます。ステータスコードのエラーハンドリングは親クラスで定義すると良いと思います。
 
-なお、 `status_code` には `Integer` `Range` `Regexp` が指定可能です。`raise` には `MyApiClient::Error` を継承したクラスが指定可能です。`my_api_client` で標準で定義しているエラークラスについては以下のソースコードをご確認下さい。
+なお、 `status_code` には `Integer` `Range` `Regexp` が指定可能です。`raise` には `MyApiClient::Error` を継承したクラスが指定可能です。`my_api_client` で標準で定義しているエラークラスについては以下のソースコードをご確認下さい。
 
 https://github.com/ryz310/my_api_client/blob/master/lib/my_api_client/errors.rb
 
@@ -123,7 +123,7 @@ error_handling status_code: 500..599 do |params, logger|
 end
 ```
 
-上記の例であれば、ステータスコードが `500..599` の場合に Block の内容が実行れます。引数の `params` にはリクエスト情報とレスポンス情報が含まれています。`logger` はログ出力用インスタンスですが、このインスタンスを使ってログ出力すると、以下のようにリクエスト情報がログ出力に含まれるようになり、デバッグの際に便利です。
+上記の例であれば、ステータスコードが `500..599` の場合に Block の内容が実行れます。引数の `params` にはリクエスト情報とレスポンス情報が含まれています。`logger` はログ出力用インスタンスですが、このインスタンスを使ってログ出力すると、以下のようにリクエスト情報がログ出力に含まれるようになり、デバッグの際に便利です。
 
 ```text
 API request `GET https://example.com/path/to/resouce`: "Server error occurred."
