@@ -19,7 +19,7 @@ pr_comet.commit ':comet: Update version' do
   File.write('lib/my_api_client/version.rb', <<~VERSION)
     # frozen_string_literal: true
 
-    class MyApiClient
+    module MyApiClient
       VERSION = '#{version}'
     end
   VERSION
