@@ -43,7 +43,7 @@ class ExampleApiClient < MyApiClient::Base
   #
   # @return [Sawyer::Response] HTTP response parameter
   def get_users
-    get 'users', query: { key: 'value' }, headers: headers
+    get 'users', headers: headers, query: { key: 'value' }
   end
 
   # POST https://example.com/users
