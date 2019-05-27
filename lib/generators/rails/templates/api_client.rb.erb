@@ -20,10 +20,10 @@ class <%= "#{class_name}ApiClient" %> < ::ApplicationApiClient
   def <%= action %>
 <% if http_method == 'get' -%>
     query = {}
-    <%= http_method %> '<%= path %>', query: query, headers: headers
+    <%= http_method %> '<%= pathname %>', query: query, headers: headers
 <% else -%>
     body = {}
-    <%= http_method %> '<%= path %>', body: body, headers: headers
+    <%= http_method %> '<%= pathname %>', body: body, headers: headers
 <% end -%>
   end
 <% end -%>
