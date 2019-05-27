@@ -6,7 +6,7 @@ RSpec.describe <%= "#{class_name}ApiClient" %>, <%= type_metatag(:api_client) %>
   let(:api_client) { described_class.new }
 
 <% requests.each do |request| -%>
-<% action, http_method, pathname = request.separate(':') -%>
+<% action, http_method, pathname = request.split(':') -%>
   describe '#<%= action %>' do
   end
 <% end -%>
