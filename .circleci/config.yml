@@ -137,35 +137,35 @@ jobs:
         type: enum
         enum: ['4.2', '5.0', '5.1', '5.2']
     executor:
-      - default:
-        ruby_version: << parameters.ruby_version >>
+      name: default
+      ruby_version: << parameters.ruby_version >>
     steps:
       - build:
         rails_version: <<parameters.rails_version >>
   rubocop:
     executor:
-      - default:
-        ruby_version: '2.4'
+      name: default
+      ruby_version: '2.4'
     steps:
       - setup
       - rubocop
   yardoc:
     executor:
-      - default:
-        ruby_version: '2.4'
+      name: default
+      ruby_version: '2.4'
     steps:
       - setup
       - yardoc
   rubocop_challenge:
     executor:
-      - default:
-        ruby_version: '2.4'
+      name: default
+      ruby_version: '2.4'
     steps:
       - rubocop_challenge
   release:
     executor:
-      - default:
-        ruby_version: '2.4'
+      name: default
+      ruby_version: '2.4'
     steps:
       - setup
       - release
