@@ -49,8 +49,10 @@ commands:
       - run:
           name: Modify ActiveSupport Version
           command: |
-            cp << parameters.gemfile >> Gemfile
-            bundle update activesupport --jobs=4
+            if [ "Gemfile" != "<< parameters.gemfile >>" ]; then
+              cp << parameters.gemfile >> Gemfile
+              bundle update activesupport --jobs=4
+            fi
       - save_cache:
           paths:
             - ./vendor/bundle
