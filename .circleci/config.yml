@@ -134,88 +134,76 @@ commands:
           gemfile: << parameters.gemfile >>
       - run_rspec
       - rake_build
+  build_on_rails_4_2:
+    steps:
+      - build:
+          gemfile: gemfiles/rails_4_2.gemfile
+  build_on_rails_5_0:
+    steps:
+      - build:
+          gemfile: gemfiles/rails_5_0.gemfile
+  build_on_rails_5_1:
+    steps:
+      - build:
+          gemfile: gemfiles/rails_5_1.gemfile
+  build_on_rails_5_2:
+    steps:
+      - build:
+          gemfile: gemfiles/rails_5_2.gemfile
 
 jobs:
   build_on_rails_4_2_and_ruby_2_4:
     executor: ruby_2_4
-    steps:
-      - build:
-          gemfile: gemfiles/rails_4_2.gemfile
+    steps: [build_on_rails_4_2]
   build_on_rails_4_2_and_ruby_2_5:
     executor: ruby_2_5
-    steps:
-      - build:
-          gemfile: gemfiles/rails_4_2.gemfile
+    steps: [build_on_rails_4_2]
   build_on_rails_4_2_and_ruby_2_6:
     executor: ruby_2_6
-    steps:
-      - build:
-          gemfile: gemfiles/rails_4_2.gemfile
+    steps: [build_on_rails_4_2]
   build_on_rails_4_2_and_ruby_latest:
     executor: ruby_latest
-    steps:
-      - build:
-          gemfile: gemfiles/rails_4_2.gemfile
+    steps: [build_on_rails_4_2]
+
   build_on_rails_5_0_and_ruby_2_4:
     executor: ruby_2_4
-    steps:
-      - build:
-          gemfile: gemfiles/rails_5_0.gemfile
+    steps: [build_on_rails_5_0]
   build_on_rails_5_0_and_ruby_2_5:
     executor: ruby_2_5
-    steps:
-      - build:
-          gemfile: gemfiles/rails_5_0.gemfile
+    steps: [build_on_rails_5_0]
   build_on_rails_5_0_and_ruby_2_6:
     executor: ruby_2_6
-    steps:
-      - build:
-          gemfile: gemfiles/rails_5_0.gemfile
+    steps: [build_on_rails_5_0]
   build_on_rails_5_0_and_ruby_latest:
     executor: ruby_latest
-    steps:
-      - build:
-          gemfile: gemfiles/rails_5_0.gemfile
+    steps: [build_on_rails_5_0]
+
   build_on_rails_5_1_and_ruby_2_4:
     executor: ruby_2_4
-    steps:
-      - build:
-          gemfile: gemfiles/rails_5_1.gemfile
+    steps: [build_on_rails_5_1]
   build_on_rails_5_1_and_ruby_2_5:
     executor: ruby_2_5
-    steps:
-      - build:
-          gemfile: gemfiles/rails_5_1.gemfile
+    steps: [build_on_rails_5_1]
   build_on_rails_5_1_and_ruby_2_6:
     executor: ruby_2_6
-    steps:
-      - build:
-          gemfile: gemfiles/rails_5_1.gemfile
+    steps: [build_on_rails_5_1]
   build_on_rails_5_1_and_ruby_latest:
     executor: ruby_latest
-    steps:
-      - build:
-          gemfile: gemfiles/rails_5_1.gemfile
+    steps: [build_on_rails_5_1]
+
   build_on_rails_5_2_and_ruby_2_4:
     executor: ruby_2_4
-    steps:
-      - build:
-          gemfile: gemfiles/rails_5_2.gemfile
+    steps: [build_on_rails_5_2]
   build_on_rails_5_2_and_ruby_2_5:
     executor: ruby_2_5
-    steps:
-      - build:
-          gemfile: gemfiles/rails_5_2.gemfile
+    steps: [build_on_rails_5_2]
   build_on_rails_5_2_and_ruby_2_6:
     executor: ruby_2_6
-    steps:
-      - build:
-          gemfile: gemfiles/rails_5_2.gemfile
+    steps: [build_on_rails_5_2]
   build_on_rails_5_2_and_ruby_latest:
     executor: ruby_latest
-    steps:
-      - build:
-          gemfile: gemfiles/rails_5_2.gemfile
+    steps: [build_on_rails_5_2]
+
   rubocop:
     executor: ruby_2_4
     steps:
