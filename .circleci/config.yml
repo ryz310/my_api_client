@@ -141,7 +141,7 @@ jobs:
       ruby_version: << parameters.ruby_version >>
     steps:
       - build:
-        rails_version: << parameters.rails_version >>
+          rails_version: << parameters.rails_version >>
   rubocop:
     executor:
       name: default
