@@ -5,38 +5,28 @@
 version: 2.1
 
 executors:
-  ruby_2_4:
-    working_directory: ~/repo
+  default:
+    parameters:
+      ruby_version:
+        type: enum
+        enum: ['2.4', '2.5', '2.6']
     docker:
-       - image: circleci/ruby:2.4-node-browsers
-  ruby_2_5:
+       - image: circleci/ruby:<< parameters.ruby_version >>-node-browsers
     working_directory: ~/repo
-    docker:
-       - image: circleci/ruby:2.5-node-browsers
-  ruby_2_6:
-    working_directory: ~/repo
-    docker:
-       - image: circleci/ruby:2.6-node-browsers
-  ruby_latest:
-    working_directory: ~/repo
-    docker:
-       - image: circleci/ruby:latest-node-browsers-legacy
 
 commands:
   download_cc_test_reporter:
     description: 'Download cc-test-reporter'
     steps:
-      - run:
-          command: |
-            mkdir -p tmp/
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
-            chmod +x ./tmp/cc-test-reporter
+      - run: |
+          mkdir -p tmp/
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
+          chmod +x ./tmp/cc-test-reporter
   setup_bundle:
     description: Setup Bundle
     parameters:
-      gemfile:
+      rails_version:
         type: string
-        default: Gemfile
     steps:
       - restore_cache:
           keys:
@@ -49,10 +39,8 @@ commands:
       - run:
           name: Modify ActiveSupport Version
           command: |
-            if [ "Gemfile" != "<< parameters.gemfile >>" ]; then
-              cp << parameters.gemfile >> Gemfile
-              bundle update activesupport --jobs=4
-            fi
+            cp gemfiles/rails_<< parameters.rails_version >>.gemfile Gemfile
+            bundle update activesupport
       - save_cache:
           paths:
             - ./vendor/bundle
@@ -91,17 +79,15 @@ commands:
   rake_build:
     description: Rake Build
     steps:
-      - run:
-          command: |
-            bundle exec rake build
+      - run: |
+          bundle exec rake build
   rubocop_challenge:
     description: Rubocop Challenge
     steps:
       - checkout
-      - run:
-          command: |
-            gem install rubocop_challenger --pre
-            rubocop_challenger go --email=ryz310@gmail.com --name=ryz310
+      - run: |
+          gem install rubocop_challenger --pre
+          rubocop_challenger go --email=ryz310@gmail.com --name=ryz310
   release:
     description: Release to RubyGems.org
     steps:
@@ -118,110 +104,70 @@ commands:
             bundle exec rake release --trace
   setup:
     description: Setup for Job Working
+    parameters:
+      rails_version:
+        type: string
     steps:
       - checkout
-      - setup_bundle
+      - setup_bundle:
+          rails_version: << parameters.rails_version >>
   build:
     description: Build the RubyGem
     parameters:
-      gemfile:
+      rails_version:
         type: string
-        default: Gemfile
     steps:
       - checkout
       - download_cc_test_reporter
       - setup_bundle:
-          gemfile: << parameters.gemfile >>
+          rails_version: << parameters.rails_version >>
       - run_rspec
       - rake_build
-  build_on_rails_4_2:
-    steps:
-      - build:
-          gemfile: gemfiles/rails_4_2.gemfile
-  build_on_rails_5_0:
-    steps:
-      - build:
-          gemfile: gemfiles/rails_5_0.gemfile
-  build_on_rails_5_1:
-    steps:
-      - build:
-          gemfile: gemfiles/rails_5_1.gemfile
-  build_on_rails_5_2:
-    steps:
-      - build:
-          gemfile: gemfiles/rails_5_2.gemfile
 
 jobs:
-  build_on_rails_4_2_and_ruby_2_4:
-    executor: ruby_2_4
-    steps: [build_on_rails_4_2]
-  build_on_rails_4_2_and_ruby_2_5:
-    executor: ruby_2_5
-    steps: [build_on_rails_4_2]
-  build_on_rails_4_2_and_ruby_2_6:
-    executor: ruby_2_6
-    steps: [build_on_rails_4_2]
-  build_on_rails_4_2_and_ruby_latest:
-    executor: ruby_latest
-    steps: [build_on_rails_4_2]
-
-  build_on_rails_5_0_and_ruby_2_4:
-    executor: ruby_2_4
-    steps: [build_on_rails_5_0]
-  build_on_rails_5_0_and_ruby_2_5:
-    executor: ruby_2_5
-    steps: [build_on_rails_5_0]
-  build_on_rails_5_0_and_ruby_2_6:
-    executor: ruby_2_6
-    steps: [build_on_rails_5_0]
-  build_on_rails_5_0_and_ruby_latest:
-    executor: ruby_latest
-    steps: [build_on_rails_5_0]
-
-  build_on_rails_5_1_and_ruby_2_4:
-    executor: ruby_2_4
-    steps: [build_on_rails_5_1]
-  build_on_rails_5_1_and_ruby_2_5:
-    executor: ruby_2_5
-    steps: [build_on_rails_5_1]
-  build_on_rails_5_1_and_ruby_2_6:
-    executor: ruby_2_6
-    steps: [build_on_rails_5_1]
-  build_on_rails_5_1_and_ruby_latest:
-    executor: ruby_latest
-    steps: [build_on_rails_5_1]
-
-  build_on_rails_5_2_and_ruby_2_4:
-    executor: ruby_2_4
-    steps: [build_on_rails_5_2]
-  build_on_rails_5_2_and_ruby_2_5:
-    executor: ruby_2_5
-    steps: [build_on_rails_5_2]
-  build_on_rails_5_2_and_ruby_2_6:
-    executor: ruby_2_6
-    steps: [build_on_rails_5_2]
-  build_on_rails_5_2_and_ruby_latest:
-    executor: ruby_latest
-    steps: [build_on_rails_5_2]
-
-  rubocop:
-    executor: ruby_2_4
+  build:
+    parameters:
+      ruby_version:
+        type: enum
+        enum: ['2.4', '2.5', '2.6']
+      rails_version:
+        type: enum
+        enum: ['4.2', '5.0', '5.1', '5.2']
+    executor:
+      name: default
+      ruby_version: << parameters.ruby_version >>
     steps:
-      - setup
+      - build:
+          rails_version: << parameters.rails_version >>
+  rubocop:
+    executor:
+      name: default
+      ruby_version: '2.4'
+    steps:
+      - setup:
+          rails_version: '4.2'
       - rubocop
   yardoc:
-    executor: ruby_2_4
+    executor:
+      name: default
+      ruby_version: '2.4'
     steps:
-      - setup
+      - setup:
+          rails_version: '4.2'
       - yardoc
   rubocop_challenge:
-    executor: ruby_2_4
+    executor:
+      name: default
+      ruby_version: '2.4'
     steps:
       - rubocop_challenge
   release:
-    executor: ruby_2_4
+    executor:
+      name: default
+      ruby_version: '2.4'
     steps:
-      - setup
+      - setup:
+          rails_version: '4.2'
       - release
 
 workflows:
@@ -229,43 +175,71 @@ workflows:
 
   commit:
     jobs:
-      - build_on_rails_4_2_and_ruby_2_4
-      - build_on_rails_4_2_and_ruby_2_5
-      - build_on_rails_4_2_and_ruby_2_6
-      - build_on_rails_4_2_and_ruby_latest
-      - build_on_rails_5_0_and_ruby_2_4
-      - build_on_rails_5_0_and_ruby_2_5
-      - build_on_rails_5_0_and_ruby_2_6
-      - build_on_rails_5_0_and_ruby_latest
-      - build_on_rails_5_1_and_ruby_2_4
-      - build_on_rails_5_1_and_ruby_2_5
-      - build_on_rails_5_1_and_ruby_2_6
-      - build_on_rails_5_1_and_ruby_latest
-      - build_on_rails_5_2_and_ruby_2_4
-      - build_on_rails_5_2_and_ruby_2_5
-      - build_on_rails_5_2_and_ruby_2_6
-      - build_on_rails_5_2_and_ruby_latest
+      - build:
+          name: build_on_ruby_2_4_and_rails_4_2
+          ruby_version:  '2.4'
+          rails_version: '4.2'
+      - build:
+          name: build_on_ruby_2_4_and_rails_5_0
+          ruby_version:  '2.4'
+          rails_version: '5.0'
+      - build:
+          name: build_on_ruby_2_4_and_rails_5_1
+          ruby_version:  '2.4'
+          rails_version: '5.1'
+      - build:
+          name: build_on_ruby_2_4_and_rails_5_2
+          ruby_version:  '2.4'
+          rails_version: '5.2'
+      - build:
+          name: build_on_ruby_2_5_and_rails_4_2
+          ruby_version:  '2.5'
+          rails_version: '4.2'
+      - build:
+          name: build_on_ruby_2_5_and_rails_5_0
+          ruby_version:  '2.5'
+          rails_version: '5.0'
+      - build:
+          name: build_on_ruby_2_5_and_rails_5_1
+          ruby_version:  '2.5'
+          rails_version: '5.1'
+      - build:
+          name: build_on_ruby_2_5_and_rails_5_2
+          ruby_version:  '2.5'
+          rails_version: '5.2'
+      - build:
+          name: build_on_ruby_2_6_and_rails_4_2
+          ruby_version:  '2.6'
+          rails_version: '4.2'
+      - build:
+          name: build_on_ruby_2_6_and_rails_5_0
+          ruby_version:  '2.6'
+          rails_version: '5.0'
+      - build:
+          name: build_on_ruby_2_6_and_rails_5_1
+          ruby_version:  '2.6'
+          rails_version: '5.1'
+      - build:
+          name: build_on_ruby_2_6_and_rails_5_2
+          ruby_version:  '2.6'
+          rails_version: '5.2'
       - rubocop
       - yardoc
       - release:
           context: RubyGems API Key
           requires:
-            - build_on_rails_4_2_and_ruby_2_4
-            - build_on_rails_4_2_and_ruby_2_5
-            - build_on_rails_4_2_and_ruby_2_6
-            - build_on_rails_4_2_and_ruby_latest
-            - build_on_rails_5_0_and_ruby_2_4
-            - build_on_rails_5_0_and_ruby_2_5
-            - build_on_rails_5_0_and_ruby_2_6
-            - build_on_rails_5_0_and_ruby_latest
-            - build_on_rails_5_1_and_ruby_2_4
-            - build_on_rails_5_1_and_ruby_2_5
-            - build_on_rails_5_1_and_ruby_2_6
-            - build_on_rails_5_1_and_ruby_latest
-            - build_on_rails_5_2_and_ruby_2_4
-            - build_on_rails_5_2_and_ruby_2_5
-            - build_on_rails_5_2_and_ruby_2_6
-            - build_on_rails_5_2_and_ruby_latest
+            - build_on_ruby_2_4_and_rails_4_2
+            - build_on_ruby_2_4_and_rails_5_0
+            - build_on_ruby_2_4_and_rails_5_1
+            - build_on_ruby_2_4_and_rails_5_2
+            - build_on_ruby_2_5_and_rails_4_2
+            - build_on_ruby_2_5_and_rails_5_0
+            - build_on_ruby_2_5_and_rails_5_1
+            - build_on_ruby_2_5_and_rails_5_2
+            - build_on_ruby_2_6_and_rails_4_2
+            - build_on_ruby_2_6_and_rails_5_0
+            - build_on_ruby_2_6_and_rails_5_1
+            - build_on_ruby_2_6_and_rails_5_2
             - rubocop
           filters:
             branches:
