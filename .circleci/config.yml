@@ -176,41 +176,41 @@ workflows:
   commit:
     jobs:
       - build:
-        - ruby_version:  '2.4'
-        - rails_version: '4.2'
+          ruby_version:  '2.4'
+          rails_version: '4.2'
       - build:
-        - ruby_version:  '2.4'
-        - rails_version: '5.0'
+          ruby_version:  '2.4'
+          rails_version: '5.0'
       - build:
-        - ruby_version:  '2.4'
-        - rails_version: '5.1'
+          ruby_version:  '2.4'
+          rails_version: '5.1'
       - build:
-        - ruby_version:  '2.4'
-        - rails_version: '5.2'
+          ruby_version:  '2.4'
+          rails_version: '5.2'
       - build:
-        - ruby_version:  '2.5'
-        - rails_version: '4.2'
+          ruby_version:  '2.5'
+          rails_version: '4.2'
       - build:
-        - ruby_version:  '2.5'
-        - rails_version: '5.0'
+          ruby_version:  '2.5'
+          rails_version: '5.0'
       - build:
-        - ruby_version:  '2.5'
-        - rails_version: '5.1'
+          ruby_version:  '2.5'
+          rails_version: '5.1'
       - build:
-        - ruby_version:  '2.5'
-        - rails_version: '5.2'
+          ruby_version:  '2.5'
+          rails_version: '5.2'
       - build:
-        - ruby_version:  '2.6'
-        - rails_version: '4.2'
+          ruby_version:  '2.6'
+          rails_version: '4.2'
       - build:
-        - ruby_version:  '2.6'
-        - rails_version: '5.0'
+          ruby_version:  '2.6'
+          rails_version: '5.0'
       - build:
-        - ruby_version:  '2.6'
-        - rails_version: '5.1'
+          ruby_version:  '2.6'
+          rails_version: '5.1'
       - build:
-        - ruby_version:  '2.6'
-        - rails_version: '5.2'
+          ruby_version:  '2.6'
+          rails_version: '5.2'
       - rubocop
       - yardoc
       - release:
