@@ -18,11 +18,10 @@ commands:
   download_cc_test_reporter:
     description: 'Download cc-test-reporter'
     steps:
-      - run:
-          command: |
-            mkdir -p tmp/
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
-            chmod +x ./tmp/cc-test-reporter
+      - run: |
+          mkdir -p tmp/
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
+          chmod +x ./tmp/cc-test-reporter
   setup_bundle:
     description: Setup Bundle
     parameters:
@@ -80,17 +79,15 @@ commands:
   rake_build:
     description: Rake Build
     steps:
-      - run:
-          command: |
-            bundle exec rake build
+      - run: |
+          bundle exec rake build
   rubocop_challenge:
     description: Rubocop Challenge
     steps:
       - checkout
-      - run:
-          command: |
-            gem install rubocop_challenger --pre
-            rubocop_challenger go --email=ryz310@gmail.com --name=ryz310
+      - run: |
+          gem install rubocop_challenger --pre
+          rubocop_challenger go --email=ryz310@gmail.com --name=ryz310
   release:
     description: Release to RubyGems.org
     steps:
