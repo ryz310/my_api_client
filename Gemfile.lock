@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    my_api_client (0.1.3)
+    my_api_client (0.1.4)
       activesupport (>= 4.2.0)
       jsonpath
       sawyer
@@ -80,7 +80,7 @@ GEM
       rubocop (>= 0.68.0)
     rubocop-rspec (1.33.0)
       rubocop (>= 0.60.0)
-    ruby-progressbar (1.10.0)
+    ruby-progressbar (1.10.1)
     safe_yaml (1.0.5)
     sawyer (0.8.2)
       addressable (>= 2.3.5)
@@ -120,4 +120,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.17.1
+   1.17.3

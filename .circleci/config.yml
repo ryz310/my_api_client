@@ -2,129 +2,95 @@
 #
 # Check https://circleci.com/docs/2.0/language-ruby/ for more details
 #
-version: 2
+version: 2.1
 
-references:
-  - &download_cc_test_reporter
-    run:
-        name: Download cc-test-reporter
-        command: |
+executors:
+  default:
+    parameters:
+      ruby_version:
+        type: enum
+        enum: ['2.4', '2.5', '2.6']
+    docker:
+       - image: circleci/ruby:<< parameters.ruby_version >>-node-browsers
+    working_directory: ~/repo
+
+commands:
+  download_cc_test_reporter:
+    description: 'Download cc-test-reporter'
+    steps:
+      - run: |
           mkdir -p tmp/
           curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
           chmod +x ./tmp/cc-test-reporter
-  - &restore_bundle_install_cache
-    restore_cache:
-        keys:
-        - v1-dependencies-{{ checksum "Gemfile.lock" }}
-        - v1-dependencies-
-  - &bundle_install
-    run:
-        name: Bundle Install
-        command: |
-          bundle install --jobs=4 --retry=3 --path vendor/bundle
-  - &save_bundle_install_cache
-    save_cache:
-      paths:
-        - ./vendor/bundle
-      key: v1-dependencies-{{ checksum "Gemfile.lock" }}
-  - &run_rspec
-    run:
-        name: Run Rspec
-        command: |
-          mkdir /tmp/test-results
-          TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
-          ./tmp/cc-test-reporter before-build
-          bundle exec rspec --format documentation \
-                            --color \
-                            --format RspecJunitFormatter \
-                            --out /tmp/test-results/rspec.xml \
-                            $TEST_FILES
-          ./tmp/cc-test-reporter after-build --coverage-input-type simplecov --exit-code $?
-  - &build
-    working_directory: ~/repo
+  setup_bundle:
+    description: Setup Bundle
+    parameters:
+      rails_version:
+        type: string
     steps:
-      - checkout
-      - *download_cc_test_reporter
-      - *restore_bundle_install_cache
-      - *bundle_install
-      - *save_bundle_install_cache
-      - *run_rspec
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "Gemfile.lock" }}
+          - v1-dependencies-
+      - run:
+          name: Bundle Install
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+      - run:
+          name: Modify ActiveSupport Version
+          command: |
+            cp gemfiles/rails_<< parameters.rails_version >>.gemfile Gemfile
+            bundle update activesupport
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+  run_rspec:
+    description: 'Run RSpec'
+    steps:
+      - run:
+          name: 'Execute RSpec'
+          command: |
+            mkdir /tmp/test-results
+            TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+            ./tmp/cc-test-reporter before-build
+            bundle exec rspec --format documentation \
+                              --color \
+                              --format RspecJunitFormatter \
+                              --out /tmp/test-results/rspec.xml \
+                              $TEST_FILES
+            ./tmp/cc-test-reporter after-build --coverage-input-type simplecov --exit-code $?
       - store_test_results:
           path: /tmp/test-results
       - store_artifacts:
           path: /tmp/test-results
           destination: test-results
-      - run:
-          name: Rake Build
-          command: |
-            bundle exec rake build
-  - &rubocop
-    working_directory: ~/repo
+  rubocop:
+    description: Run RuboCop
     steps:
-      - checkout
-      - *restore_bundle_install_cache
-      - *bundle_install
-      - *save_bundle_install_cache
       - run: bundle exec rubocop
-
-  - &yardoc
-    working_directory: ~/repo
+  yardoc:
+    description: 'Generate YARDoc'
     steps:
-      - checkout
-      - *restore_bundle_install_cache
-      - *bundle_install
-      - *save_bundle_install_cache
-      - run:  bundle exec yardoc -o ./yardoc
+      - run: bundle exec yardoc -o ./yardoc
       - store_artifacts:
           path: ./yardoc
           destination: yardoc
-
-jobs:
-  build_on_ruby_2.4:
-    docker:
-       - image: circleci/ruby:2.4-node-browsers
-    <<: *build
-  build_on_ruby_2.5:
-    docker:
-       - image: circleci/ruby:2.5-node-browsers
-    <<: *build
-  build_on_ruby_2.6:
-    docker:
-       - image: circleci/ruby:2.6-node-browsers
-    <<: *build
-  build_on_ruby_latest:
-    docker:
-       - image: circleci/ruby:latest-node-browsers-legacy
-    <<: *build
-  rubocop:
-    docker:
-       - image: circleci/ruby:2.4-node-browsers
-    <<: *rubocop
-  yardoc:
-    docker:
-       - image: circleci/ruby:2.4-node-browsers
-    <<: *yardoc
-
+  rake_build:
+    description: Rake Build
+    steps:
+      - run: |
+          bundle exec rake build
   rubocop_challenge:
-    docker:
-      - image: circleci/ruby:2.4-node-browsers
-    working_directory: ~/repo
+    description: Rubocop Challenge
     steps:
       - checkout
-      - run:
-          name: Rubocop Challenge
-          command: |
-            gem install rubocop_challenger --pre
-            rubocop_challenger go --email=ryz310@gmail.com --name=ryz310
+      - run: |
+          gem install rubocop_challenger --pre
+          rubocop_challenger go --email=ryz310@gmail.com --name=ryz310
   release:
-    docker:
-       - image: circleci/ruby:2.4-node-browsers
-    working_directory: ~/repo
+    description: Release to RubyGems.org
     steps:
-      - checkout
-      - *restore_bundle_install_cache
-      - *bundle_install
-      - *save_bundle_install_cache
       - run:
           name: Create Rubygems Credentials
           command: |
@@ -136,24 +102,144 @@ jobs:
           command: |
             git push --set-upstream origin ${CIRCLE_BRANCH}
             bundle exec rake release --trace
+  setup:
+    description: Setup for Job Working
+    parameters:
+      rails_version:
+        type: string
+    steps:
+      - checkout
+      - setup_bundle:
+          rails_version: << parameters.rails_version >>
+  build:
+    description: Build the RubyGem
+    parameters:
+      rails_version:
+        type: string
+    steps:
+      - checkout
+      - download_cc_test_reporter
+      - setup_bundle:
+          rails_version: << parameters.rails_version >>
+      - run_rspec
+      - rake_build
+
+jobs:
+  build:
+    parameters:
+      ruby_version:
+        type: enum
+        enum: ['2.4', '2.5', '2.6']
+      rails_version:
+        type: enum
+        enum: ['4.2', '5.0', '5.1', '5.2']
+    executor:
+      name: default
+      ruby_version: << parameters.ruby_version >>
+    steps:
+      - build:
+          rails_version: << parameters.rails_version >>
+  rubocop:
+    executor:
+      name: default
+      ruby_version: '2.4'
+    steps:
+      - setup:
+          rails_version: '4.2'
+      - rubocop
+  yardoc:
+    executor:
+      name: default
+      ruby_version: '2.4'
+    steps:
+      - setup:
+          rails_version: '4.2'
+      - yardoc
+  rubocop_challenge:
+    executor:
+      name: default
+      ruby_version: '2.4'
+    steps:
+      - rubocop_challenge
+  release:
+    executor:
+      name: default
+      ruby_version: '2.4'
+    steps:
+      - setup:
+          rails_version: '4.2'
+      - release
+
 workflows:
   version: 2
 
   commit:
     jobs:
-      - build_on_ruby_2.4
-      - build_on_ruby_2.5
-      - build_on_ruby_2.6
-      - build_on_ruby_latest
+      - build:
+          name: build_on_ruby_2_4_and_rails_4_2
+          ruby_version:  '2.4'
+          rails_version: '4.2'
+      - build:
+          name: build_on_ruby_2_4_and_rails_5_0
+          ruby_version:  '2.4'
+          rails_version: '5.0'
+      - build:
+          name: build_on_ruby_2_4_and_rails_5_1
+          ruby_version:  '2.4'
+          rails_version: '5.1'
+      - build:
+          name: build_on_ruby_2_4_and_rails_5_2
+          ruby_version:  '2.4'
+          rails_version: '5.2'
+      - build:
+          name: build_on_ruby_2_5_and_rails_4_2
+          ruby_version:  '2.5'
+          rails_version: '4.2'
+      - build:
+          name: build_on_ruby_2_5_and_rails_5_0
+          ruby_version:  '2.5'
+          rails_version: '5.0'
+      - build:
+          name: build_on_ruby_2_5_and_rails_5_1
+          ruby_version:  '2.5'
+          rails_version: '5.1'
+      - build:
+          name: build_on_ruby_2_5_and_rails_5_2
+          ruby_version:  '2.5'
+          rails_version: '5.2'
+      - build:
+          name: build_on_ruby_2_6_and_rails_4_2
+          ruby_version:  '2.6'
+          rails_version: '4.2'
+      - build:
+          name: build_on_ruby_2_6_and_rails_5_0
+          ruby_version:  '2.6'
+          rails_version: '5.0'
+      - build:
+          name: build_on_ruby_2_6_and_rails_5_1
+          ruby_version:  '2.6'
+          rails_version: '5.1'
+      - build:
+          name: build_on_ruby_2_6_and_rails_5_2
+          ruby_version:  '2.6'
+          rails_version: '5.2'
       - rubocop
       - yardoc
       - release:
           context: RubyGems API Key
           requires:
-            - build_on_ruby_2.4
-            - build_on_ruby_2.5
-            - build_on_ruby_2.6
-            - build_on_ruby_latest
+            - build_on_ruby_2_4_and_rails_4_2
+            - build_on_ruby_2_4_and_rails_5_0
+            - build_on_ruby_2_4_and_rails_5_1
+            - build_on_ruby_2_4_and_rails_5_2
+            - build_on_ruby_2_5_and_rails_4_2
+            - build_on_ruby_2_5_and_rails_5_0
+            - build_on_ruby_2_5_and_rails_5_1
+            - build_on_ruby_2_5_and_rails_5_2
+            - build_on_ruby_2_6_and_rails_4_2
+            - build_on_ruby_2_6_and_rails_5_0
+            - build_on_ruby_2_6_and_rails_5_1
+            - build_on_ruby_2_6_and_rails_5_2
             - rubocop
           filters:
             branches:
