@@ -10,8 +10,8 @@ executors:
       ruby_version:
         type: enum
         enum: ['2.4', '2.5', '2.6']
-      docker:
-         - image: circleci/ruby:<< parameters.ruby_version >>-node-browsers
+    docker:
+       - image: circleci/ruby:<< parameters.ruby_version >>-node-browsers
     working_directory: ~/repo
 
 commands:
