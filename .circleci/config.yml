@@ -147,14 +147,16 @@ jobs:
       name: default
       ruby_version: '2.4'
     steps:
-      - setup
+      - setup:
+          rails_version: '4.2'
       - rubocop
   yardoc:
     executor:
       name: default
       ruby_version: '2.4'
     steps:
-      - setup
+      - setup:
+          rails_version: '4.2'
       - yardoc
   rubocop_challenge:
     executor:
@@ -167,7 +169,8 @@ jobs:
       name: default
       ruby_version: '2.4'
     steps:
-      - setup
+      - setup:
+          rails_version: '4.2'
       - release
 
 workflows:
