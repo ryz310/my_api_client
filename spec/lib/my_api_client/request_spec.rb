@@ -7,7 +7,12 @@ RSpec.describe MyApiClient::Request do
     include MyApiClient::Exceptions
     include MyApiClient::ErrorHandling
 
-    class_attribute :error_handlers, default: []
+    if ActiveSupport::VERSION::STRING >= '5.2.0'
+      class_attribute :error_handlers, default: []
+    else
+      class_attribute :error_handlers
+      self.error_handlers = []
+    end
 
     endpoint 'https://example.com'
     http_open_timeout 2.seconds

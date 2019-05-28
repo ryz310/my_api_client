@@ -5,7 +5,13 @@ RSpec.describe MyApiClient::ErrorHandling do
 
   class self::SuperMockClass
     include MyApiClient::ErrorHandling
-    class_attribute :error_handlers, default: []
+
+    if ActiveSupport::VERSION::STRING >= '5.2.0'
+      class_attribute :error_handlers, default: []
+    else
+      class_attribute :error_handlers
+      self.error_handlers = []
+    end
 
     # Commonized error handling
     error_handling status_code: 500, with: :commonized_error_handling
@@ -247,7 +253,13 @@ RSpec.describe MyApiClient::ErrorHandling do
 
   class self::ParentMockClass
     include MyApiClient::ErrorHandling
-    class_attribute :error_handlers, default: []
+
+    if ActiveSupport::VERSION::STRING >= '5.2.0'
+      class_attribute :error_handlers, default: []
+    else
+      class_attribute :error_handlers
+      self.error_handlers = []
+    end
 
     error_handling status_code: 400,
                    with: :bad_request
