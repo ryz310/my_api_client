@@ -2,129 +2,107 @@
 #
 # Check https://circleci.com/docs/2.0/language-ruby/ for more details
 #
-version: 2
+version: 2.1
 
-references:
-  - &download_cc_test_reporter
-    run:
-        name: Download cc-test-reporter
-        command: |
-          mkdir -p tmp/
-          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
-          chmod +x ./tmp/cc-test-reporter
-  - &restore_bundle_install_cache
-    restore_cache:
-        keys:
-        - v1-dependencies-{{ checksum "Gemfile.lock" }}
-        - v1-dependencies-
-  - &bundle_install
-    run:
-        name: Bundle Install
-        command: |
-          bundle install --jobs=4 --retry=3 --path vendor/bundle
-  - &save_bundle_install_cache
-    save_cache:
-      paths:
-        - ./vendor/bundle
-      key: v1-dependencies-{{ checksum "Gemfile.lock" }}
-  - &run_rspec
-    run:
-        name: Run Rspec
-        command: |
-          mkdir /tmp/test-results
-          TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
-          ./tmp/cc-test-reporter before-build
-          bundle exec rspec --format documentation \
-                            --color \
-                            --format RspecJunitFormatter \
-                            --out /tmp/test-results/rspec.xml \
-                            $TEST_FILES
-          ./tmp/cc-test-reporter after-build --coverage-input-type simplecov --exit-code $?
-  - &build
+executors:
+  ruby_2_4:
     working_directory: ~/repo
+    docker:
+       - image: circleci/ruby:2.4-node-browsers
+  ruby_2_5:
+    working_directory: ~/repo
+    docker:
+       - image: circleci/ruby:2.5-node-browsers
+  ruby_2_6:
+    working_directory: ~/repo
+    docker:
+       - image: circleci/ruby:2.6-node-browsers
+  ruby_latest:
+    working_directory: ~/repo
+    docker:
+       - image: circleci/ruby:latest-node-browsers-legacy
+
+commands:
+  download_cc_test_reporter:
+    description: 'Download cc-test-reporter'
     steps:
-      - checkout
-      - *download_cc_test_reporter
-      - *restore_bundle_install_cache
-      - *bundle_install
-      - *save_bundle_install_cache
-      - *run_rspec
+      - run:
+          command: |
+            mkdir -p tmp/
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
+            chmod +x ./tmp/cc-test-reporter
+  setup_bundle:
+    description: Setup Bundle
+    parameters:
+      gemfile:
+        type: string
+        default: Gemfile
+    steps:
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "Gemfile.lock" }}
+          - v1-dependencies-
+      - run:
+          name: Bundle Install
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+      - run:
+          name: Modify ActiveSupport Version
+          command: |
+            cp << parameters.gemfile >> Gemfile
+            bundle update activesupport --jobs=4
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+  run_rspec:
+    description: 'Run RSpec'
+    steps:
+      - run:
+          name: 'Execute RSpec'
+          command: |
+            mkdir /tmp/test-results
+            TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+            ./tmp/cc-test-reporter before-build
+            bundle exec rspec --format documentation \
+                              --color \
+                              --format RspecJunitFormatter \
+                              --out /tmp/test-results/rspec.xml \
+                              $TEST_FILES
+            ./tmp/cc-test-reporter after-build --coverage-input-type simplecov --exit-code $?
       - store_test_results:
           path: /tmp/test-results
       - store_artifacts:
           path: /tmp/test-results
           destination: test-results
-      - run:
-          name: Rake Build
-          command: |
-            bundle exec rake build
-  - &rubocop
-    working_directory: ~/repo
+  rubocop:
+    description: Run RuboCop
     steps:
-      - checkout
-      - *restore_bundle_install_cache
-      - *bundle_install
-      - *save_bundle_install_cache
       - run: bundle exec rubocop
-
-  - &yardoc
-    working_directory: ~/repo
+  yardoc:
+    description: 'Generate YARDoc'
     steps:
-      - checkout
-      - *restore_bundle_install_cache
-      - *bundle_install
-      - *save_bundle_install_cache
-      - run:  bundle exec yardoc -o ./yardoc
+      - run: bundle exec yardoc -o ./yardoc
       - store_artifacts:
           path: ./yardoc
           destination: yardoc
-
-jobs:
-  build_on_ruby_2.4:
-    docker:
-       - image: circleci/ruby:2.4-node-browsers
-    <<: *build
-  build_on_ruby_2.5:
-    docker:
-       - image: circleci/ruby:2.5-node-browsers
-    <<: *build
-  build_on_ruby_2.6:
-    docker:
-       - image: circleci/ruby:2.6-node-browsers
-    <<: *build
-  build_on_ruby_latest:
-    docker:
-       - image: circleci/ruby:latest-node-browsers-legacy
-    <<: *build
-  rubocop:
-    docker:
-       - image: circleci/ruby:2.4-node-browsers
-    <<: *rubocop
-  yardoc:
-    docker:
-       - image: circleci/ruby:2.4-node-browsers
-    <<: *yardoc
-
+  rake_build:
+    description: Rake Build
+    steps:
+      - run:
+          command: |
+            bundle exec rake build
   rubocop_challenge:
-    docker:
-      - image: circleci/ruby:2.4-node-browsers
-    working_directory: ~/repo
+    description: Rubocop Challenge
     steps:
       - checkout
       - run:
-          name: Rubocop Challenge
           command: |
             gem install rubocop_challenger --pre
             rubocop_challenger go --email=ryz310@gmail.com --name=ryz310
   release:
-    docker:
-       - image: circleci/ruby:2.4-node-browsers
-    working_directory: ~/repo
+    description: Release to RubyGems.org
     steps:
-      - checkout
-      - *restore_bundle_install_cache
-      - *bundle_install
-      - *save_bundle_install_cache
       - run:
           name: Create Rubygems Credentials
           command: |
@@ -136,24 +114,168 @@ jobs:
           command: |
             git push --set-upstream origin ${CIRCLE_BRANCH}
             bundle exec rake release --trace
+  setup:
+    description: Setup for Job Working
+    steps:
+      - checkout
+      - setup_bundle
+  build:
+    description: Build the RubyGem
+    parameters:
+      gemfile:
+        type: string
+        default: Gemfile
+    steps:
+      - checkout
+      - download_cc_test_reporter
+      - setup_bundle:
+          gemfile: << parameters.gemfile >>
+      - run_rspec
+      - rake_build
+
+jobs:
+  build_on_rails_4_2_and_ruby_2_4:
+    executor: ruby_2_4
+    steps:
+      - build:
+          gemfile: gemfiles/rails_4_2.gemfile
+  build_on_rails_4_2_and_ruby_2_5:
+    executor: ruby_2_5
+    steps:
+      - build:
+          gemfile: gemfiles/rails_4_2.gemfile
+  build_on_rails_4_2_and_ruby_2_6:
+    executor: ruby_2_6
+    steps:
+      - build:
+          gemfile: gemfiles/rails_4_2.gemfile
+  build_on_rails_4_2_and_ruby_latest:
+    executor: ruby_latest
+    steps:
+      - build:
+          gemfile: gemfiles/rails_4_2.gemfile
+  build_on_rails_5_0_and_ruby_2_4:
+    executor: ruby_2_4
+    steps:
+      - build:
+          gemfile: gemfiles/rails_5_0.gemfile
+  build_on_rails_5_0_and_ruby_2_5:
+    executor: ruby_2_5
+    steps:
+      - build:
+          gemfile: gemfiles/rails_5_0.gemfile
+  build_on_rails_5_0_and_ruby_2_6:
+    executor: ruby_2_6
+    steps:
+      - build:
+          gemfile: gemfiles/rails_5_0.gemfile
+  build_on_rails_5_0_and_ruby_latest:
+    executor: ruby_latest
+    steps:
+      - build:
+          gemfile: gemfiles/rails_5_0.gemfile
+  build_on_rails_5_1_and_ruby_2_4:
+    executor: ruby_2_4
+    steps:
+      - build:
+          gemfile: gemfiles/rails_5_1.gemfile
+  build_on_rails_5_1_and_ruby_2_5:
+    executor: ruby_2_5
+    steps:
+      - build:
+          gemfile: gemfiles/rails_5_1.gemfile
+  build_on_rails_5_1_and_ruby_2_6:
+    executor: ruby_2_6
+    steps:
+      - build:
+          gemfile: gemfiles/rails_5_1.gemfile
+  build_on_rails_5_1_and_ruby_latest:
+    executor: ruby_latest
+    steps:
+      - build:
+          gemfile: gemfiles/rails_5_1.gemfile
+  build_on_rails_5_2_and_ruby_2_4:
+    executor: ruby_2_4
+    steps:
+      - build:
+          gemfile: gemfiles/rails_5_2.gemfile
+  build_on_rails_5_2_and_ruby_2_5:
+    executor: ruby_2_5
+    steps:
+      - build:
+          gemfile: gemfiles/rails_5_2.gemfile
+  build_on_rails_5_2_and_ruby_2_6:
+    executor: ruby_2_6
+    steps:
+      - build:
+          gemfile: gemfiles/rails_5_2.gemfile
+  build_on_rails_5_2_and_ruby_latest:
+    executor: ruby_latest
+    steps:
+      - build:
+          gemfile: gemfiles/rails_5_2.gemfile
+  rubocop:
+    executor: ruby_2_4
+    steps:
+      - setup
+      - rubocop
+  yardoc:
+    executor: ruby_2_4
+    steps:
+      - setup
+      - yardoc
+  rubocop_challenge:
+    executor: ruby_2_4
+    steps:
+      - rubocop_challenge
+  release:
+    executor: ruby_2_4
+    steps:
+      - setup
+      - release
+
 workflows:
   version: 2
 
   commit:
     jobs:
-      - build_on_ruby_2.4
-      - build_on_ruby_2.5
-      - build_on_ruby_2.6
-      - build_on_ruby_latest
+      - build_on_rails_4_2_and_ruby_2_4
+      - build_on_rails_4_2_and_ruby_2_5
+      - build_on_rails_4_2_and_ruby_2_6
+      - build_on_rails_4_2_and_ruby_latest
+      - build_on_rails_5_0_and_ruby_2_4
+      - build_on_rails_5_0_and_ruby_2_5
+      - build_on_rails_5_0_and_ruby_2_6
+      - build_on_rails_5_0_and_ruby_latest
+      - build_on_rails_5_1_and_ruby_2_4
+      - build_on_rails_5_1_and_ruby_2_5
+      - build_on_rails_5_1_and_ruby_2_6
+      - build_on_rails_5_1_and_ruby_latest
+      - build_on_rails_5_2_and_ruby_2_4
+      - build_on_rails_5_2_and_ruby_2_5
+      - build_on_rails_5_2_and_ruby_2_6
+      - build_on_rails_5_2_and_ruby_latest
       - rubocop
       - yardoc
       - release:
           context: RubyGems API Key
           requires:
-            - build_on_ruby_2.4
-            - build_on_ruby_2.5
-            - build_on_ruby_2.6
-            - build_on_ruby_latest
+            - build_on_rails_4_2_and_ruby_2_4
+            - build_on_rails_4_2_and_ruby_2_5
+            - build_on_rails_4_2_and_ruby_2_6
+            - build_on_rails_4_2_and_ruby_latest
+            - build_on_rails_5_0_and_ruby_2_4
+            - build_on_rails_5_0_and_ruby_2_5
+            - build_on_rails_5_0_and_ruby_2_6
+            - build_on_rails_5_0_and_ruby_latest
+            - build_on_rails_5_1_and_ruby_2_4
+            - build_on_rails_5_1_and_ruby_2_5
+            - build_on_rails_5_1_and_ruby_2_6
+            - build_on_rails_5_1_and_ruby_latest
+            - build_on_rails_5_2_and_ruby_2_4
+            - build_on_rails_5_2_and_ruby_2_5
+            - build_on_rails_5_2_and_ruby_2_6
+            - build_on_rails_5_2_and_ruby_latest
             - rubocop
           filters:
             branches:
