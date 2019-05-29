@@ -22,6 +22,31 @@ RSpec.describe MyApiClient::Params::Request do
     end
   end
 
+  describe '#to_bugsnag' do
+    context 'when body parameter is blank' do
+      it 'returns hashed parameters which omitted body parameter' do
+        expect(instance.to_bugsnag).to eq(
+          line: 'GET path/to/resource',
+          headers: { 'Content-Type': 'application/json; charset=utf-8' },
+          query: { key: 'value' }
+        )
+      end
+    end
+
+    context 'when query parameter is blank' do
+      let(:body) { { username: 'John Smith' } }
+      let(:query) { nil }
+
+      it 'returns hashed parameters which omitted query parameter' do
+        expect(instance.to_bugsnag).to eq(
+          line: 'GET path/to/resource',
+          headers: { 'Content-Type': 'application/json; charset=utf-8' },
+          body: { username: 'John Smith' }
+        )
+      end
+    end
+  end
+
   describe '#inspect' do
     it 'returns contents as string for to be readable for human' do
       expect(instance.inspect)

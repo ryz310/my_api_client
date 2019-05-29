@@ -25,6 +25,19 @@ module MyApiClient
         [method, pathname, body, { headers: headers, query: query }]
       end
 
+      # Generate metadata for bugsnag.
+      # Blank parameter will be omitted.
+      #
+      # @return [Hash] Metadata for bugsnag
+      def to_bugsnag
+        {
+          line: "#{method.upcase} #{pathname}",
+          headers: headers,
+          query: query,
+          body: body,
+        }.compact
+      end
+
       # Returns contents as string for to be readable for human
       #
       # @return [String] Contents as string
