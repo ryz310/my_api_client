@@ -6,6 +6,13 @@ module MyApiClient
     class Request
       attr_reader :method, :pathname, :headers, :query, :body
 
+      # Description of #initialize
+      #
+      # @param method [Symbol] describe_method_here
+      # @param pathname [String] describe_pathname_here
+      # @param headers [Hash, nil] describe_headers_here
+      # @param query [Hash, nil] describe_query_here
+      # @param body [Hash, nil] describe_body_here
       def initialize(method, pathname, headers, query, body)
         @method = method
         @pathname = pathname
