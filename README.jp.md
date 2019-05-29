@@ -6,6 +6,11 @@ MyApiClient は API リクエストクラスを作成するための汎用的な
 
 また、 Ruby on Rails で利用することを想定してますが、それ以外の環境でも動作するように作っているつもりです。不具合などあれば Issue ページからご報告下さい。
 
+## Supported Versions
+
+* Ruby 2.4, 2.5, 2.6
+* Rails 4.2, 5.0, 5.1, 5.2
+
 ## Installation
 
 この gem は macOS と Linux で作動します。まずは、my_api_client を Gemfile に追加します:
@@ -31,7 +36,7 @@ create    spec/api_clients/path/to/resource_api_client_spec.rb
 
 最もシンプルな利用例を以下に示します。
 
-```rb
+```ruby
 class ExampleApiClient < MyApiClient::Base
   endpoint 'https://example.com'
 
@@ -78,7 +83,7 @@ api_clinet.get_users #=> #<Sawyer::Response>
 
 上記のコードにエラーハンドリングを追加してみます。
 
-```rb
+```ruby
 class ExampleApiClient < MyApiClient::Base
   endpoint 'https://example.com'
 
@@ -106,7 +111,7 @@ end
 
 一つずつ解説していきます。まず、以下のように `status_code` を指定するものについて。
 
-```rb
+```ruby
 error_handling status_code: 400..499, raise: MyApiClient::ClientError
 ```
 
@@ -118,7 +123,7 @@ https://github.com/ryz310/my_api_client/blob/master/lib/my_api_client/errors.rb
 
 次に、 `raise` の代わりに Block を指定する場合について。
 
-```rb
+```ruby
 error_handling status_code: 500..599 do |params, logger|
   logger.warn 'Server error occurred.'
   raise MyApiClient::ServerError, params
@@ -135,7 +140,7 @@ API request `GET https://example.com/path/to/resouce`: "Server error occurred."
 
 最後に `json` と `with` を利用する場合について。
 
-```rb
+```ruby
 error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
 ```
 
@@ -152,7 +157,7 @@ error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
 
 `with` にはインスタンスメソッド名を指定することで、エラーを検出した際に任意のメソッドを実行させることができます。メソッドに渡される引数は Block 定義の場合と同じく `params` と `logger` です。
 
-```rb
+```ruby
 # @param params [MyApiClient::Params::Params] HTTP req and res params
 # @param logger [MyApiClient::Logger] Logger for a request processing
 def my_error_handling(params, logger)
@@ -173,7 +178,7 @@ WIP
 
 多くの場合、同一ホストの API は リクエストヘッダーやエラー情報が同じ構造になっているため、上記のように一つのクラス内に複数の API を定義する設計が理にかなっていますが、 API 毎に個別に定義したい場合は、以下のように 1 つのクラスに 1 の API という構造で設計することも可能です。
 
-```rb
+```ruby
 class ExampleApiClient < MyApiClient::Base
   endpoint 'https://example.com'
 
@@ -226,6 +231,70 @@ WIP
 ### Logger
 
 WIP
+
+### RSpec
+
+RSpec を使ったテストをサポートしています。
+以下のコードを `spec/spec_helper.rb` (または `spec/rails_helper.rb`) に追記して下さい。
+
+```ruby
+require 'my_api_client/rspec'
+```
+
+例えば以下のような `ApiClient` を定義しているとします。
+
+```ruby
+class ExampleApiClient < MyApiClient::Base
+  endpoint 'https://example.com'
+
+  def request(user_id:)
+    get "users/#{user_id}"
+  end
+end
+```
+
+`my_api_client_stub` を使うことで、 `ExampleApiClient#request` をスタブ化することができます。これで `#request` を実行してもリアルな HTTP リクエストが実行されなくなります。
+
+```ruby
+my_api_client_stub(ExampleApiClient, :request, response: { id: 12345 })
+
+response = ExampleApiClient.new.request(user_id: 1)
+response.id # => 12345
+```
+
+リクスエストパラメータを使ったレスポンスを返すようにスタブ化したい場合は、 block を利用することで実現できます。
+
+```ruby
+my_api_client_stub(ExampleApiClient, :request) do |params|
+  { id: params[:user_id] }
+end
+
+response = ExampleApiClient.new.request(user_id: 1)
+response.id # => 1
+```
+
+`receive` や `have_received` を使ったテストを書きたい場合は、 `my_api_client_stub` の戻り値を利用すると良いでしょう。
+
+```ruby
+def execute_api_request
+  ExampleApiClient.new.request(user_id: 1)
+end
+
+api_clinet = my_api_client_stub(ExampleApiClient, :request)
+execute_api_request
+expect(api_client).to have_received(:request).with(user_id: 1)
+```
+
+また、例外が発生する場合のテストを書きたい場合は、 `raise` オプションを利用することができます。
+
+```ruby
+def execute_api_request
+  ExampleApiClient.new.request(user_id: 1)
+end
+
+my_api_client_stub(ExampleApiClient, :request, raise: MyApiClient::Error)
+expect { execute_api_request }.to raise_error(MyApiClient::Error)
+```
 
 ## Contributing
 
