@@ -35,7 +35,6 @@ commands:
   setup_bundle:
     description: Setup Bundle
     parameters:
-      <<: *rails_version
     steps:
       - restore_cache:
           keys:
@@ -45,15 +44,18 @@ commands:
           name: Bundle Install
           command: |
             bundle install --jobs=4 --retry=3 --path vendor/bundle
-      - run:
-          name: Modify ActiveSupport Version
-          command: |
-            cp gemfiles/rails_<< parameters.rails_version >>.gemfile Gemfile
-            bundle update activesupport
       - save_cache:
           paths:
             - ./vendor/bundle
           key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+  modify_active_support_version:
+    description: Modify ActiveSupport Version
+    parameters:
+      <<: *rails_version
+    steps:
+      - run: |
+          cp gemfiles/rails_<< parameters.rails_version >>.gemfile Gemfile
+          bundle update activesupport
   run_rspec:
     description: 'Run RSpec'
     steps:
@@ -113,12 +115,9 @@ commands:
             bundle exec rake release --trace
   setup:
     description: Setup for Job Working
-    parameters:
-      <<: *rails_version
     steps:
       - checkout
-      - setup_bundle:
-          rails_version: << parameters.rails_version >>
+      - setup_bundle
   build:
     description: Build the RubyGem
     parameters:
@@ -127,6 +126,7 @@ commands:
       - checkout
       - download_cc_test_reporter
       - setup_bundle:
+      - modify_active_support_version:
           rails_version: << parameters.rails_version >>
       - run_rspec
       - rake_build
@@ -163,8 +163,7 @@ jobs:
     executor:
       name: default
     steps:
-      - setup:
-          rails_version: '5.2'
+      - setup
       - release
 
 workflows:
