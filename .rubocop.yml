@@ -38,6 +38,7 @@ RSpec/ExampleLength:
 RSpec/FilePath:
   Exclude:
     - 'spec/lib/my_api_client/errors/**/*'
+    - 'spec/lib/my_api_client/rspec/**/*'
 
 RSpec/NestedGroups:
   Max: 4
