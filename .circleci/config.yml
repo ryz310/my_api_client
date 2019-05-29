@@ -4,12 +4,20 @@
 #
 version: 2.1
 
+references:
+  - &ruby_version
+    ruby_version:
+      type: enum
+      enum: ['2.4', '2.5', '2.6']
+  - &rails_version
+    rails_version:
+      type: enum
+      enum: ['4.2', '5.0', '5.1', '5.2']
+
 executors:
   default:
     parameters:
-      ruby_version:
-        type: enum
-        enum: ['2.4', '2.5', '2.6']
+      <<: *ruby_version
     docker:
        - image: circleci/ruby:<< parameters.ruby_version >>-node-browsers
     working_directory: ~/repo
@@ -25,8 +33,7 @@ commands:
   setup_bundle:
     description: Setup Bundle
     parameters:
-      rails_version:
-        type: string
+      <<: *rails_version
     steps:
       - restore_cache:
           keys:
@@ -105,8 +112,7 @@ commands:
   setup:
     description: Setup for Job Working
     parameters:
-      rails_version:
-        type: string
+      <<: *rails_version
     steps:
       - checkout
       - setup_bundle:
@@ -114,8 +120,7 @@ commands:
   build:
     description: Build the RubyGem
     parameters:
-      rails_version:
-        type: string
+      <<: *rails_version
     steps:
       - checkout
       - download_cc_test_reporter
@@ -127,12 +132,8 @@ commands:
 jobs:
   build:
     parameters:
-      ruby_version:
-        type: enum
-        enum: ['2.4', '2.5', '2.6']
-      rails_version:
-        type: enum
-        enum: ['4.2', '5.0', '5.1', '5.2']
+      <<: *ruby_version
+      <<: *rails_version
     executor:
       name: default
       ruby_version: << parameters.ruby_version >>
