@@ -21,6 +21,9 @@ module MyApiClient
         @body = body
       end
 
+      # Description of #to_sawyer_args
+      #
+      # @return [Array<Object>] Arguments for Sawyer::Agent#call
       def to_sawyer_args
         [method, pathname, body, { headers: headers, query: query }]
       end
