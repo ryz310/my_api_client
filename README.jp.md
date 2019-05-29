@@ -227,6 +227,70 @@ WIP
 
 WIP
 
+### RSpec
+
+RSpec を使ったテストをサポートしています。
+以下のコードを `spec/spec_helper.rb` (または `spec/rails_helper.rb`) に追記して下さい。
+
+```ruby
+require 'my_api_client/rspec'
+```
+
+例えば以下のような `ApiClient` を定義しているとします。
+
+```ruby
+class ExampleApiClient < MyApiClient::Base
+  endpoint 'https://example.com'
+
+  def request(user_id:)
+    get "users/#{user_id}"
+  end
+end
+```
+
+`my_api_client_stub` を使うことで、 `ExampleApiClient#request` をスタブ化することができます。これで `#request` を実行してもリアルな HTTP リクエストが実行されなくなります。
+
+```ruby
+my_api_client_stub(ExampleApiClient, :request, response: { id: 12345 })
+
+response = ExampleApiClient.new.request(user_id: 1)
+response.id # => 12345
+```
+
+リクスエストパラメータを使ったレスポンスを返すようにスタブ化したい場合は、 block を利用することで実現できます。
+
+```ruby
+my_api_client_stub(ExampleApiClient, :request) do |params|
+  { id: params[:user_id] }
+end
+
+response = ExampleApiClient.new.request(user_id: 1)
+response.id # => 1
+```
+
+`receive` や `have_received` を使ったテストを書きたい場合は、 `my_api_client_stub` の戻り値を利用すると良いでしょう。
+
+```ruby
+def execute_api_request
+  ExampleApiClient.new.request(user_id: 1)
+end
+
+api_clinet = my_api_client_stub(ExampleApiClient, :request)
+execute_api_request
+expect(api_client).to have_received(:request).with(user_id: 1)
+```
+
+また、例外が発生する場合のテストを書きたい場合は、 `raise` オプションを利用することができます。
+
+```ruby
+def execute_api_request
+  ExampleApiClient.new.request(user_id: 1)
+end
+
+my_api_client_stub(ExampleApiClient, :request, raise: MyApiClient::Error)
+expect { execute_api_request }.to raise_error(MyApiClient::Error)
+```
+
 ## Contributing
 
 不具合の報告や Pull Request を歓迎しています。OSS という事で自分はなるべく頑張って英語を使うようにしていますが、日本語での報告でも大丈夫です :+1:
