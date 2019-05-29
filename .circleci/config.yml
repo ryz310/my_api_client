@@ -35,10 +35,11 @@ commands:
   setup_bundle:
     description: Setup Bundle
     parameters:
+      <<: *ruby_version
     steps:
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "Gemfile.lock" }}
+          - v1-dependencies-<< parameters.ruby_version >>-{{ checksum "Gemfile.lock" }}
           - v1-dependencies-
       - run:
           name: Bundle Install
@@ -47,7 +48,7 @@ commands:
       - save_cache:
           paths:
             - ./vendor/bundle
-          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+          key: v1-dependencies-<< parameters.ruby_version >>-{{ checksum "Gemfile.lock" }}
   modify_active_support_version:
     description: Modify ActiveSupport Version
     parameters:
@@ -121,11 +122,13 @@ commands:
   build:
     description: Build the RubyGem
     parameters:
+      <<: *ruby_version
       <<: *rails_version
     steps:
       - checkout
       - download_cc_test_reporter
       - setup_bundle:
+          ruby_version: << parameters.ruby_version >>
       - modify_active_support_version:
           rails_version: << parameters.rails_version >>
       - run_rspec
@@ -141,6 +144,7 @@ jobs:
       ruby_version: << parameters.ruby_version >>
     steps:
       - build:
+          ruby_version: << parameters.ruby_version >>
           rails_version: << parameters.rails_version >>
   rubocop:
     executor:
