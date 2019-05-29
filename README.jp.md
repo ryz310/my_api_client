@@ -6,6 +6,11 @@ MyApiClient は API リクエストクラスを作成するための汎用的な
 
 また、 Ruby on Rails で利用することを想定してますが、それ以外の環境でも動作するように作っているつもりです。不具合などあれば Issue ページからご報告下さい。
 
+## Supported Versions
+
+* Ruby 2.4, 2.5, 2.6
+* Rails 4.2, 5.0, 5.1, 5.2
+
 ## Installation
 
 この gem は macOS と Linux で作動します。まずは、my_api_client を Gemfile に追加します:
