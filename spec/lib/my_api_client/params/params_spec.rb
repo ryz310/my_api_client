@@ -3,20 +3,41 @@
 RSpec.describe MyApiClient::Params::Params do
   let(:instance) { described_class.new(request, response) }
 
-  describe '#inspect' do
-    let(:request) do
-      instance_double(
-        MyApiClient::Params::Request,
-        inspect: '"#<MyApiClient::Params::Request#inspect>"'
-      )
-    end
-    let(:response) do
-      instance_double(
-        Sawyer::Response,
-        inspect: '"#<Sawyer::Response#inspect>"'
-      )
-    end
+  let(:request) do
+    instance_double(
+      MyApiClient::Params::Request,
+      inspect: '"#<MyApiClient::Params::Request#inspect>"',
+      to_bugsnag: {
+        line: 'GET path/to/resource',
+        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        query: { key: 'value' },
+      }
+    )
+  end
+  let(:response) do
+    instance_double(
+      Sawyer::Response,
+      inspect: '"#<Sawyer::Response#inspect>"',
+      status: 200,
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      data: { status: 'OK' }
+    )
+  end
 
+  describe '#to_bugsnag' do
+    it 'returns metadata which integrated request and response params' do
+      expect(instance.to_bugsnag).to eq(
+        request_line: 'GET path/to/resource',
+        request_headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        request_query: { key: 'value' },
+        response_status: 200,
+        response_headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        response_body: { status: 'OK' }
+      )
+    end
+  end
+
+  describe '#inspect' do
     it 'returns contents as string for to be readable for human' do
       expect(instance.inspect)
         .to eq '{:request=>"#<MyApiClient::Params::Request#inspect>", ' \
