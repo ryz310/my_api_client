@@ -56,7 +56,7 @@ module MyApiClient
         when Regexp
           operator =~ target.to_s
         else
-          false
+          raise "Unexpected operator type was given: #{operator.inspect}"
         end
       end
 
