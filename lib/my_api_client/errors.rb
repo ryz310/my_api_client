@@ -4,6 +4,7 @@ module MyApiClient
   # The ancestor class for all API request error
   class Error < StandardError
     attr_reader :params
+    delegate :to_bugsnag, to: :params
 
     # Description of #initialize
     #

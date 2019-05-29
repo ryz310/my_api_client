@@ -328,5 +328,15 @@ RSpec.describe MyApiClient::ErrorHandling do
     it 'returns nil when detected nothing' do
       expect(instance.error_handling(response_5)).to be_nil
     end
+
+    class self::BadMockClass < self::ParentMockClass
+      error_handling status_code: Object
+    end
+
+    it 'raises error when set unexpected operator type' do
+      instance = self.class::BadMockClass.new
+      expect { instance.error_handling(response_1) }
+        .to raise_error(/Unexpected operator type was given/)
+    end
   end
 end
