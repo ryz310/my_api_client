@@ -9,8 +9,6 @@ RSpec.describe MyApiClient::Params::Request do
   let(:body) { nil }
 
   describe '#to_sawyer_args' do
-    subject { instance.to_sawyer_args }
-
     it 'returns value formatted for arguments of Sawyer::Agent#call' do
       expect(instance.to_sawyer_args).to eq [
         'GET',
