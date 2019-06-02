@@ -14,7 +14,7 @@ RSpec.describe MyApiClient::Request do
       self.error_handlers = []
     end
 
-    endpoint 'https://example.com'
+    endpoint 'https://example.com/v1'
     http_open_timeout 2.seconds
     http_read_timeout 3.seconds
 
@@ -26,7 +26,9 @@ RSpec.describe MyApiClient::Request do
   end
 
   describe '#_request' do
-    subject(:request!) { instance._request(http_method, pathname, headers, query, body, logger) }
+    subject(:request!) do
+      instance._request(:get, '/path/to/resource', headers, query, body, logger)
+    end
 
     before do
       allow(MyApiClient::Params::Request).to receive(:new).and_call_original
@@ -35,15 +37,12 @@ RSpec.describe MyApiClient::Request do
       allow(Sawyer::Agent).to receive(:new).and_return(agent)
       allow(Faraday).to receive(:new).and_call_original
       allow(instance).to receive(:error_handling).and_call_original
-      stub_request(http_method, "#{endpoint}/#{pathname}")
+      stub_request(:get, 'https://example.com/v1/path/to/resource')
         .with(query: query)
         .to_return(body: response_body, headers: headers)
     end
 
     let(:instance) { self.class::MockClass.new }
-    let(:endpoint) { 'https://example.com' }
-    let(:http_method) { :get }
-    let(:pathname) { 'path/to/resource' }
     let(:headers) { { 'Content-Type': 'application/json;charset=UTF-8' } }
     let(:query) { { key: 'value' } }
     let(:body) { nil }
@@ -57,21 +56,21 @@ RSpec.describe MyApiClient::Request do
     it 'builds request parameter instance with arguments' do
       request!
       expect(MyApiClient::Params::Request)
-        .to have_received(:new).with(http_method, pathname, headers, query, body)
+        .to have_received(:new).with(:get, '/v1/path/to/resource', headers, query, body)
     end
 
     it 'builds a request logger instandce with arguments' do
       request!
       expect(MyApiClient::Logger)
         .to have_received(:new)
-        .with(logger, instance_of(Faraday::Connection), http_method, pathname)
+        .with(logger, instance_of(Faraday::Connection), :get, '/v1/path/to/resource')
     end
 
     it 'builds Sawyer::Agent instance with the configuration parameter' do
       request!
       expect(Sawyer::Agent)
         .to have_received(:new)
-        .with(endpoint, faraday: instance_of(Faraday::Connection))
+        .with('https://example.com', faraday: instance_of(Faraday::Connection))
     end
 
     it 'builds Faraday instance with configuration parameters' do
@@ -85,7 +84,7 @@ RSpec.describe MyApiClient::Request do
       request!
       expect(agent)
         .to have_received(:call)
-        .with(http_method, pathname, body, headers: headers, query: query)
+        .with(:get, '/v1/path/to/resource', body, headers: headers, query: query)
     end
 
     it 'builds the Params instance with request and response parameters' do
