@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'URI'
 require 'openssl'
 require 'net/http'
 require 'logger'
