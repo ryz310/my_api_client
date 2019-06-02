@@ -16,5 +16,24 @@ module MyApiClient
         METHOD
       end
     end
+
+    # Extracts schema and hostname from endpoint
+    #
+    # @example Extracts schema and hostname from 'https://example.com/path/to/api'
+    #   schema_and_hostname # => 'https://example.com'
+    # @return [String] description_of_returned_object
+    def schema_and_hostname
+      uri = URI.parse(endpoint)
+      "#{uri.scheme}://#{uri.host}"
+    end
+
+    # Extracts pathname from endpoint
+    #
+    # @example Extracts pathname from 'https://example.com/path/to/api'
+    #   common_path # => 'path/to/api'
+    # @return [String] The pathanem
+    def common_path
+      URI.parse(endpoint).path
+    end
   end
 end
