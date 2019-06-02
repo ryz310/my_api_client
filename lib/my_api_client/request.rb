@@ -14,9 +14,9 @@ module MyApiClient
     # @return [Sawyer::Resource] description_of_returned_object
     # rubocop:disable Metrics/ParameterLists
     def _request(http_method, pathname, headers, query, body, logger)
-      path = [common_path, pathname].join('/').gsub('//', '/')
-      request_params = Params::Request.new(http_method, path, headers, query, body)
-      request_logger = Logger.new(logger, faraday, http_method, path)
+      processed_path = [common_path, pathname].join('/').gsub('//', '/')
+      request_params = Params::Request.new(http_method, processed_path, headers, query, body)
+      request_logger = Logger.new(logger, faraday, http_method, processed_path)
       call(:_execute, request_params, request_logger)
     end
     # rubocop:enable Metrics/ParameterLists
