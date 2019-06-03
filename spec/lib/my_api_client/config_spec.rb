@@ -40,4 +40,20 @@ RSpec.describe MyApiClient::Config do
       end
     end
   end
+
+  describe '#schema_and_hostname' do
+    before { self.class::MockClass.endpoint('https://example.com/path/to/api') }
+
+    it 'extracts schema and hostname from endpoint' do
+      expect(instance.schema_and_hostname).to eq 'https://example.com'
+    end
+  end
+
+  describe '#common_path' do
+    before { self.class::MockClass.endpoint('https://example.com/path/to/api') }
+
+    it 'extracts pathname from endpoint' do
+      expect(instance.common_path).to eq '/path/to/api'
+    end
+  end
 end

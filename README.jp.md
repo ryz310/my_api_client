@@ -40,7 +40,7 @@ create    spec/api_clients/path/to/resource_api_client_spec.rb
 
 ```ruby
 class ExampleApiClient < MyApiClient::Base
-  endpoint 'https://example.com'
+  endpoint 'https://example.com/v1'
 
   attr_reader :access_token
 
@@ -48,14 +48,14 @@ class ExampleApiClient < MyApiClient::Base
     @access_token = access_token
   end
 
-  # GET https://example.com/users
+  # GET https://example.com/v1/users
   #
   # @return [Sawyer::Response] HTTP response parameter
   def get_users
     get 'users', headers: headers, query: { key: 'value' }
   end
 
-  # POST https://example.com/users
+  # POST https://example.com/v1/users
   #
   # @param name [String] Username which want to create
   # @return [Sawyer::Response] HTTP response parameter
@@ -77,7 +77,7 @@ api_clinet = ExampleApiClient.new(access_token: 'access_token')
 api_clinet.get_users #=> #<Sawyer::Response>
 ```
 
-クラス定義の最初に記述される `endpoint` にはリクエスト対象のスキーマとホストを定義します。ここにパス名を含めても反映されませんのでご注意ください。
+クラス定義の最初に記述される `endpoint` にはリクエスト URL の共通部分を定義します。後述の各メソッドで後続の path を定義しますが、上記の例だと `get 'users'` と定義すると、 `GET https://example.com/v1/users` というリクエストが実行されます。
 
 次に、 `#initialize` を定義します。上記の例のように Access Token や API Key などを設定することを想定します。必要なければ定義の省略も可能です。
 
@@ -201,7 +201,7 @@ API リクエストを何度も実行していると回線の不調などによ�
 
 #### MyApiClient::NetworkError
 
-前述の通りですが、 `MyApiClient` ではネットワーク系の例外はまとめて `MyApiClient::NetworkError` として `raise` されます。他の例外と同じく `MyApiClient::Error` を親クラスとしています。 `MyApiClient::NetworkError` として扱われる例外クラスの一覧は `MyApiClient::NETWORK_ERRORS` で参照できます。また、元となった例外は `#original_error` で参照できます。
+前述の通りですが、 `MyApiClient` ではネットワーク系の例外はまとめて `MyApiClient::NetworkError` として `raise` されます。他の例外と同じく `MyApiClient::Error` を親クラスとしています。 `MyApiClient::NetworkError` として扱われる例外クラスの一覧は `MyApiClient::NETWORK_ERRORS` で参照できます。また、元となった例外は `#original_error` で参照できます。
 
 ```ruby
 begin
