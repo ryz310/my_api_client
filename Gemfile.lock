@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    my_api_client (0.3.0)
+    my_api_client (0.4.0)
       activesupport (>= 4.2.0)
       jsonpath
       sawyer
