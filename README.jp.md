@@ -2,7 +2,9 @@
 
 # MyApiClient
 
-MyApiClient は API リクエストクラスを作成するための汎用的な機能を提供します。Sawyer や Faraday をベースにエラーハンドリングの機能を強化した構造になっています。ただし、 Sawyer はダミーデータの作成が難しかったり、他の gem で競合することがよくあるので、将来的には依存しないように変更していくかもしれません。
+MyApiClient は API リクエストクラスを作成するための汎用的な機能を提供します。Sawyer や Faraday をベースにエラーハンドリングの機能を強化した構造になっています。
+
+ただし、 Sawyer はダミーデータの作成が難しかったり、他の gem で競合することがよくあるので、将来的には依存しないように変更していくかもしれません。
 
 また、 Ruby on Rails で利用することを想定してますが、それ以外の環境でも動作するように作っているつもりです。不具合などあれば Issue ページからご報告下さい。
 
@@ -13,7 +15,7 @@ MyApiClient は API リクエストクラスを作成するための汎用的な
 
 ## Installation
 
-この gem は macOS と Linux で作動します。まずは、my_api_client を Gemfile に追加します:
+この gem は macOS と Linux で作動します。まずは `my_api_client` を Gemfile に追加します:
 
 ```ruby
 gem 'my_api_client'
@@ -38,7 +40,7 @@ create    spec/api_clients/path/to/resource_api_client_spec.rb
 
 ```ruby
 class ExampleApiClient < MyApiClient::Base
-  endpoint 'https://example.com'
+  endpoint 'https://example.com/v1'
 
   attr_reader :access_token
 
@@ -46,14 +48,14 @@ class ExampleApiClient < MyApiClient::Base
     @access_token = access_token
   end
 
-  # GET https://example.com/users
+  # GET https://example.com/v1/users
   #
   # @return [Sawyer::Response] HTTP response parameter
   def get_users
     get 'users', headers: headers, query: { key: 'value' }
   end
 
-  # POST https://example.com/users
+  # POST https://example.com/v1/users
   #
   # @param name [String] Username which want to create
   # @return [Sawyer::Response] HTTP response parameter
@@ -75,8 +77,10 @@ api_clinet = ExampleApiClient.new(access_token: 'access_token')
 api_clinet.get_users #=> #<Sawyer::Response>
 ```
 
-クラス定義の最初に記述される `endpoint` にはリクエスト対象のスキーマとホストを定義します。ここにパス名を含めても反映されませんのでご注意ください。
+クラス定義の最初に記述される `endpoint` にはリクエスト URL の共通部分を定義します。後述の各メソッドで後続の path を定義しますが、上記の例だと `get 'users'` と定義すると、 `GET https://example.com/v1/users` というリクエストが実行されます。
+
 次に、 `#initialize` を定義します。上記の例のように Access Token や API Key などを設定することを想定します。必要なければ定義の省略も可能です。
+
 続いて、 `#get_users` や `#post_user` を定義します。メソッド名には API のタイトルを付けると良いと思います。メソッド内部で `#get` や `#post` を呼び出していますが、これがリクエスト時の HTTP Method になります。他にも `#patch` `#put` `#delete` が利用可能です。
 
 ### Error handling
@@ -121,7 +125,7 @@ error_handling status_code: 400..499, raise: MyApiClient::ClientError
 
 https://github.com/ryz310/my_api_client/blob/master/lib/my_api_client/errors.rb
 
-次に、 `raise` の代わりに Block を指定する場合について。
+次に、 `raise` の代わりに `block` を指定する場合について。
 
 ```ruby
 error_handling status_code: 500..599 do |params, logger|
@@ -130,7 +134,7 @@ error_handling status_code: 500..599 do |params, logger|
 end
 ```
 
-上記の例であれば、ステータスコードが `500..599` の場合に Block の内容が実行れます。引数の `params` にはリクエスト情報とレスポンス情報が含まれています。`logger` はログ出力用インスタンスですが、このインスタンスを使ってログ出力すると、以下のようにリクエスト情報がログ出力に含まれるようになり、デバッグの際に便利です。
+上記の例であれば、ステータスコードが `500..599` の場合に `block` の内容が実行れます。引数の `params` にはリクエスト情報とレスポンス情報が含まれています。`logger` はログ出力用インスタンスですが、このインスタンスを使ってログ出力すると、以下のようにリクエスト情報がログ出力に含まれるようになり、デバッグの際に便利です。
 
 ```text
 API request `GET https://example.com/path/to/resouce`: "Server error occurred."
@@ -155,7 +159,7 @@ error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
 }
 ```
 
-`with` にはインスタンスメソッド名を指定することで、エラーを検出した際に任意のメソッドを実行させることができます。メソッドに渡される引数は Block 定義の場合と同じく `params` と `logger` です。
+`with` にはインスタンスメソッド名を指定することで、エラーを検出した際に任意のメソッドを実行させることができます。メソッドに渡される引数は `block` 定義の場合と同じく `params` と `logger` です。
 
 ```ruby
 # @param params [MyApiClient::Params::Params] HTTP req and res params
@@ -166,15 +170,59 @@ def my_error_handling(params, logger)
 end
 ```
 
-### Retry
+#### MyApiClient::Params::Params
 
 WIP
+
+#### MyApiClient::Error
+
+WIP
+
+### Retry
+
+次に `MyApiClient` が提供するリトライ機能についてご紹介致します。
+
+```ruby
+class ExampleApiClient < MyApiClient::Base
+  endpoint 'https://example.com'
+
+  retry_on MyApiClient::NetworkError, wait: 0.1.seconds, attempts: 3
+  retry_on MyApiClient::ApiLimitError, wait: 30.seconds, attempts: 3
+
+  error_handling json: { '$.errors.code': 20 }, raise: MyApiClient::ApiLimitError
+end
+```
+
+API リクエストを何度も実行していると回線の不調などによりネットワークエラーが発生する事があります。長時間ネットワークが使えなくなるケースもありますが、瞬間的なエラーであるケースも多々あります。 `MyApiClient` ではネットワーク系の例外はまとめて `MyApiClient::NetworkError` として `raise` されます。この例外の詳細は後述しますが、 `retry_on` を利用する事で、 `ActiveJob` のように任意の例外処理を補足して、一定回数、一定の期間を空けて API リクエストをリトライさせる事ができます。
+
+ただし、 `ActiveJob` とは異なり同期処理でリトライするため、ネットワークの瞬断に備えたリトライ以外ではあまり使う機会はないのではないかと思います。上記の例のように API Limit に備えてリトライするケースもあるかと思いますが、こちらは `ActiveJob` で対応した方が良いと思います。
+
+ちなみに一応 `discard_on` も実装していますが、作者自身が有効な用途を見出せていないので、詳細は割愛します。良い利用方法があれば教えてください。
 
 #### MyApiClient::NetworkError
 
+前述の通りですが、 `MyApiClient` ではネットワーク系の例外はまとめて `MyApiClient::NetworkError` として `raise` されます。他の例外と同じく `MyApiClient::Error` を親クラスとしています。 `MyApiClient::NetworkError` として扱われる例外クラスの一覧は `MyApiClient::NETWORK_ERRORS` で参照できます。また、元となった例外は `#original_error` で参照できます。
+
+```ruby
+begin
+  api_client.request
+rescue MyApiClient::NetworkError => e
+  e.original_error # => #<Net::OpenTimeout>
+  e.params.response # => nil
+end
+```
+
+なお、通常の例外はリクエストの結果によって発生しますが、この例外はリクエスト中に発生するため、例外インスタンスにレスポンスパラメータは含まれません。
+
+### Timeout
+
 WIP
 
-### One request for one class
+### Logger
+
+WIP
+
+## One request for one class
 
 多くの場合、同一ホストの API は リクエストヘッダーやエラー情報が同じ構造になっているため、上記のように一つのクラス内に複数の API を定義する設計が理にかなっていますが、 API 毎に個別に定義したい場合は、以下のように 1 つのクラスに 1 の API という構造で設計することも可能です。
 
@@ -224,13 +272,7 @@ class PostUserApiClient < ExampleApiClient
 end
 ```
 
-### Timeout
-
-WIP
-
-### Logger
-
-WIP
+## Testing
 
 ### RSpec
 
@@ -262,7 +304,7 @@ response = ExampleApiClient.new.request(user_id: 1)
 response.id # => 12345
 ```
 
-リクスエストパラメータを使ったレスポンスを返すようにスタブ化したい場合は、 block を利用することで実現できます。
+リクスエストパラメータを使ったレスポンスを返すようにスタブ化したい場合は、 `block` を利用することで実現できます。
 
 ```ruby
 my_api_client_stub(ExampleApiClient, :request) do |params|
