@@ -48,7 +48,9 @@ RSpec.describe MyApiClient::Request do
     let(:body) { nil }
     let(:response_body) { { message: 'OK' }.to_json }
     let(:agent) { instance_double(Sawyer::Agent, call: response) }
-    let(:response) { instance_double(Sawyer::Response, status: 200, data: resource, timing: 0.1) }
+    let(:response) do
+      instance_double(Sawyer::Response, status: 200, data: resource, timing: 0.1, headers: nil)
+    end
     let(:resource) { instance_double(Sawyer::Resource) }
     let(:logger) { instance_double(::Logger) }
     let(:request_logger) { instance_double(MyApiClient::Logger, info: nil, warn: nil, error: nil) }

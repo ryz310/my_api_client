@@ -62,7 +62,7 @@ RSpec.describe MyApiClient::ErrorHandling do
         Sawyer::Response, status: status_code, body: response_body.to_json
       )
     end
-    let(:params) { instance_double(MyApiClient::Params::Params) }
+    let(:params) { instance_double(MyApiClient::Params::Params, metadata: {}) }
     let(:logger) { instance_double(MyApiClient::Logger) }
 
     describe 'use `status_code`' do
