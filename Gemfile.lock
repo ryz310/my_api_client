@@ -107,7 +107,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bugsnag (~> 6.11.0)
+  bugsnag (>= 6.11.0)
   bundler (~> 1.16)
   my_api_client!
   pr_comet
