@@ -17,6 +17,7 @@ require 'my_api_client/params/params'
 require 'my_api_client/params/request'
 require 'my_api_client/request'
 require 'my_api_client/base'
+require 'my_api_client/integrations/bugsnag'
 
 if Sawyer::VERSION < '0.8.2'
   module Sawyer
