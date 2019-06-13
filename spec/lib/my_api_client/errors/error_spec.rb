@@ -14,11 +14,11 @@ RSpec.describe MyApiClient::Error do
     end
   end
 
-  describe '#to_bugsnag' do
-    it 'delegates processing to params#to_bugsnag' do
-      allow(params).to receive(:to_bugsnag)
-      instance.to_bugsnag
-      expect(params).to have_received(:to_bugsnag)
+  describe '#metadata' do
+    it 'delegates processing to params#metadata' do
+      allow(params).to receive(:metadata)
+      instance.metadata
+      expect(params).to have_received(:metadata)
     end
   end
 

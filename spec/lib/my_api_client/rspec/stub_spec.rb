@@ -61,7 +61,7 @@ RSpec.describe MyApiClient::Stub do
 
       context 'with MyApiClient::Error instance' do
         it 'stubs ApiClient as that raises Error set by `raise` on executes' do
-          params = instance_double(MyApiClient::Params::Params, to_bugsnag: {})
+          params = instance_double(MyApiClient::Params::Params, metadata: {})
           error = MyApiClient::ServerError.new(params)
           my_api_client_stub(self.class::ExampleApiClient, :request, raise: error)
           expect { api_request! }.to raise_error(MyApiClient::ServerError)

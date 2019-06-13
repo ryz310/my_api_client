@@ -32,7 +32,7 @@ module MyApiClient
       # Blank parameter will be omitted.
       #
       # @return [Hash] Metadata for bugsnag
-      def to_bugsnag
+      def metadata
         {
           line: "#{method.upcase} #{pathname}",
           headers: headers,
@@ -40,6 +40,7 @@ module MyApiClient
           body: body,
         }.compact
       end
+      alias to_bugsnag metadata
 
       # Returns contents as string for to be readable for human
       #
