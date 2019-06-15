@@ -6,7 +6,7 @@ RSpec.describe MyApiClient::Error do
     instance_double(
       MyApiClient::Params::Params,
       inspect: '"#<MyApiClient::Params::Params#inspect>"',
-      metadata: {}
+      metadata: { request: 'params', response: 'params' }
     )
   end
 
@@ -18,8 +18,7 @@ RSpec.describe MyApiClient::Error do
 
   describe '#metadata' do
     it 'delegates processing to params#metadata' do
-      instance.metadata
-      expect(params).to have_received(:metadata).twice
+      expect(instance.metadata).to eq(request: 'params', response: 'params')
     end
   end
 
