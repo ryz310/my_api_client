@@ -251,3 +251,10 @@ workflows:
                 - master
     jobs:
       - rubocop_challenge
+
+experimental:
+  notify:
+    branches:
+      only:
+        - master
+        - production
