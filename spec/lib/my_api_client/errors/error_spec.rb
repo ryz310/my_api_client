@@ -4,7 +4,9 @@ RSpec.describe MyApiClient::Error do
   let(:instance) { described_class.new(params) }
   let(:params) do
     instance_double(
-      MyApiClient::Params::Params, inspect: '"#<MyApiClient::Params::Params#inspect>"'
+      MyApiClient::Params::Params,
+      inspect: '"#<MyApiClient::Params::Params#inspect>"',
+      metadata: { request: 'params', response: 'params' }
     )
   end
 
@@ -14,11 +16,9 @@ RSpec.describe MyApiClient::Error do
     end
   end
 
-  describe '#to_bugsnag' do
-    it 'delegates processing to params#to_bugsnag' do
-      allow(params).to receive(:to_bugsnag)
-      instance.to_bugsnag
-      expect(params).to have_received(:to_bugsnag)
+  describe '#metadata' do
+    it 'delegates processing to params#metadata' do
+      expect(instance.metadata).to eq(request: 'params', response: 'params')
     end
   end
 

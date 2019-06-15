@@ -7,7 +7,7 @@ RSpec.describe MyApiClient::Params::Params do
     instance_double(
       MyApiClient::Params::Request,
       inspect: '"#<MyApiClient::Params::Request#inspect>"',
-      to_bugsnag: {
+      metadata: {
         line: 'GET path/to/resource',
         headers: { 'Content-Type': 'application/json; charset=utf-8' },
         query: { key: 'value' },
@@ -24,10 +24,10 @@ RSpec.describe MyApiClient::Params::Params do
     )
   end
 
-  describe '#to_bugsnag' do
+  describe '#metadata' do
     context 'when given both params of request and response' do
       it 'returns metadata which integrated request and response params' do
-        expect(instance.to_bugsnag).to eq(
+        expect(instance.metadata).to eq(
           request_line: 'GET path/to/resource',
           request_headers: { 'Content-Type': 'application/json; charset=utf-8' },
           request_query: { key: 'value' },
@@ -42,7 +42,7 @@ RSpec.describe MyApiClient::Params::Params do
       let(:response) { nil }
 
       it 'returns metadata just including request params' do
-        expect(instance.to_bugsnag).to eq(
+        expect(instance.metadata).to eq(
           request_line: 'GET path/to/resource',
           request_headers: { 'Content-Type': 'application/json; charset=utf-8' },
           request_query: { key: 'value' }
@@ -54,7 +54,7 @@ RSpec.describe MyApiClient::Params::Params do
       let(:request) { nil }
 
       it 'returns metadata just including response params' do
-        expect(instance.to_bugsnag).to eq(
+        expect(instance.metadata).to eq(
           response_status: 200,
           response_headers: { 'Content-Type': 'application/json; charset=utf-8' },
           response_body: { status: 'OK' }

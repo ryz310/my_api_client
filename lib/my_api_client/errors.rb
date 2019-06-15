@@ -4,12 +4,15 @@ module MyApiClient
   # The ancestor class for all API request error
   class Error < StandardError
     attr_reader :params
-    delegate :to_bugsnag, to: :params
+    delegate :metadata, to: :params
+    alias to_bugsnag metadata
 
-    # Description of #initialize
+    # Initialize the error class
     #
-    # @param params [MyApiClient::Params::Params] describe_params_here
-    # @param error_message [String] default: nil
+    # @param params [MyApiClient::Params::Params]
+    #   The request and response parameters
+    # @param error_message [String]
+    #   The error description
     def initialize(params, error_message = nil)
       @params = params
       super error_message
@@ -35,10 +38,12 @@ module MyApiClient
   class NetworkError < Error
     attr_reader :original_error
 
-    # Description of #initialize
+    # Initialize the error class
     #
-    # @param params [MyApiClient::Params::Params] describe_params_here
-    # @param original_error [StandardError] Some network error
+    # @param params [MyApiClient::Params::Params]
+    #   The request and response parameters
+    # @param original_error [StandardError]
+    #   Some network error
     def initialize(params, original_error)
       @original_error = original_error
       super params, original_error.message
@@ -49,6 +54,13 @@ module MyApiClient
     # @return [String] Contents as string
     def inspect
       { error: original_error, params: params }.inspect
+    end
+
+    # Generate metadata for bugsnag.
+    #
+    # @return [Hash] Metadata for bugsnag
+    def metadata
+      super.merge(original_error: original_error.inspect)
     end
   end
 

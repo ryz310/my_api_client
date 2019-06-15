@@ -17,6 +17,8 @@ GEM
     addressable (2.6.0)
       public_suffix (>= 2.0.2, < 4.0)
     ast (2.4.0)
+    bugsnag (6.11.1)
+      concurrent-ruby (~> 1.0)
     byebug (11.0.1)
     coderay (1.1.2)
     concurrent-ruby (1.1.5)
@@ -105,6 +107,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bugsnag (>= 6.11.0)
   bundler (~> 1.16)
   my_api_client!
   pr_comet

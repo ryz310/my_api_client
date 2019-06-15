@@ -46,7 +46,7 @@ module MyApiClient
     def process_raise_option(exception)
       case exception
       when Class
-        params = instance_double(MyApiClient::Params::Params, to_bugsnag: {})
+        params = instance_double(MyApiClient::Params::Params, metadata: {})
         if exception == MyApiClient::NetworkError
           exception.new(params, Net::OpenTimeout.new)
         else
