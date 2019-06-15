@@ -15,6 +15,10 @@ references:
       type: enum
       enum: ['4.2', '5.0', '5.1', '5.2']
       default: '4.2'
+  - &bundler_options
+    bundler_options:
+      type: string
+      default: ''
 
 executors:
   default:
@@ -36,6 +40,7 @@ commands:
     description: Setup Bundle
     parameters:
       <<: *ruby_version
+      <<: *bundler_options
     steps:
       - restore_cache:
           keys:
@@ -44,7 +49,7 @@ commands:
       - run:
           name: Bundle Install
           command: |
-            bundle install --jobs=4 --retry=3 --path vendor/bundle
+            bundle install --jobs=4 --retry=3 --path vendor/bundle << parameters.bundler_options >>
       - save_cache:
           paths:
             - ./vendor/bundle
@@ -124,11 +129,13 @@ commands:
     parameters:
       <<: *ruby_version
       <<: *rails_version
+      <<: *bundler_options
     steps:
       - checkout
       - download_cc_test_reporter
       - setup_bundle:
           ruby_version: << parameters.ruby_version >>
+          bundler_options: << parameters.bundler_options >>
       - modify_active_support_version:
           rails_version: << parameters.rails_version >>
       - run_rspec
@@ -139,6 +146,7 @@ jobs:
     parameters:
       <<: *ruby_version
       <<: *rails_version
+      <<: *bundler_options
     executor:
       name: default
       ruby_version: << parameters.ruby_version >>
@@ -146,6 +154,7 @@ jobs:
       - build:
           ruby_version: << parameters.ruby_version >>
           rails_version: << parameters.rails_version >>
+          bundler_options: << parameters.bundler_options >>
   rubocop:
     executor:
       name: default
@@ -220,9 +229,15 @@ workflows:
           ruby_version:  '2.6'
           rails_version: '5.1'
       - build:
-          name: build_on_ruby_2_6_and_rails_5_2
+          name: build_on_ruby_2_6_and_rails_5_2_with_integrations
           ruby_version:  '2.6'
           rails_version: '5.2'
+          bundler_options: '--with integrations'
+      - build:
+          name: build_on_ruby_2_6_and_rails_5_2_without_integrations
+          ruby_version:  '2.6'
+          rails_version: '5.2'
+          bundler_options: '--without integrations'
       - rubocop
       - yardoc
       - release:
@@ -239,7 +254,8 @@ workflows:
             - build_on_ruby_2_6_and_rails_4_2
             - build_on_ruby_2_6_and_rails_5_0
             - build_on_ruby_2_6_and_rails_5_1
-            - build_on_ruby_2_6_and_rails_5_2
+            - build_on_ruby_2_6_and_rails_5_2_with_integrations
+            - build_on_ruby_2_6_and_rails_5_2_without_integrations
             - rubocop
           filters:
             branches:
