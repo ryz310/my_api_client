@@ -121,23 +121,22 @@ commands:
             bundle exec rake release --trace
   setup:
     description: Setup for Job Working
-    steps:
-      - checkout
-      - setup_bundle
-  build:
-    description: Build the RubyGem
     parameters:
       <<: *ruby_version
-      <<: *rails_version
       <<: *bundler_options
     steps:
       - checkout
-      - download_cc_test_reporter
       - setup_bundle:
           ruby_version: << parameters.ruby_version >>
           bundler_options: << parameters.bundler_options >>
+  test_and_build:
+    description: Build the RubyGem
+    parameters:
+      <<: *rails_version
+    steps:
       - modify_active_support_version:
           rails_version: << parameters.rails_version >>
+      - download_cc_test_reporter
       - run_rspec
       - rake_build
 
@@ -151,10 +150,11 @@ jobs:
       name: default
       ruby_version: << parameters.ruby_version >>
     steps:
-      - build:
+      - setup:
           ruby_version: << parameters.ruby_version >>
-          rails_version: << parameters.rails_version >>
           bundler_options: << parameters.bundler_options >>
+      - test_and_build:
+          rails_version: << parameters.rails_version >>
   rubocop:
     executor:
       name: default
