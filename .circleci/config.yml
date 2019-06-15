@@ -6,6 +6,7 @@ version: 2.1
 
 orbs:
   ruby-orbs: sue445/ruby-orbs@1.4.3
+  code-climate: rvla/code-climate@0.0.2
 
 references:
   - &ruby_version
@@ -32,13 +33,6 @@ executors:
     working_directory: ~/repo
 
 commands:
-  download_cc_test_reporter:
-    description: 'Download cc-test-reporter'
-    steps:
-      - run: |
-          mkdir -p tmp/
-          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
-          chmod +x ./tmp/cc-test-reporter
   modify_active_support_version:
     description: Modify ActiveSupport Version
     parameters:
@@ -55,13 +49,13 @@ commands:
           command: |
             mkdir /tmp/test-results
             TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
-            ./tmp/cc-test-reporter before-build
+            cc-test-reporter before-build
             bundle exec rspec --format documentation \
                               --color \
                               --format RspecJunitFormatter \
                               --out /tmp/test-results/rspec.xml \
                               $TEST_FILES
-            ./tmp/cc-test-reporter after-build --coverage-input-type simplecov --exit-code $?
+            cc-test-reporter after-build --coverage-input-type simplecov --exit-code $?
       - store_test_results:
           path: /tmp/test-results
       - store_artifacts:
@@ -121,7 +115,7 @@ commands:
     steps:
       - modify_active_support_version:
           rails_version: << parameters.rails_version >>
-      - download_cc_test_reporter
+      - code-climate/install
       - run_rspec
       - rake_build
 
