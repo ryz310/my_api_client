@@ -20,9 +20,10 @@ module MyApiClient
       # Blank parameter will be omitted.
       #
       # @return [Hash] Metadata for bugsnag
-      def to_bugsnag
+      def metadata
         request_metadata.merge(response_metadata)
       end
+      alias to_bugsnag metadata
 
       # Returns contents as string for to be readable for human
       #
@@ -39,7 +40,7 @@ module MyApiClient
       # @return [Hash] Metadata for bugsnag
       def request_metadata
         if request.present?
-          request.to_bugsnag.each_with_object({}) do |(key, value), memo|
+          request.metadata.each_with_object({}) do |(key, value), memo|
             memo[:"request_#{key}"] = value
           end
         else

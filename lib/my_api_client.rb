@@ -18,6 +18,14 @@ require 'my_api_client/params/request'
 require 'my_api_client/request'
 require 'my_api_client/base'
 
+# Loads gems for feature of integrations
+begin
+  require 'bugsnag'
+  require 'my_api_client/integrations/bugsnag' if defined?(Bugsnag) && Bugsnag::VERSION >= '6.11.0'
+rescue LoadError
+  nil
+end
+
 if Sawyer::VERSION < '0.8.2'
   module Sawyer
     # NOTE: Old sawyer does not have attribute reader for response body.
