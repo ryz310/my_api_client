@@ -178,6 +178,10 @@ WIP
 
 WIP
 
+#### Bugsnag breadcrumbs
+
+[Bugsnag-Ruby v6.11.0](https://github.com/bugsnag/bugsnag-ruby/releases/tag/v6.11.0) 以降を利用している場合は [breadcrumbs 機能](https://docs.bugsnag.com/platforms/ruby/other/#logging-breadcrumbs) が自動的にサポートされます。この機能によって `MyApiClient::Error` 発生時に内部で `Bugsnag.leave_breadcrumb` が呼び出され、 Bugsnag のコンソールからエラー発生時のリクエスト情報、レスポンス情報などが確認できるようになります。
+
 ### Retry
 
 次に `MyApiClient` が提供するリトライ機能についてご紹介致します。
