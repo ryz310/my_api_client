@@ -135,25 +135,21 @@ jobs:
       - test_and_build:
           rails_version: << parameters.rails_version >>
   rubocop:
-    executor:
-      name: default
+    executor: default
     steps:
       - setup
       - rubocop
   yardoc:
-    executor:
-      name: default
+    executor: default
     steps:
       - setup
       - yardoc
   rubocop_challenge:
-    executor:
-      name: default
+    executor: default
     steps:
       - rubocop_challenge
   release:
-    executor:
-      name: default
+    executor: default
     steps:
       - setup
       - release
