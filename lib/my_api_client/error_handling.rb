@@ -68,6 +68,8 @@ module MyApiClient
           target = JsonPath.new(path.to_s).first(response_body)
           match?(operator, target)
         end
+      rescue MultiJson::ParseError
+        false
       end
     end
 

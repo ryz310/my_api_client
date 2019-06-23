@@ -16,6 +16,7 @@ module MyApiClient
     def _request(http_method, pathname, headers, query, body, logger)
       processed_path = [common_path, pathname].join('/').gsub('//', '/')
       request_params = Params::Request.new(http_method, processed_path, headers, query, body)
+      agent # Initializes for faraday
       request_logger = Logger.new(logger, faraday, http_method, processed_path)
       call(:_execute, request_params, request_logger)
     end
