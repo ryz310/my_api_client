@@ -82,6 +82,13 @@ RSpec.describe MyApiClient::Request do
         .with(nil, request: { timeout: 3.seconds, open_timeout: 2.seconds })
     end
 
+    it 'initializes in order of faraday, sawyer, logger' do
+      request!
+      expect(Faraday).to have_received(:new).ordered
+      expect(Sawyer::Agent).to have_received(:new).ordered
+      expect(MyApiClient::Logger).to have_received(:new).ordered
+    end
+
     it 'calls Sawyer::Agent#call with request parameters' do
       request!
       expect(agent)
