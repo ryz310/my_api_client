@@ -70,9 +70,10 @@ commands:
           path: /tmp/test-results
           destination: test-results
   rubocop:
-    description: Run RuboCop
     steps:
-      - run: bundle exec rubocop
+      - run:
+          name: Run RuboCop
+          command: bundle exec rubocop
   yardoc:
     description: 'Generate YARDoc'
     steps:
@@ -81,17 +82,17 @@ commands:
           path: ./yardoc
           destination: yardoc
   rake_build:
-    description: Rake Build
     steps:
-      - run: |
-          bundle exec rake build
+      - run:
+          name: Rake Build
+          command: bundle exec rake build
   rubocop_challenge:
-    description: Rubocop Challenge
     steps:
-      - checkout
-      - run: |
-          gem install rubocop_challenger --pre
-          rubocop_challenger go --email=ryz310@gmail.com --name=ryz310
+      - run:
+          name: Rubocop Challenge
+          command: |
+            gem install rubocop_challenger --pre
+            rubocop_challenger go --email=ryz310@gmail.com --name=ryz310
   release:
     description: Release to RubyGems.org
     steps:
@@ -165,6 +166,7 @@ jobs:
   rubocop_challenge:
     executor: default
     steps:
+      - checkout
       - rubocop_challenge
   release:
     executor: default
@@ -178,56 +180,56 @@ workflows:
   commit:
     jobs:
       - build:
-          name: build_on_ruby_2_4_and_rails_4_2
+          name: build_on_ruby_2.4_and_rails_4.2
           ruby_version:  '2.4'
           rails_version: '4.2'
       - build:
-          name: build_on_ruby_2_4_and_rails_5_0
+          name: build_on_ruby_2.4_and_rails_5.0
           ruby_version:  '2.4'
           rails_version: '5.0'
       - build:
-          name: build_on_ruby_2_4_and_rails_5_1
+          name: build_on_ruby_2.4_and_rails_5.1
           ruby_version:  '2.4'
           rails_version: '5.1'
       - build:
-          name: build_on_ruby_2_4_and_rails_5_2
+          name: build_on_ruby_2.4_and_rails_5.2
           ruby_version:  '2.4'
           rails_version: '5.2'
       - build:
-          name: build_on_ruby_2_5_and_rails_4_2
+          name: build_on_ruby_2.5_and_rails_4.2
           ruby_version:  '2.5'
           rails_version: '4.2'
       - build:
-          name: build_on_ruby_2_5_and_rails_5_0
+          name: build_on_ruby_2.5_and_rails_5.0
           ruby_version:  '2.5'
           rails_version: '5.0'
       - build:
-          name: build_on_ruby_2_5_and_rails_5_1
+          name: build_on_ruby_2.5_and_rails_5.1
           ruby_version:  '2.5'
           rails_version: '5.1'
       - build:
-          name: build_on_ruby_2_5_and_rails_5_2
+          name: build_on_ruby_2.5_and_rails_5.2
           ruby_version:  '2.5'
           rails_version: '5.2'
       - build:
-          name: build_on_ruby_2_6_and_rails_4_2
+          name: build_on_ruby_2.6_and_rails_4.2
           ruby_version:  '2.6'
           rails_version: '4.2'
       - build:
-          name: build_on_ruby_2_6_and_rails_5_0
+          name: build_on_ruby_2.6_and_rails_5.0
           ruby_version:  '2.6'
           rails_version: '5.0'
       - build:
-          name: build_on_ruby_2_6_and_rails_5_1
+          name: build_on_ruby_2.6_and_rails_5.1
           ruby_version:  '2.6'
           rails_version: '5.1'
       - build:
-          name: build_on_ruby_2_6_and_rails_5_2_with_integrations
+          name: build_on_ruby_2.6_and_rails_5.2_with_integrations
           ruby_version:  '2.6'
           rails_version: '5.2'
           bundler_options: '--with integrations'
       - build:
-          name: build_on_ruby_2_6_and_rails_5_2_without_integrations
+          name: build_on_ruby_2.6_and_rails_5.2_without_integrations
           ruby_version:  '2.6'
           rails_version: '5.2'
           bundler_options: '--without integrations'
@@ -235,35 +237,35 @@ workflows:
       - yardoc
       - upload-coverage:
           requires:
-            - build_on_ruby_2_4_and_rails_4_2
-            - build_on_ruby_2_4_and_rails_5_0
-            - build_on_ruby_2_4_and_rails_5_1
-            - build_on_ruby_2_4_and_rails_5_2
-            - build_on_ruby_2_5_and_rails_4_2
-            - build_on_ruby_2_5_and_rails_5_0
-            - build_on_ruby_2_5_and_rails_5_1
-            - build_on_ruby_2_5_and_rails_5_2
-            - build_on_ruby_2_6_and_rails_4_2
-            - build_on_ruby_2_6_and_rails_5_0
-            - build_on_ruby_2_6_and_rails_5_1
-            - build_on_ruby_2_6_and_rails_5_2_with_integrations
-            - build_on_ruby_2_6_and_rails_5_2_without_integrations
+            - build_on_ruby_2.4_and_rails_4.2
+            - build_on_ruby_2.4_and_rails_5.0
+            - build_on_ruby_2.4_and_rails_5.1
+            - build_on_ruby_2.4_and_rails_5.2
+            - build_on_ruby_2.5_and_rails_4.2
+            - build_on_ruby_2.5_and_rails_5.0
+            - build_on_ruby_2.5_and_rails_5.1
+            - build_on_ruby_2.5_and_rails_5.2
+            - build_on_ruby_2.6_and_rails_4.2
+            - build_on_ruby_2.6_and_rails_5.0
+            - build_on_ruby_2.6_and_rails_5.1
+            - build_on_ruby_2.6_and_rails_5.2_with_integrations
+            - build_on_ruby_2.6_and_rails_5.2_without_integrations
       - release:
           context: RubyGems API Key
           requires:
-            - build_on_ruby_2_4_and_rails_4_2
-            - build_on_ruby_2_4_and_rails_5_0
-            - build_on_ruby_2_4_and_rails_5_1
-            - build_on_ruby_2_4_and_rails_5_2
-            - build_on_ruby_2_5_and_rails_4_2
-            - build_on_ruby_2_5_and_rails_5_0
-            - build_on_ruby_2_5_and_rails_5_1
-            - build_on_ruby_2_5_and_rails_5_2
-            - build_on_ruby_2_6_and_rails_4_2
-            - build_on_ruby_2_6_and_rails_5_0
-            - build_on_ruby_2_6_and_rails_5_1
-            - build_on_ruby_2_6_and_rails_5_2_with_integrations
-            - build_on_ruby_2_6_and_rails_5_2_without_integrations
+            - build_on_ruby_2.4_and_rails_4.2
+            - build_on_ruby_2.4_and_rails_5.0
+            - build_on_ruby_2.4_and_rails_5.1
+            - build_on_ruby_2.4_and_rails_5.2
+            - build_on_ruby_2.5_and_rails_4.2
+            - build_on_ruby_2.5_and_rails_5.0
+            - build_on_ruby_2.5_and_rails_5.1
+            - build_on_ruby_2.5_and_rails_5.2
+            - build_on_ruby_2.6_and_rails_4.2
+            - build_on_ruby_2.6_and_rails_5.0
+            - build_on_ruby_2.6_and_rails_5.1
+            - build_on_ruby_2.6_and_rails_5.2_with_integrations
+            - build_on_ruby_2.6_and_rails_5.2_without_integrations
             - rubocop
           filters:
             branches:
