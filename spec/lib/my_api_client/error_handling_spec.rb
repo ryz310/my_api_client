@@ -59,14 +59,14 @@ RSpec.describe MyApiClient::ErrorHandling do
     let(:error_handler) { instance.error_handling(response) }
     let(:response) do
       instance_double(
-        Sawyer::Response, status: status_code, body: response_body.to_json
+        Sawyer::Response, status: status_code, body: response_body
       )
     end
     let(:params) { instance_double(MyApiClient::Params::Params, metadata: {}) }
     let(:logger) { instance_double(MyApiClient::Logger) }
 
     describe 'use `status_code`' do
-      let(:response_body) { nil }
+      let(:response_body) { nil.to_json }
 
       describe 'with Regexp' do
         let(:status_code) { 401 }
@@ -102,7 +102,7 @@ RSpec.describe MyApiClient::ErrorHandling do
             errors: {
               message: 'maintenance',
             },
-          }
+          }.to_json
         end
 
         it 'monitors given JSON with string' do
@@ -116,7 +116,7 @@ RSpec.describe MyApiClient::ErrorHandling do
             errors: {
               message: 'Sorry, something went wrong.',
             },
-          }
+          }.to_json
         end
 
         it 'monitors given JSON with regex pattern' do
@@ -130,7 +130,7 @@ RSpec.describe MyApiClient::ErrorHandling do
             errors: {
               code: 10,
             },
-          }
+          }.to_json
         end
 
         it 'monitors given JSON with number' do
@@ -144,11 +144,36 @@ RSpec.describe MyApiClient::ErrorHandling do
             errors: {
               code: 23,
             },
-          }
+          }.to_json
         end
 
         it 'monitors given JSON within range' do
           expect(error_handler).to eq :json_is_monitored_by_range
+        end
+      end
+
+      describe 'when given text/html response' do
+        let(:status_code) { 404 }
+        let(:response_body) { <<~HTML }
+          <!doctype html>
+          <html>
+          <head>
+              <title>Example Domain</title>
+          </head>
+          <body>
+          <div>
+             <h1>Example Domain</h1>
+             <p>This domain is established to be used for illustrative examples in documents. You may use this
+             domain in examples without prior coordination or asking for permission.</p>
+             <p><a href="http://www.iana.org/domains/example">More information...</a></p>
+          </div>
+          </body>
+          </html>
+        HTML
+
+        it 'does not raise parsing error and escalates to other handers' do
+          expect { error_handler }.not_to raise_error
+          expect(error_handler).to eq :status_code_is_monitored_by_number
         end
       end
     end
@@ -161,7 +186,7 @@ RSpec.describe MyApiClient::ErrorHandling do
             errors: {
               code: 30,
             },
-          }
+          }.to_json
         end
 
         it 'monitors given status code and JSON' do
@@ -177,7 +202,7 @@ RSpec.describe MyApiClient::ErrorHandling do
               code: 31,
               message: 'Unknown error',
             },
-          }
+          }.to_json
         end
 
         it 'monitors given JSON for each path' do
@@ -193,7 +218,7 @@ RSpec.describe MyApiClient::ErrorHandling do
           errors: {
             code: 40,
           },
-        }
+        }.to_json
       end
 
       it 'raises the error when detected' do
@@ -208,7 +233,7 @@ RSpec.describe MyApiClient::ErrorHandling do
           errors: {
             code: 50,
           },
-        }
+        }.to_json
       end
 
       it 'executes the block when detected' do
@@ -225,7 +250,7 @@ RSpec.describe MyApiClient::ErrorHandling do
           errors: {
             code: 60,
           },
-        }
+        }.to_json
       end
 
       it 'raises default error when detected' do
