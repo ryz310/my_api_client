@@ -16,11 +16,13 @@ module MyApiClient
     rescue StandardError => e
       @retry_count ||= 0
       raise unless rescue_with_handler(e)
+
+      retry_result
     end
 
     private
 
-    attr_reader :retry_count, :method_name, :args
+    attr_reader :retry_count, :retry_result, :method_name, :args
 
     class_methods do
       def retry_on(*exception, wait: 1.second, attempts: 3)
@@ -51,7 +53,7 @@ module MyApiClient
     def retry_calling(wait)
       sleep(wait)
       @retry_count += 1
-      call(*args)
+      @retry_result = call(*args)
     end
   end
 end

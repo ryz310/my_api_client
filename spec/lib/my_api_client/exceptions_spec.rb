@@ -24,19 +24,69 @@ RSpec.describe MyApiClient::Exceptions do
 
     private
 
-    def execute(_first, _second, _third); end
+    def execute(_first, _second, _third)
+      'Success'
+    end
   end
 
   let(:instance) { self.class::MockClass.new }
+
+  describe '#call' do
+    subject(:execute_call) { instance.call(:execute, 1, 2, 3) }
+
+    context 'when no error occurred' do
+      before do
+        allow(instance).to receive(:execute).and_call_original
+      end
+
+      it 'calls the method specified by the 1st argument' do
+        execute_call
+        expect(instance).to have_received(:execute).with(1, 2, 3)
+      end
+
+      it 'returns the result of execution' do
+        expect(execute_call).to eq 'Success'
+      end
+    end
+
+    context 'when an error occurs and succeeds due to retry' do
+      before do
+        results = [:raise, nil]
+        allow(instance).to receive(:execute).twice do
+          result = results.shift
+          result == :raise ? raise(self.class::RetriableError) : 'Success'
+        end
+      end
+
+      it 'calls the method specified by the 1st argument twice' do
+        execute_call
+        expect(instance).to have_received(:execute).with(1, 2, 3).twice
+      end
+
+      it 'returns the result of the retry' do
+        expect(execute_call).to eq 'Success'
+      end
+    end
+
+    context 'when an error occurs and fails again due to retry' do
+      before do
+        allow(instance).to receive(:execute).and_raise(self.class::RetriableError)
+      end
+
+      it 'returns the result of the retry' do
+        expect { execute_call }.to raise_error(self.class::RetriableError)
+      end
+    end
+  end
 
   describe '.retry_on' do
     context 'with &block' do
       context 'when it retries and solves' do
         before do
-          results = [:raise, true]
+          results = [:raise, nil]
           allow(instance).to receive(:execute).twice do
             result = results.shift
-            result == :raise ? raise(Net::OpenTimeout) : result
+            result == :raise ? raise(Net::OpenTimeout) : 'Success'
           end
         end
 
@@ -60,10 +110,10 @@ RSpec.describe MyApiClient::Exceptions do
     context 'without &block' do
       context 'when it retries and solves' do
         before do
-          results = [:raise, true]
+          results = [:raise, nil]
           allow(instance).to receive(:execute).twice do
             result = results.shift
-            result == :raise ? raise(self.class::RetriableError) : result
+            result == :raise ? raise(self.class::RetriableError) : 'Success'
           end
         end
 
