@@ -14,15 +14,17 @@ module MyApiClient
       actions_and_options.each do |action, options|
         case options
         when Proc
-          allow(instance).to receive(action) { |*request| options.call(*request) }
+          allow(instance).to receive(action) { |*request| stub_as_sawyer(options.call(*request)) }
         when Hash
           if options[:raise].present?
             allow(instance).to receive(action).and_raise(process_raise_option(options[:raise]))
-          else
+          elsif options[:response]
             allow(instance).to receive(action).and_return(stub_as_sawyer(options[:response]))
+          else
+            allow(instance).to receive(action).and_return(stub_as_sawyer(options))
           end
         else
-          allow(instance).to receive(action).and_return(nil)
+          allow(instance).to receive(action).and_return(stub_as_sawyer(options))
         end
       end
       instance
