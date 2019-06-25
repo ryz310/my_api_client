@@ -3,13 +3,15 @@
 module MyApiClient
   # Test helper module for RSpec
   module Stub
-    def stub_api_client_all(klass, **actions)
-      allow(klass).to receive(:new).and_return(stub_api_client(klass, actions))
+    def stub_api_client_all(klass, **actions_and_options)
+      instance = stub_api_client(klass, actions_and_options)
+      allow(klass).to receive(:new).and_return(instance)
+      instance
     end
 
-    def stub_api_client(klass, **actions)
+    def stub_api_client(klass, **actions_and_options)
       instance = instance_double(klass)
-      actions.each do |action, options|
+      actions_and_options.each do |action, options|
         case options
         when Proc
           allow(instance).to receive(action) { |*request| options.call(*request) }
