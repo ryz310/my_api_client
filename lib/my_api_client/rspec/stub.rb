@@ -11,22 +11,7 @@ module MyApiClient
 
     def stub_api_client(klass, **actions_and_options)
       instance = instance_double(klass)
-      actions_and_options.each do |action, options|
-        case options
-        when Proc
-          allow(instance).to receive(action) { |*request| stub_as_sawyer(options.call(*request)) }
-        when Hash
-          if options[:raise].present?
-            allow(instance).to receive(action).and_raise(process_raise_option(options[:raise]))
-          elsif options[:response]
-            allow(instance).to receive(action).and_return(stub_as_sawyer(options[:response]))
-          else
-            allow(instance).to receive(action).and_return(stub_as_sawyer(options))
-          end
-        else
-          allow(instance).to receive(action).and_return(stub_as_sawyer(options))
-        end
-      end
+      actions_and_options.each { |action, options| stubbing(instance, action, options) }
       instance
     end
 
@@ -65,6 +50,25 @@ module MyApiClient
     # rubocop:enable Metrics/AbcSize
 
     private
+
+    # rubocop:disable Metrics/AbcSize
+    def stubbing(instance, action, options)
+      case options
+      when Proc
+        allow(instance).to receive(action) { |*request| stub_as_sawyer(options.call(*request)) }
+      when Hash
+        if options[:raise].present?
+          allow(instance).to receive(action).and_raise(process_raise_option(options[:raise]))
+        elsif options[:response]
+          allow(instance).to receive(action).and_return(stub_as_sawyer(options[:response]))
+        else
+          allow(instance).to receive(action).and_return(stub_as_sawyer(options))
+        end
+      else
+        allow(instance).to receive(action).and_return(stub_as_sawyer(options))
+      end
+    end
+    # rubocop:enable Metrics/AbcSize
 
     # Provides a shorthand for `raise` option.
     # `MyApiClient::Error` requires `MyApiClient::Params::Params` instance on
