@@ -68,7 +68,7 @@ RSpec.describe MyApiClient::Stub do
         end
       end
 
-      context 'with MyApiClient::Error instance' do
+      context 'with not an MyApiClient::Error class or instance' do
         it 'raises exception' do
           expect { my_api_client_stub(self.class::ExampleApiClient, :request, raise: 1) }
             .to raise_error(/Unsupported error class was set/)
