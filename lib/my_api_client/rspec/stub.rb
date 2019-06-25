@@ -3,6 +3,29 @@
 module MyApiClient
   # Test helper module for RSpec
   module Stub
+    def stub_api_client_all(klass, **actions)
+      allow(klass).to receive(:new).and_return(stub_api_client(klass, actions))
+    end
+
+    def stub_api_client(klass, **actions)
+      instance = instance_double(klass)
+      actions.each do |action, options|
+        case options
+        when Proc
+          allow(instance).to receive(action) { |*request| options.call(*request) }
+        when Hash
+          if options[:raise].present?
+            allow(instance).to receive(action).and_raise(process_raise_option(options[:raise]))
+          else
+            allow(instance).to receive(action).and_return(stub_as_sawyer(options[:response]))
+          end
+        else
+          allow(instance).to receive(action).and_return(nil)
+        end
+      end
+      instance
+    end
+
     # Provides stubbing feature for `MyApiClient`.
     #
     # @param klass [Class]
