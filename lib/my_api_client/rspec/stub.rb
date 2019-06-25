@@ -89,7 +89,7 @@ module MyApiClient
     def stub_as_sawyer(params)
       case params
       when Hash  then Sawyer::Resource.new(agent, params)
-      when Array then params.map { |hash| sawyer_resource(hash) }
+      when Array then params.map { |hash| stub_as_sawyer(hash) }
       when nil   then nil
       else params
       end
