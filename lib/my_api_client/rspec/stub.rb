@@ -3,12 +3,49 @@
 module MyApiClient
   # Test helper module for RSpec
   module Stub
+    # Stubs all instance of arbitrary MyApiClient class.
+    # And returns a stubbed arbitrary MyApiClient instance.
+    #
+    # @param klass [Class]
+    #   Stubbing target class.
+    # @param actions_and_options [Hash]
+    #   Stubbing target method and options
+    # @example
+    #   stub_api_client_all(
+    #     ExampleApiClient,
+    #     get_user: { response: { id: 1 } },               # Returns an arbitrary response.
+    #     post_users: { status: 'created' },               # You can ommit `response` keyword.
+    #     patch_user: ->(params) { { id: params[:id] } },  # Returns calculated result as response.
+    #     delete_user: { raise: MyApiClient::ClientError } # Raises an arbitrary error.
+    #   )
+    #   response = ExampleApiClient.new.get_user(id: 123)
+    #   response.id # => 1
+    # @return [InstanceDouble]
+    #   Returns a spy object of the stubbed ApiClient.
     def stub_api_client_all(klass, **actions_and_options)
       instance = stub_api_client(klass, actions_and_options)
       allow(klass).to receive(:new).and_return(instance)
       instance
     end
 
+    # Returns a stubbed arbitrary MyApiClient instance.
+    #
+    # @param klass [Class]
+    #   Stubbing target class.
+    # @param actions_and_options [Hash]
+    #   Stubbing target method and options
+    # @example
+    #   api_client = stub_api_client(
+    #     ExampleApiClient,
+    #     get_user: { response: { id: 1 } },               # Returns an arbitrary response.
+    #     post_users: { status: 'created' },               # You can ommit `response` keyword.
+    #     patch_user: ->(params) { { id: params[:id] } },  # Returns calculated result as response.
+    #     delete_user: { raise: MyApiClient::ClientError } # Raises an arbitrary error.
+    #   )
+    #   response = api_client.get_user(id: 123)
+    #   response.id # => 1
+    # @return [InstanceDouble]
+    #   Returns a spy object of the stubbed ApiClient.
     def stub_api_client(klass, **actions_and_options)
       instance = instance_double(klass)
       actions_and_options.each { |action, options| stubbing(instance, action, options) }
