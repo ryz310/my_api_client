@@ -43,6 +43,10 @@ module MyApiClient
     #   Returns a spy object for the ApiClient.
     # rubocop:disable Metrics/AbcSize
     def my_api_client_stub(klass, action, response: nil, raise: nil)
+      ActiveSupport::Deprecation.warn(<<~MSG)
+        `my_api_client_stub` is deprecated. Please use `stub_api_client` or `stub_api_client_all`.
+      MSG
+
       instance = instance_double(klass)
       allow(klass).to receive(:new).and_return(instance)
       if raise.present?
