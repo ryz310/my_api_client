@@ -5,7 +5,7 @@ class ApplicationApiClient < MyApiClient::Base
   # Almost settings are inherited to child classes.
 
   # Set the log output destination. The default is `Logger.new(STDOUT)`.
-  logger = Rails.logger
+  self.logger = Rails.logger
 
   # Set the maximum number of seconds to wait on HTTP connection. If the
   # connection does not open even after this number of seconds, the exception
