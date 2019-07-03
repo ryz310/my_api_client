@@ -1,7 +1,23 @@
 # frozen_string_literal: true
 
 RSpec.describe MyApiClient::Base do
-  let(:instance) { described_class.new }
+  class self::MyLogger < ::Logger
+    def initialize
+      super(STDOUT)
+    end
+  end
+
+  class self::MockClass < described_class
+    self.logger = RSpec::ExampleGroups::MyApiClientBase::MyLogger.new
+  end
+
+  let(:instance) { self.class::MockClass.new }
+
+  describe '.logger=' do
+    it 'overrides the log output destination' do
+      expect(instance.logger).to be_kind_of(self.class::MyLogger)
+    end
+  end
 
   described_class::HTTP_METHODS.each do |http_method|
     describe "##{http_method}" do
@@ -16,7 +32,7 @@ RSpec.describe MyApiClient::Base do
         instance.public_send(http_method, pathname, headers: headers, query: query, body: body)
         expect(instance)
           .to have_received(:_request)
-          .with(http_method, pathname, headers, query, body, instance_of(::Logger))
+          .with(http_method, pathname, headers, query, body, instance_of(self.class::MyLogger))
       end
     end
   end
