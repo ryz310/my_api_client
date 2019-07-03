@@ -14,7 +14,7 @@ module MyApiClient
     #   stub_api_client_all(
     #     ExampleApiClient,
     #     get_user: { response: { id: 1 } },               # Returns an arbitrary response.
-    #     post_users: { status: 'created' },               # You can ommit `response` keyword.
+    #     post_users: { id: 1 },                           # You can ommit `response` keyword.
     #     patch_user: ->(params) { { id: params[:id] } },  # Returns calculated result as response.
     #     delete_user: { raise: MyApiClient::ClientError } # Raises an arbitrary error.
     #   )
@@ -38,7 +38,7 @@ module MyApiClient
     #   api_client = stub_api_client(
     #     ExampleApiClient,
     #     get_user: { response: { id: 1 } },               # Returns an arbitrary response.
-    #     post_users: { status: 'created' },               # You can ommit `response` keyword.
+    #     post_users: { id: 1 },                           # You can ommit `response` keyword.
     #     patch_user: ->(params) { { id: params[:id] } },  # Returns calculated result as response.
     #     delete_user: { raise: MyApiClient::ClientError } # Raises an arbitrary error.
     #   )

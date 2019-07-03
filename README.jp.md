@@ -299,34 +299,51 @@ class ExampleApiClient < MyApiClient::Base
 end
 ```
 
-`my_api_client_stub` を使うことで、 `ExampleApiClient#request` をスタブ化することができます。これで `#request` を実行してもリアルな HTTP リクエストが実行されなくなります。
+`stub_api_client_all` や `stub_api_client` を使うことで、 `ExampleApiClient#request` をスタブ化することができます。これで `#request` を実行してもリアルな HTTP リクエストが実行されなくなります。
 
 ```ruby
-my_api_client_stub(ExampleApiClient, :request, response: { id: 12345 })
+stub_api_client_all(
+  ExampleApiClient,
+  request: { response: { id: 12345 } }
+)
 
 response = ExampleApiClient.new.request(user_id: 1)
 response.id # => 12345
 ```
 
-リクスエストパラメータを使ったレスポンスを返すようにスタブ化したい場合は、 `block` を利用することで実現できます。
+`response` は省略することも可能です。
 
 ```ruby
-my_api_client_stub(ExampleApiClient, :request) do |params|
-  { id: params[:user_id] }
-end
+stub_api_client_all(
+  ExampleApiClient,
+  request: { id: 12345 }
+)
+
+response = ExampleApiClient.new.request(user_id: 1)
+response.id # => 12345
+```
+
+
+リクスエストパラメータを使ったレスポンスを返すようにスタブ化したい場合は、 `Proc` を利用することで実現できます。
+
+```ruby
+stub_api_client_all(
+  ExampleApiClient,
+  request: ->(params) { { id: params[:user_id] } }
+)
 
 response = ExampleApiClient.new.request(user_id: 1)
 response.id # => 1
 ```
 
-`receive` や `have_received` を使ったテストを書きたい場合は、 `my_api_client_stub` の戻り値を利用すると良いでしょう。
+`receive` や `have_received` を使ったテストを書きたい場合は、 `stub_api_client_all` や `stub_api_client` の戻り値を利用すると良いでしょう。
 
 ```ruby
 def execute_api_request
   ExampleApiClient.new.request(user_id: 1)
 end
 
-api_clinet = my_api_client_stub(ExampleApiClient, :request)
+api_clinet = stub_api_client_all(ExampleApiClient, request: nil)
 execute_api_request
 expect(api_client).to have_received(:request).with(user_id: 1)
 ```
@@ -338,7 +355,7 @@ def execute_api_request
   ExampleApiClient.new.request(user_id: 1)
 end
 
-my_api_client_stub(ExampleApiClient, :request, raise: MyApiClient::Error)
+stub_api_client_all(ExampleApiClient, request: { raise: MyApiClient::Error })
 expect { execute_api_request }.to raise_error(MyApiClient::Error)
 ```
 
