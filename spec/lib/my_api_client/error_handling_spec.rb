@@ -28,6 +28,8 @@ RSpec.describe MyApiClient::ErrorHandling do
     error_handling json: { '$.errors.message': /[sS]orry/ }, with: :json_is_monitored_by_regex
     error_handling json: { '$.errors.code': 10 }, with: :json_is_monitored_by_number
     error_handling json: { '$.errors.code': 20..29 }, with: :json_is_monitored_by_range
+    error_handling json: { '$.errors.is_transient': true }, with: :json_is_monitored_by_true
+    error_handling json: { '$.errors.is_transient': false }, with: :json_is_monitored_by_false
 
     # Use complex patterns
     error_handling status_code: 200, json: { '$.errors.code': 30 },
@@ -152,6 +154,34 @@ RSpec.describe MyApiClient::ErrorHandling do
         end
       end
 
+      describe 'with true' do
+        let(:response_body) do
+          {
+            errors: {
+              is_transient: true,
+            },
+          }.to_json
+        end
+
+        it 'monitors given JSON with true' do
+          expect(error_handler).to eq :json_is_monitored_by_true
+        end
+      end
+
+      describe 'with false' do
+        let(:response_body) do
+          {
+            errors: {
+              is_transient: false,
+            },
+          }.to_json
+        end
+
+        it 'monitors given JSON with false' do
+          expect(error_handler).to eq :json_is_monitored_by_false
+        end
+      end
+
       describe 'when given text/html response' do
         let(:status_code) { 404 }
         let(:response_body) { <<~HTML }
@@ -270,7 +300,7 @@ RSpec.describe MyApiClient::ErrorHandling do
     describe 'definition' do
       it 'is isolate defined for each classes' do
         expect(self.class::SuperMockClass.error_handlers.count).to eq 1
-        expect(self.class::MockClass.error_handlers.count).to eq 13
+        expect(self.class::MockClass.error_handlers.count).to eq 15
         expect(self.class::AnotherMockClass.error_handlers.count).to eq 4
       end
     end
