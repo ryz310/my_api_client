@@ -2,7 +2,7 @@ Description:
     Generate a new api client class files.
 
 Example:
-    `rails g api_client path/to/resource https://example.com get_user:get:path/to/resource`
+    `rails g api_client path/to/resource get:path/to/resource`
 
     This will create:
         create  app/api_clients/application_api_client.rb

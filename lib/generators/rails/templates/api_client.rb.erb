@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class <%= "#{class_name}ApiClient" %> < ::ApplicationApiClient
-  endpoint '<%= endpoint %>'
+  endpoint '{ endpoint }'
 
   # error_handling json: { '$.errors.code': 10 } do |params, logger|
   #   # Behavior when detected an error.
@@ -10,9 +10,8 @@ class <%= "#{class_name}ApiClient" %> < ::ApplicationApiClient
   def initialize
   end
 
-<% requests.each do |request| -%>
-<% action, http_method, pathname = request.split(':') -%>
-  # <%= "#{http_method.upcase} #{endpoint}/#{pathname}" %>
+<% yeild_request_arguments do |action, http_method, pathname| -%>
+  # <%= "#{http_method.upcase} #{pathname}" %>
   #
   # @return [Sawyer::Resource] Description of the API response
   # @raise [MyApiClient::Error] Description of the error
