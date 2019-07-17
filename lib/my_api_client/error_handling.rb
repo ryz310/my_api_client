@@ -55,6 +55,8 @@ module MyApiClient
           operator.include?(target)
         when Regexp
           operator =~ target.to_s
+        when Symbol
+          target.respond_to?(operator) && target.public_send(operator)
         else
           raise "Unexpected operator type was given: #{operator.inspect}"
         end
