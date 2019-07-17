@@ -4,7 +4,7 @@ PATH
     my_api_client (0.7.0)
       activesupport (>= 4.2.0)
       jsonpath
-      sawyer
+      sawyer (>= 0.8.2)
 
 GEM
   remote: https://rubygems.org/
