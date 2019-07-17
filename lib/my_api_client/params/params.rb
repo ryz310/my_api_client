@@ -60,6 +60,7 @@ module MyApiClient
             response_status: response.status,
             response_headers: response.headers,
             response_body: body,
+            duration: response.timing,
           }.compact
         else
           {}
