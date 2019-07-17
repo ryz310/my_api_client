@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# The helper module for source generators
 module MyApiClient
+  # The helper module for source generators
   module GeneratorHelper
     def yeild_request_arguments
       requests.each do |request|
