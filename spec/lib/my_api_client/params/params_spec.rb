@@ -20,7 +20,8 @@ RSpec.describe MyApiClient::Params::Params do
       inspect: '"#<Sawyer::Response#inspect>"',
       status: 200,
       headers: { 'Content-Type': 'application/json; charset=utf-8' },
-      data: { status: 'OK' }
+      data: { status: 'OK' },
+      timing: 0.12345
     )
   end
 
@@ -33,7 +34,8 @@ RSpec.describe MyApiClient::Params::Params do
           request_query: { key: 'value' },
           response_status: 200,
           response_headers: { 'Content-Type': 'application/json; charset=utf-8' },
-          response_body: { status: 'OK' }
+          response_body: { status: 'OK' },
+          duration: 0.12345
         )
       end
     end
@@ -57,7 +59,8 @@ RSpec.describe MyApiClient::Params::Params do
         expect(instance.metadata).to eq(
           response_status: 200,
           response_headers: { 'Content-Type': 'application/json; charset=utf-8' },
-          response_body: { status: 'OK' }
+          response_body: { status: 'OK' },
+          duration: 0.12345
         )
       end
     end
