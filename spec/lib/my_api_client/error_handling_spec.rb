@@ -28,8 +28,8 @@ RSpec.describe MyApiClient::ErrorHandling do
     error_handling json: { '$.errors.message': /[sS]orry/ }, with: :json_is_monitored_by_regex
     error_handling json: { '$.errors.code': 10 }, with: :json_is_monitored_by_number
     error_handling json: { '$.errors.code': 20..29 }, with: :json_is_monitored_by_range
-    error_handling json: { '$.errors.is_transient': true }, with: :json_is_monitored_by_true
-    error_handling json: { '$.errors.is_transient': false }, with: :json_is_monitored_by_false
+    error_handling json: { '$.errors.is_transient': true }, with: :json_is_monitored_by_true_value
+    error_handling json: { '$.errors.is_transient': false }, with: :json_is_monitored_by_false_value
 
     # Use complex patterns
     error_handling status_code: 200, json: { '$.errors.code': 30 },
@@ -154,7 +154,7 @@ RSpec.describe MyApiClient::ErrorHandling do
         end
       end
 
-      describe 'with true' do
+      describe 'with true value' do
         let(:response_body) do
           {
             errors: {
@@ -164,11 +164,11 @@ RSpec.describe MyApiClient::ErrorHandling do
         end
 
         it 'monitors given JSON with true' do
-          expect(error_handler).to eq :json_is_monitored_by_true
+          expect(error_handler).to eq :json_is_monitored_by_true_value
         end
       end
 
-      describe 'with false' do
+      describe 'with false value' do
         let(:response_body) do
           {
             errors: {
@@ -178,7 +178,7 @@ RSpec.describe MyApiClient::ErrorHandling do
         end
 
         it 'monitors given JSON with false' do
-          expect(error_handler).to eq :json_is_monitored_by_false
+          expect(error_handler).to eq :json_is_monitored_by_false_value
         end
       end
 
