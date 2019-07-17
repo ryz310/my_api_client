@@ -24,7 +24,7 @@ gem 'my_api_client'
 Ruby on Rails を利用している場合は `generator` 機能を利用できます。
 
 ```sh
-$ rails g api_client path/to/resource https://example.com get_user:get:path/to/resource
+$ rails g api_client path/to/resource get:path/to/resource
 
 create  app/api_clients/application_api_client.rb
 create  app/api_clients/path/to/resource_api_client.rb
