@@ -40,14 +40,9 @@ GEM
     minitest (5.11.3)
     multi_json (1.13.1)
     multipart-post (2.1.1)
-    octokit (4.14.0)
-      sawyer (~> 0.8.0, >= 0.5.3)
     parallel (1.17.0)
     parser (2.6.3.0)
       ast (~> 2.4.0)
-    pr_comet (0.3.0)
-      octokit
-      rainbow
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
@@ -111,7 +106,6 @@ DEPENDENCIES
   bugsnag (>= 6.11.0)
   bundler (~> 1.16)
   my_api_client!
-  pr_comet
   pry-byebug
   rake (~> 10.0)
   rspec
