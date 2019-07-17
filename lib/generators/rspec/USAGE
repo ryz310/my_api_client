@@ -2,7 +2,7 @@ Description:
     Generate a new api client spec files.
 
 Example:
-    rails g rspec:api_client path/to/resource https://example.com get_user:get:path/to/resource`
+    rails g rspec:api_client path/to/resource get:path/to/resource`
 
     This will create:
         create  spec/api_clients/path/to/resource_api_client_spec.rb

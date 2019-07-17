@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
+require_relative '../generator_helper'
+
 module Rails
   # rails g api_client
   class ApiClientGenerator < Rails::Generators::NamedBase
+    include MyApiClient::GeneratorHelper
+
     source_root File.expand_path('templates', __dir__)
     check_class_collision suffix: 'ApiClient'
 
-    argument :endpoint,
-             type: :string,
-             default: 'https://example.com',
-             banner: '{schema and hostname}'
     argument :requests,
              type: :array,
-             default: %w[get_resource:get:path/to/resource post_resource:post:path/to/resource],
-             banner: '{action}:{method}:{path} {action}:{method}:{path}'
+             default: %w[get:path/to/resource post:path/to/resource],
+             banner: '{method}:{path} {method}:{path}'
 
     def generate_root_class
       file_path = File.join('app/api_clients', 'application_api_client.rb')

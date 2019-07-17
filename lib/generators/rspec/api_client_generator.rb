@@ -1,21 +1,20 @@
 # frozen_string_literal: true
 
 require 'generators/rspec'
+require_relative '../generator_helper'
 
 module Rspec
   module Generators
     # rails g rspec:api_client
     class ApiClientGenerator < Base
+      include MyApiClient::GeneratorHelper
+
       source_root File.expand_path('templates', __dir__)
 
-      argument :endpoint,
-               type: :string,
-               default: 'https://example.com',
-               banner: '{schema and hostname}'
       argument :requests,
                type: :array,
-               default: %w[get_resource:get:path/to/resource post_resource:post:path/to/resource],
-               banner: '{action}:{method}:{path} {action}:{method}:{path}'
+               default: %w[get:path/to/resource post:path/to/resource],
+               banner: '{method}:{path} {method}:{path}'
 
       class_option :api_client_specs, type: :boolean, default: true
 
