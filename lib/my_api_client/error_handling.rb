@@ -49,7 +49,7 @@ module MyApiClient
         return true if operator.nil?
 
         case operator
-        when String, Integer
+        when String, Integer, TrueClass, FalseClass
           operator == target
         when Range
           operator.include?(target)
