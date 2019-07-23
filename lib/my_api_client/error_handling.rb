@@ -45,20 +45,24 @@ module MyApiClient
 
       private
 
+      # rubocop:disable Metrics/CyclomaticComplexity
       def match?(operator, target)
-        return true if operator.nil?
-
         case operator
+        when nil
+          true
         when String, Integer, TrueClass, FalseClass
           operator == target
         when Range
           operator.include?(target)
         when Regexp
           operator =~ target.to_s
+        when Symbol
+          target.respond_to?(operator) && target.public_send(operator)
         else
           raise "Unexpected operator type was given: #{operator.inspect}"
         end
       end
+      # rubocop:enable Metrics/CyclomaticComplexity
 
       def match_all?(json, response_body)
         return true if json.nil?
