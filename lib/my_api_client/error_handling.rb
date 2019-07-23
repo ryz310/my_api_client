@@ -46,9 +46,9 @@ module MyApiClient
       private
 
       def match?(operator, target)
-        return true if operator.nil?
-
         case operator
+        when nil
+          true
         when String, Integer, TrueClass, FalseClass
           operator == target
         when Range
