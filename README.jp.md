@@ -170,6 +170,23 @@ def my_error_handling(params, logger)
 end
 ```
 
+#### Symbol を利用する
+
+```ruby
+error_handling json: { '$.errors.code': :negative? }
+```
+
+実験的な機能ですが、`status` や `json` の Value に `Symbol` を指定することで、結果値に対してメソッド呼び出しを行い、結果を判定させる事ができます。上記の場合、以下のような JSON にマッチします。なお、対象 Object に `#negative?` が存在しない場合はメソッドは呼び出されません。
+
+```json
+{
+    "erros": {
+        "code": -1,
+        "message": "Some error has occurred."
+    }
+}
+```
+
 #### MyApiClient::Params::Params
 
 WIP
