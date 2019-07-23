@@ -45,6 +45,7 @@ module MyApiClient
 
       private
 
+      # rubocop:disable Metrics/CyclomaticComplexity
       def match?(operator, target)
         case operator
         when nil
@@ -61,6 +62,7 @@ module MyApiClient
           raise "Unexpected operator type was given: #{operator.inspect}"
         end
       end
+      # rubocop:enable Metrics/CyclomaticComplexity
 
       def match_all?(json, response_body)
         return true if json.nil?
