@@ -1,14 +1,27 @@
 # Change log
 
+## 0.8.0 (July 23, 2019)
+
+### New Features
+
+* Allow method calling on error handling (#89)
+
+### Breaking Changes
+
+* Require sawyer gem v0.8.2 over (#88)
+
 ## 0.7.0 (July 17, 2019)
 
-## Features
+### Features
 
 * Add request duration to metadata (#80)
 * Support boolean on error handling (#81)
-* Modify the generator to be simple (#82) **breaking changes**
 
-## Misc
+### Breaking Changes
+
+* Modify the generator to be simple (#82)
+
+### Misc
 
 * Re-generate .rubocop_todo.yml with RuboCop v0.73.0 (#79)
 * Introduce gem comet (#85)
