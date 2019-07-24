@@ -20,13 +20,18 @@ module MyApiClient
     extend ActiveSupport::Concern
 
     class_methods do
-      # Description of .error_handling
+      # Definition of an error handling
       #
-      # @param status_code [String, Range, Integer, Regexp] default: nil
-      # @param json [Hash] default: nil
-      # @param with [Symbol] default: nil
-      # @param raise [MyApiClient::Error] default: MyApiClient::Error
-      # @param block [Proc] describe_block_here
+      # @param status_code [String, Range, Integer, Regexp]
+      #   Verifies response HTTP status code and raises error if matched
+      # @param json [Hash]
+      #   Verifies response body as JSON and raises error if matched
+      # @param with [Symbol]
+      #   Calls specified method when error detected
+      # @param raise [MyApiClient::Error]
+      #   Raises specified error when error detected. default: MyApiClient::Error
+      # @param block [Proc]
+      #   Executes the block when error detected
       def error_handling(status_code: nil, json: nil, with: nil, raise: MyApiClient::Error)
         temp = error_handlers.dup
         temp << lambda { |response|
