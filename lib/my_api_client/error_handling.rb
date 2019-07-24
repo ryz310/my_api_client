@@ -22,28 +22,24 @@ module MyApiClient
     class_methods do
       # Definition of an error handling
       #
-      # @param status_code [String, Range, Integer, Regexp]
+      # @param options [Hash]
+      #   Options for this generator
+      # @option status_code [String, Range, Integer, Regexp]
       #   Verifies response HTTP status code and raises error if matched
-      # @param json [Hash]
+      # @option json [Hash]
       #   Verifies response body as JSON and raises error if matched
-      # @param with [Symbol]
+      # @option with [Symbol]
       #   Calls specified method when error detected
-      # @param raise [MyApiClient::Error]
+      # @option raise [MyApiClient::Error]
       #   Raises specified error when error detected. default: MyApiClient::Error
-      # @param block [Proc]
+      # @yield [MyApiClient::Params::Params, MyApiClient::Logger]
       #   Executes the block when error detected
-      def error_handling(status_code: nil, json: nil, with: nil, raise: MyApiClient::Error, &block)
+      def error_handling(**options, &block)
+        options[:raise] ||= MyApiClient::Error
+        options[:block] = block if block_given?
+
         temp = error_handlers.dup
-        temp << lambda { |response|
-          Generator.call(
-            response: response,
-            status_code: status_code,
-            json: json,
-            with: with,
-            raise: raise,
-            block: (block if block_given?)
-          )
-        }
+        temp << ->(response) { Generator.call(options.merge(response: response)) }
         self.error_handlers = temp
       end
     end
