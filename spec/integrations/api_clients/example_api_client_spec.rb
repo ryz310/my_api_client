@@ -18,7 +18,7 @@ RSpec.describe ExampleApiClient, type: :api_client do
     stub_request(http_method, endpoint)
       .with(headers: request_headers, body: request_body)
       .to_return(api_response)
-    allow(ExampleApiClient).to receive(:logger).and_return(logger)
+    allow(described_class).to receive(:logger).and_return(logger)
   end
 
   shared_examples 'error handling' do
