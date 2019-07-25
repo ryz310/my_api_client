@@ -23,6 +23,9 @@ RSpec.describe MyApiClient::ErrorHandling do
     error_handling status_code: 404, with: :status_code_is_monitored_by_number
     error_handling status_code: 405..499, with: :status_code_is_monitored_by_range
 
+    # Use `forbid_nil`
+    error_handling status_code: 200, forbid_nil: true, with: :nil_is_forbidden_with_response_body
+
     # Use `json`
     error_handling json: { '$.errors.message': 'maintenance' }, with: :json_is_monitored_by_string
     error_handling json: { '$.errors.message': /[sS]orry/ }, with: :json_is_monitored_by_regex
@@ -69,7 +72,7 @@ RSpec.describe MyApiClient::ErrorHandling do
     let(:logger) { instance_double(MyApiClient::Logger) }
 
     describe 'use `status_code`' do
-      let(:response_body) { nil.to_json }
+      let(:response_body) { nil }
 
       describe 'with Regexp' do
         let(:status_code) { 401 }
@@ -93,6 +96,15 @@ RSpec.describe MyApiClient::ErrorHandling do
         it 'monitors given status code within the range' do
           expect(error_handler).to eq :status_code_is_monitored_by_range
         end
+      end
+    end
+
+    describe 'use `forbid_nil`' do
+      let(:status_code) { 200 }
+      let(:response_body) { nil }
+
+      it 'forbid "nil" with response body' do
+        expect(error_handler).to eq :nil_is_forbidden_with_response_body
       end
     end
 
@@ -313,9 +325,9 @@ RSpec.describe MyApiClient::ErrorHandling do
     end
 
     describe 'definition' do
-      it 'is isolate defined for each classes' do
+      it 'is isolatedly defined for each classes' do
         expect(self.class::SuperMockClass.error_handlers.count).to eq 1
-        expect(self.class::MockClass.error_handlers.count).to eq 16
+        expect(self.class::MockClass.error_handlers.count).to eq 17
         expect(self.class::AnotherMockClass.error_handlers.count).to eq 4
       end
     end
