@@ -137,7 +137,7 @@ RSpec.describe MyApiClient::Stub do
         stub_api_client(
           self.class::ExampleApiClient,
           request: { response: { id: 12_345 } },
-          request_all: { response: [{ id: 10 }, { id: 20 }, { id: 30 }] }
+          request_all: { response: [10, 20, 30] }
         )
       end
 
@@ -145,7 +145,7 @@ RSpec.describe MyApiClient::Stub do
         response1 = api_client.request(user_id: 1)
         expect(response1.id).to eq 12_345
         response2 = api_client.request_all
-        expect(response2.map(&:id)).to eq [10, 20, 30]
+        expect(response2).to eq [10, 20, 30]
       end
     end
 
