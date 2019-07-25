@@ -23,9 +23,6 @@ RSpec.describe MyApiClient::ErrorHandling do
     error_handling status_code: 404, with: :status_code_is_monitored_by_number
     error_handling status_code: 405..499, with: :status_code_is_monitored_by_range
 
-    # Use `forbid_nil`
-    error_handling status_code: 200, forbid_nil: true, with: :nil_is_forbidden_with_response_body
-
     # Use `json`
     error_handling json: { '$.errors.message': 'maintenance' }, with: :json_is_monitored_by_string
     error_handling json: { '$.errors.message': /[sS]orry/ }, with: :json_is_monitored_by_regex
@@ -34,6 +31,9 @@ RSpec.describe MyApiClient::ErrorHandling do
     error_handling json: { '$.errors.is_transient': true }, with: :json_is_monitored_by_true_value
     error_handling json: { '$.errors.is_transient': false }, with: :json_is_monitored_by_false_value
     error_handling json: { '$.errors.code': :negative? }, with: :json_is_monitored_by_method_calling
+
+    # Use `forbid_nil`
+    error_handling status_code: 200, json: :forbid_nil, with: :nil_is_forbidden_with_response_body
 
     # Use complex patterns
     error_handling status_code: 200, json: { '$.errors.code': 30 },
@@ -70,6 +70,13 @@ RSpec.describe MyApiClient::ErrorHandling do
     end
     let(:params) { instance_double(MyApiClient::Params::Params, metadata: {}) }
     let(:logger) { instance_double(MyApiClient::Logger) }
+
+    context 'when response is valid' do
+      let(:status_code) { 200 }
+      let(:response_body) { 'expected result' }
+
+      it { expect(error_handler).to be_nil }
+    end
 
     describe 'use `status_code`' do
       let(:response_body) { nil }
