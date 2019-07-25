@@ -1,5 +1,11 @@
 # Change log
 
+## 0.9.1 (July 25, 2019)
+
+### Bugfix
+
+* Fix/forbid nil option ([#97](https://github.com/ryz310/my_api_client/pull/97)) **Breaking Changes**
+
 ## 0.9.0 (July 25, 2019)
 
 ### New Features
