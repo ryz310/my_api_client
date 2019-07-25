@@ -1,5 +1,15 @@
 # Change log
 
+## 0.9.0 (July 25, 2019)
+
+### New Features
+
+* Forbid nil response ([#93](https://github.com/ryz310/my_api_client/pull/93))
+
+### Misc
+
+* RSpec/DescribedClass-20190723233015 ([#92](https://github.com/ryz310/my_api_client/pull/92))
+
 ## 0.8.0 (July 23, 2019)
 
 ### New Features
