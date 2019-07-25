@@ -12,10 +12,9 @@ module MyApiClient
       #   The target of verifying
       # @option status_code [String, Range, Integer, Regexp]
       #   Verifies response HTTP status code and raises error if matched
-      # @option json [Hash]
-      #   Verifies response body as JSON and raises error if matched
-      # @option forbid_nil [Boolean]
-      #   Verifies response_body and raises error if it is `nil`
+      # @option json [Hash, Symbol]
+      #   Verifies response body as JSON and raises error if matched.
+      #   If specified `:forbid_nil`, it forbid `nil` on response_body.
       # @option with [Symbol]
       #   Calls specified method when error detected
       # @option raise [MyApiClient::Error]
@@ -32,7 +31,7 @@ module MyApiClient
 
       private
 
-      attr_reader :_response, :_status_code, :_json, :_forbid_nil, :_with, :_raise, :_block
+      attr_reader :_response, :_status_code, :_json, :_with, :_raise, :_block
 
       def initialize(**options)
         options.each { |k, v| instance_variable_set("@_#{k}", v) }
@@ -72,7 +71,7 @@ module MyApiClient
 
       def match_all?(json, response_body)
         return true if json.nil?
-        return true if response_body.nil? && _forbid_nil
+        return response_body.nil? if json == :forbid_nil
         return false if response_body.blank?
 
         json.all? do |path, operator|
