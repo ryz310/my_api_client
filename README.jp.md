@@ -187,6 +187,14 @@ error_handling json: { '$.errors.code': :negative? }
 }
 ```
 
+#### forbid_nil
+
+```ruby
+error_handling status_code: 200, forbid_nil: true
+```
+
+一部のサービスではサーバーから何らかの Response Body が返ってくる事を期待しているにも関わらず、空の結果が結果が返ってくるというケースがあるようです。こちらも実験的な機能ですが、そういったケースを検出するために `forbid_nil` オプションを用意しました。通常の場合、Response Body が空の場合はエラー判定をしませんが、このオプションに `true` を指定するとエラーとして検知する様になります。正常応答が空となる API も存在するので、誤検知にご注意下さい。
+
 #### MyApiClient::Params::Params
 
 WIP
