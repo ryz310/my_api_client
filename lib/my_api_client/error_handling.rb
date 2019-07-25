@@ -7,7 +7,7 @@ module MyApiClient
   #   You need to define `class_attribute: error_handler, default: []` for the
   #   included class.
   # @example
-  #   error_handling status_code: 200, forbid_nil: true
+  #   error_handling status_code: 200, json: :forbid_nil
   #   error_handling status_code: 400..499, raise: MyApiClient::ClientError
   #   error_handling status_code: 500..599 do |params, logger|
   #     logger.warn 'Server error occurred.'
@@ -28,10 +28,9 @@ module MyApiClient
       #   Options for this generator
       # @option status_code [String, Range, Integer, Regexp]
       #   Verifies response HTTP status code and raises error if matched
-      # @option json [Hash]
-      #   Verifies response body as JSON and raises error if matched
-      # @option forbid_nil [Boolean]
-      #   Verifies response_body and raises error if it is `nil`. default: false.
+      # @option json [Hash, Symbol]
+      #   Verifies response body as JSON and raises error if matched.
+      #   If specified `:forbid_nil`, it forbid `nil` on response_body.
       # @option with [Symbol]
       #   Calls specified method when error detected
       # @option raise [MyApiClient::Error]
@@ -39,7 +38,6 @@ module MyApiClient
       # @yield [MyApiClient::Params::Params, MyApiClient::Logger]
       #   Executes the block when error detected
       def error_handling(**options, &block)
-        options[:forbid_nil] ||= false
         options[:raise] ||= MyApiClient::Error
         options[:block] = block if block_given?
 
