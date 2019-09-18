@@ -42,10 +42,11 @@ commands:
           cp gemfiles/rails_<< parameters.rails_version >>.gemfile Gemfile
           bundle update activesupport
   run_rspec:
-    description: 'Run RSpec'
+    description: Run RSpec
     steps:
+      - code-climate/install
       - run:
-          name: 'Execute RSpec'
+          name: Execute RSpec
           command: |
             mkdir /tmp/test-results
             TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
@@ -124,7 +125,6 @@ commands:
     steps:
       - modify_active_support_version:
           rails_version: << parameters.rails_version >>
-      - code-climate/install
       - run_rspec
       - rake_build
 
