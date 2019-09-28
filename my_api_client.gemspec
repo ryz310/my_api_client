@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'jsonpath'
   spec.add_dependency 'sawyer', '>= 0.8.2'
 
-  spec.add_development_dependency 'bundler', '~> 1.16'
+  spec.add_development_dependency 'bundler', '~> 2.0'
   spec.add_development_dependency 'pry-byebug'
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec'
