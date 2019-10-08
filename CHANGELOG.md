@@ -1,10 +1,31 @@
 # Change log
 
+## 0.9.2 (Oct 8, 2019)
+
+### Bugfix
+
+* Fix endpoint parsing when including port number ([#117](https://github.com/ryz310/my_api_client/pull/117))
+    * Fixes: Can't request to URL which includes port numbert ([#116](https://github.com/ryz310/my_api_client/pull/116))
+
+### Misc
+
+* Re-generate .rubocop_todo.yml with RuboCop v0.74.0 ([#100](https://github.com/ryz310/my_api_client/pull/100))
+* Re-generate .rubocop_todo.yml with RuboCop v0.75.0 ([#112](https://github.com/ryz310/my_api_client/pull/112))
+* Support Rails 6.0 ([#101](https://github.com/ryz310/my_api_client/pull/101))
+
+* deprecated/my_api_client_stub ([#102](https://github.com/ryz310/my_api_client/pull/102))
+* dependabot/bundler/rake-tw-13.0 ([#105](https://github.com/ryz310/my_api_client/pull/105))
+* dependabot/bundler/webmock-3.7.5 ([#108](https://github.com/ryz310/my_api_client/pull/108))
+* dependabot/bundler/bugsnag-6.12.1 ([#109](https://github.com/ryz310/my_api_client/pull/109))
+* dependabot/bundler/simplecov-0.17.1 ([#110](https://github.com/ryz310/my_api_client/pull/110))
+* dependabot/bundler/rubocop-rspec-1.36.0 ([#111](https://github.com/ryz310/my_api_client/pull/111))
+* dependabot/bundler/rubocop-performance-1.5.0 ([#115](https://github.com/ryz310/my_api_client/pull/115))
+
 ## 0.9.1 (July 25, 2019)
 
 ### Bugfix
 
-* Fix/forbid nil option ([#97](https://github.com/ryz310/my_api_client/pull/97)) **Breaking Changes**
+* Fix forbid nil option ([#97](https://github.com/ryz310/my_api_client/pull/97)) **Breaking Changes**
 
 ## 0.9.0 (July 25, 2019)
 
@@ -47,7 +68,7 @@
 ### Bug fixes
 
 * Fix logger setter on the template ([#76](https://github.com/ryz310/my_api_client/pull/76))
-    * Fix #54
+    * Fixes: The logger does not work... ([#54](https://github.com/ryz310/my_api_client/pull/54))
 
 ## 0.6.1 (July 03, 2019)
 
