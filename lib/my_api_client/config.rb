@@ -24,7 +24,11 @@ module MyApiClient
     # @return [String] description_of_returned_object
     def schema_and_hostname
       uri = URI.parse(endpoint)
-      "#{uri.scheme}://#{uri.host}"
+      if uri.default_port == uri.port
+        "#{uri.scheme}://#{uri.host}"
+      else
+        "#{uri.scheme}://#{uri.host}:#{uri.port}"
+      end
     end
 
     # Extracts pathname from endpoint
