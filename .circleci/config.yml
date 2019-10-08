@@ -17,7 +17,7 @@ references:
   - &rails_version
     rails_version:
       type: enum
-      enum: ['4.2', '5.0', '5.1', '5.2']
+      enum: ['4.2', '5.0', '5.1', '5.2', '6.0']
       default: '4.2'
   - &bundler_options
     bundler_options:
@@ -42,10 +42,11 @@ commands:
           cp gemfiles/rails_<< parameters.rails_version >>.gemfile Gemfile
           bundle update activesupport
   run_rspec:
-    description: 'Run RSpec'
+    description: Run RSpec
     steps:
+      - code-climate/install
       - run:
-          name: 'Execute RSpec'
+          name: Execute RSpec
           command: |
             mkdir /tmp/test-results
             TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
@@ -124,7 +125,6 @@ commands:
     steps:
       - modify_active_support_version:
           rails_version: << parameters.rails_version >>
-      - code-climate/install
       - run_rspec
       - rake_build
 
@@ -151,7 +151,7 @@ jobs:
       - code-climate/install
       - code-climate/sum-coverage:
           input: codeclimate.*.json
-          parts: 13
+          parts: 16
       - code-climate/upload-coverage
   rubocop:
     executor: default
@@ -212,6 +212,10 @@ workflows:
           ruby_version:  '2.5'
           rails_version: '5.2'
       - build:
+          name: build_on_ruby_2.5_and_rails_6.0
+          ruby_version:  '2.5'
+          rails_version: '6.0'
+      - build:
           name: build_on_ruby_2.6_and_rails_4.2
           ruby_version:  '2.6'
           rails_version: '4.2'
@@ -233,6 +237,16 @@ workflows:
           ruby_version:  '2.6'
           rails_version: '5.2'
           bundler_options: '--without integrations'
+      - build:
+          name: build_on_ruby_2.6_and_rails_6.0_with_integrations
+          ruby_version:  '2.6'
+          rails_version: '6.0'
+          bundler_options: '--with integrations'
+      - build:
+          name: build_on_ruby_2.6_and_rails_6.0_without_integrations
+          ruby_version:  '2.6'
+          rails_version: '6.0'
+          bundler_options: '--without integrations'
       - rubocop
       - yardoc
       - upload-coverage:
@@ -245,11 +259,14 @@ workflows:
             - build_on_ruby_2.5_and_rails_5.0
             - build_on_ruby_2.5_and_rails_5.1
             - build_on_ruby_2.5_and_rails_5.2
+            - build_on_ruby_2.5_and_rails_6.0
             - build_on_ruby_2.6_and_rails_4.2
             - build_on_ruby_2.6_and_rails_5.0
             - build_on_ruby_2.6_and_rails_5.1
             - build_on_ruby_2.6_and_rails_5.2_with_integrations
             - build_on_ruby_2.6_and_rails_5.2_without_integrations
+            - build_on_ruby_2.6_and_rails_6.0_with_integrations
+            - build_on_ruby_2.6_and_rails_6.0_without_integrations
       - release:
           context: RubyGems API Key
           requires:
@@ -261,11 +278,14 @@ workflows:
             - build_on_ruby_2.5_and_rails_5.0
             - build_on_ruby_2.5_and_rails_5.1
             - build_on_ruby_2.5_and_rails_5.2
+            - build_on_ruby_2.5_and_rails_6.0
             - build_on_ruby_2.6_and_rails_4.2
             - build_on_ruby_2.6_and_rails_5.0
             - build_on_ruby_2.6_and_rails_5.1
             - build_on_ruby_2.6_and_rails_5.2_with_integrations
             - build_on_ruby_2.6_and_rails_5.2_without_integrations
+            - build_on_ruby_2.6_and_rails_6.0_with_integrations
+            - build_on_ruby_2.6_and_rails_6.0_without_integrations
             - rubocop
           filters:
             branches:
