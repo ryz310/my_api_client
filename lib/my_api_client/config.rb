@@ -23,11 +23,10 @@ module MyApiClient
     #   schema_and_hostname # => 'https://example.com'
     # @return [String] description_of_returned_object
     def schema_and_hostname
-      uri = URI.parse(endpoint)
-      if uri.default_port == uri.port
-        "#{uri.scheme}://#{uri.host}"
+      if _uri.default_port == _uri.port
+        "#{_uri.scheme}://#{_uri.host}"
       else
-        "#{uri.scheme}://#{uri.host}:#{uri.port}"
+        "#{_uri.scheme}://#{_uri.host}:#{_uri.port}"
       end
     end
 
@@ -37,7 +36,14 @@ module MyApiClient
     #   common_path # => 'path/to/api'
     # @return [String] The pathanem
     def common_path
-      URI.parse(endpoint).path
+      _uri.path
+    end
+
+    private
+
+    # @return [URI] Returns a memoized URI instance
+    def _uri
+      @_uri ||= URI.parse(endpoint)
     end
   end
 end
