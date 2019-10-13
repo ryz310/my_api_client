@@ -55,27 +55,27 @@ RSpec.describe MyApiClient::Request do
     let(:logger) { instance_double(::Logger) }
     let(:request_logger) { instance_double(MyApiClient::Logger, info: nil, warn: nil, error: nil) }
 
-    it 'builds request parameter instance with arguments' do
+    it 'builds a request parameter instance with arguments' do
       request!
       expect(MyApiClient::Params::Request)
         .to have_received(:new).with(:get, '/v1/path/to/resource', headers, query, body)
     end
 
-    it 'builds a request logger instandce with arguments' do
+    it 'builds a request logger instance with arguments' do
       request!
       expect(MyApiClient::Logger)
         .to have_received(:new)
         .with(logger, instance_of(Faraday::Connection), :get, '/v1/path/to/resource')
     end
 
-    it 'builds Sawyer::Agent instance with the configuration parameter' do
+    it 'builds a Sawyer::Agent instance with the configuration parameter' do
       request!
       expect(Sawyer::Agent)
         .to have_received(:new)
         .with('https://example.com', faraday: instance_of(Faraday::Connection))
     end
 
-    it 'builds Faraday instance with configuration parameters' do
+    it 'builds a Faraday instance with configuration parameters' do
       request!
       expect(Faraday)
         .to have_received(:new)
