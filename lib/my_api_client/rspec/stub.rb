@@ -107,7 +107,7 @@ module MyApiClient
     end
 
     def agent
-      instance_double('Sawyer::Agent').tap do |agent|
+      instance_double(Sawyer::Agent).tap do |agent|
         allow(agent).to receive(:parse_links) do |data|
           data ||= {}
           links = data.delete(:_links)
