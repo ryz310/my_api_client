@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rspec/expectations'
-require 'webmock/rspec'
 
 RSpec::Matchers.define :request_to do |expected_method, expected_url|
   include MyApiClient::MatcherHelper

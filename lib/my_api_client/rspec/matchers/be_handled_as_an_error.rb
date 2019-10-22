@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rspec/expectations'
-require 'webmock/rspec'
 
 RSpec::Matchers.define :be_handled_as_an_error do |expected_error_class|
   include MyApiClient::MatcherHelper
