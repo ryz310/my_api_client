@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class <%= "#{class_name}ApiClient" %> < ::ApplicationApiClient
-  endpoint '{ endpoint }'
+  endpoint 'https://example.com'
 
   # error_handling json: { '$.errors.code': 10 } do |params, logger|
   #   # Behavior when detected an error.
