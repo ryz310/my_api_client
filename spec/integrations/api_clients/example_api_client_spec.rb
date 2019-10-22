@@ -13,7 +13,7 @@ RSpec.describe ExampleApiClient, type: :api_client do
     }
   end
 
-  shared_examples 'error handling' do
+  shared_examples 'to handle errors' do
     it do
       expect { api_request! }
         .to be_handled_as_an_error(MyApiClient::ClientError)
@@ -62,7 +62,7 @@ RSpec.describe ExampleApiClient, type: :api_client do
         .with(headers: headers, body: { name: 'Username' })
     end
 
-    it_behaves_like 'error handling' do
+    it_behaves_like 'to handle errors' do
       it do
         body = { user: { id: 1, name: 'Username' } }.to_json
         expect { api_request! }
@@ -80,7 +80,7 @@ RSpec.describe ExampleApiClient, type: :api_client do
         .with(headers: headers)
     end
 
-    it_behaves_like 'error handling' do
+    it_behaves_like 'to handle errors' do
       it do
         body = {
           users: [
@@ -104,7 +104,7 @@ RSpec.describe ExampleApiClient, type: :api_client do
         .with(headers: headers, body: { name: 'Modified' })
     end
 
-    it_behaves_like 'error handling' do
+    it_behaves_like 'to handle errors' do
       it do
         body = { user: { id: 1, name: 'Modified' } }.to_json
         expect { api_request! }
@@ -122,7 +122,7 @@ RSpec.describe ExampleApiClient, type: :api_client do
         .with(headers: headers)
     end
 
-    it_behaves_like 'error handling' do
+    it_behaves_like 'to handle errors' do
       it do
         expect { api_request! }
           .not_to be_handled_as_an_error.when_receive(status_code: 200, body: {}.to_json)
