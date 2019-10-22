@@ -4,9 +4,43 @@ require 'rails_helper'
 
 RSpec.describe <%= "#{class_name}ApiClient" %>, <%= type_metatag(:api_client) %> do
   let(:api_client) { described_class.new }
+  let(:headers) do
+    {
+      'Content-Type': 'application/json',
+    }
+  end
+
+  shared_examples 'to handle errors' do
+    it do
+      expect { api_request }
+        .to be_handled_as_an_error(MyApiClient::ClientError)
+        .when_receive(status_code: 400)
+    end
+
+    it do
+      expect { api_request }
+        .to be_handled_as_an_error(MyApiClient::ServerError)
+        .when_receive(status_code: 500)
+    end
+  end
 
 <% yeild_request_arguments do |action, http_method, pathname| -%>
   describe '#<%= action %>' do
+    subject(:api_request) { api_client.<%= action %> }
+
+    it do
+      expect { api_request }
+        .to request_to(:<%= http_method %>, '{ endpoint }/<%= pathname %>')
+        .with(headers: headers, body: nil, query: nil)
+    end
+
+    it_behaves_like 'to handle errors' do
+      it do
+        expect { api_request! }.not_to be_handled_as_an_error
+          .when_receive(status_code: 200, body: nil, headers: nil)
+      end
+    end
   end
+
 <% end -%>
 end
