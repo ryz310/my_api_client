@@ -9,8 +9,7 @@ RSpec::Matchers.define :request_to do |expected_method, expected_url|
   match do |api_request|
     disable_logging
     @expected = {
-      method: expected_method,
-      url: expected_url,
+      request_line: request_line(expected_method, expected_url),
       body: expected_options[:body],
       headers: expected_options[:headers],
       query: expected_options[:query],
@@ -23,8 +22,7 @@ RSpec::Matchers.define :request_to do |expected_method, expected_url|
     allow(sawyer).to receive(:call) do |method, pathname, body, options|
       @actual =
         {
-          method: method,
-          url: @actual_schema_and_hostname + pathname,
+          request_line: request_line(method, @actual_schema_and_hostname + pathname),
           body: body,
           headers: options[:headers],
           query: options[:query],
@@ -36,11 +34,19 @@ RSpec::Matchers.define :request_to do |expected_method, expected_url|
 
   chain :with, :expected_options
 
-  failure_message do |_|
+  description do
+    "request to \"#{request_line(expected_method, expected_url)}\""
+  end
+
+  failure_message do
     <<~MESSAGE
       expected that #{@actual} would match #{@expected}
       Diff: #{diff_as_object(@actual, @expected)}
     MESSAGE
+  end
+
+  def request_line(method, url)
+    "#{method.upcase} #{url}"
   end
 
   supports_block_expectations
