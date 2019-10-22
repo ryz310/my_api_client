@@ -31,12 +31,16 @@ RSpec.describe <%= "#{class_name}ApiClient" %>, <%= type_metatag(:api_client) %>
     it do
       expect { api_request }
         .to request_to(:<%= http_method %>, 'https://example.com/<%= pathname %>')
-        .with(headers: headers, body: nil, query: nil)
+<% if http_method == 'get' -%>
+        .with(headers: headers, query: {})
+<% else -%>
+        .with(headers: headers, body: {})
+<% end -%>
     end
 
     it_behaves_like 'to handle errors' do
       it do
-        expect { api_request! }.not_to be_handled_as_an_error
+        expect { api_request }.not_to be_handled_as_an_error
           .when_receive(status_code: 200, body: nil, headers: nil)
       end
     end
