@@ -3,15 +3,15 @@
 require 'rspec/expectations'
 require 'webmock/rspec'
 
-RSpec::Matchers.define :handle_error do |expected_error_handling|
+RSpec::Matchers.define :be_handled_as_an_error do |expected_error_class|
   include MyApiClient::MatcherHelper
 
   match do |api_request|
     begin
       api_request.call
     rescue StandardError => e
-      if expected_error_handling[:raise]
-        e.is_a? expected_error_handling[:raise]
+      if expected_error_class
+        e.is_a? expected_error_class
       else
         true
       end

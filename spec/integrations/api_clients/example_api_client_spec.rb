@@ -16,27 +16,27 @@ RSpec.describe ExampleApiClient, type: :api_client do
   shared_examples 'error handling' do
     it do
       expect { api_request! }
-        .to handle_error(raise: MyApiClient::ClientError)
+        .to be_handled_as_an_error(MyApiClient::ClientError)
         .when_receive(status_code: 400)
     end
 
     it do
       expect { api_request! }
-        .to handle_error(raise: MyApiClient::ServerError)
+        .to be_handled_as_an_error(MyApiClient::ServerError)
         .when_receive(status_code: 500)
     end
 
     it do
       body = { errors: { code: 10 } }.to_json
       expect { api_request! }
-        .to handle_error(raise: MyApiClient::ClientError)
+        .to be_handled_as_an_error(MyApiClient::ClientError)
         .when_receive(status_code: 200, body: body)
     end
 
     it do
       body = { errors: { code: 20 } }.to_json
       expect { api_request! }
-        .to handle_error(raise: MyApiClient::ApiLimitError)
+        .to be_handled_as_an_error(MyApiClient::ApiLimitError)
         .when_receive(status_code: 200, body: body)
     end
 
@@ -48,7 +48,7 @@ RSpec.describe ExampleApiClient, type: :api_client do
         },
       }.to_json
       expect { api_request! }
-        .to handle_error(raise: MyApiClient::ServerError)
+        .to be_handled_as_an_error(MyApiClient::ServerError)
         .when_receive(status_code: 200, body: body)
     end
   end
@@ -66,7 +66,7 @@ RSpec.describe ExampleApiClient, type: :api_client do
       it do
         body = { user: { id: 1, name: 'Username' } }.to_json
         expect { api_request! }
-          .not_to handle_error.when_receive(status_code: 201, body: body)
+          .not_to be_handled_as_an_error.when_receive(status_code: 201, body: body)
       end
     end
   end
@@ -90,7 +90,7 @@ RSpec.describe ExampleApiClient, type: :api_client do
           ],
         }.to_json
         expect { api_request! }
-          .not_to handle_error.when_receive(status_code: 200, body: body)
+          .not_to be_handled_as_an_error.when_receive(status_code: 200, body: body)
       end
     end
   end
@@ -108,7 +108,7 @@ RSpec.describe ExampleApiClient, type: :api_client do
       it do
         body = { user: { id: 1, name: 'Modified' } }.to_json
         expect { api_request! }
-          .not_to handle_error.when_receive(status_code: 200, body: body)
+          .not_to be_handled_as_an_error.when_receive(status_code: 200, body: body)
       end
     end
   end
@@ -125,7 +125,7 @@ RSpec.describe ExampleApiClient, type: :api_client do
     it_behaves_like 'error handling' do
       it do
         expect { api_request! }
-          .not_to handle_error.when_receive(status_code: 200, body: {}.to_json)
+          .not_to be_handled_as_an_error.when_receive(status_code: 200, body: {}.to_json)
       end
     end
   end
