@@ -20,11 +20,10 @@ module MyApiClient
     end
 
     def diff_as_object(actual, expected)
-      differ =
-        RSpec::Support::Differ.new(
-          object_preparer: ->(object) { RSpec::Matchers::Composable.surface_descriptions_in(object) },
-          color: RSpec::Matchers.configuration.color?
-        )
+      differ = RSpec::Support::Differ.new(
+        object_preparer: ->(object) { RSpec::Matchers::Composable.surface_descriptions_in(object) },
+        color: RSpec::Matchers.configuration.color?
+      )
       differ.diff_as_object(actual, expected)
     end
   end
