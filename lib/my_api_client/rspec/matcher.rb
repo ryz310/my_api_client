@@ -42,6 +42,18 @@ RSpec::Matchers.define :have_requested_to do |expected_method, expected_url|
   end
 
   chain :with, :expected_options
+
+  failure_message do |_|
+    message = "expected that #{@actual} would match #{@expected}"
+    message += "\nDiff:" + differ.diff_as_object(@actual, @expected)
+    message
+  end
+
+  def differ
+    RSpec::Support::Differ.new(
+      object_preparer: ->(object) { RSpec::Matchers::Composable.surface_descriptions_in(object) },
+      color: RSpec::Matchers.configuration.color?
+    )
   end
 
   supports_block_expectations
