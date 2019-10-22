@@ -23,8 +23,8 @@ RSpec.describe <%= "#{class_name}ApiClient" %>, <%= type_metatag(:api_client) %>
         .when_receive(status_code: 500)
     end
   end
-
 <% yeild_request_arguments do |action, http_method, pathname| -%>
+
   describe '#<%= action %>' do
     subject(:api_request) { api_client.<%= action %> }
 
@@ -41,6 +41,5 @@ RSpec.describe <%= "#{class_name}ApiClient" %>, <%= type_metatag(:api_client) %>
       end
     end
   end
-
 <% end -%>
 end
