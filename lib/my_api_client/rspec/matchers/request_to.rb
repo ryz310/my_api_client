@@ -40,7 +40,7 @@ RSpec::Matchers.define :request_to do |expected_method, expected_url|
 
   failure_message do
     <<~MESSAGE
-      expected that #{@actual} would match #{@expected}
+      expected to request to "#{@expected[:request_line]}"
       Diff: #{diff_as_object(@actual, @expected)}
     MESSAGE
   end
