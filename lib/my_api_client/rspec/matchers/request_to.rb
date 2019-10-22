@@ -3,7 +3,7 @@
 require 'rspec/expectations'
 require 'webmock/rspec'
 
-RSpec::Matchers.define :have_requested_to do |expected_method, expected_url|
+RSpec::Matchers.define :request_to do |expected_method, expected_url|
   include MyApiClient::MatcherHelper
 
   match do |api_request|

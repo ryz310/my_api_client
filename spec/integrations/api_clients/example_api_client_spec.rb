@@ -58,7 +58,7 @@ RSpec.describe ExampleApiClient, type: :api_client do
 
     it do
       expect { api_request! }
-        .to have_requested_to(:post, 'https://example.com/users')
+        .to request_to(:post, 'https://example.com/users')
         .with(headers: headers, body: { name: 'Username' })
     end
 
@@ -76,7 +76,7 @@ RSpec.describe ExampleApiClient, type: :api_client do
 
     it do
       expect { api_request! }
-        .to have_requested_to(:get, 'https://example.com/users')
+        .to request_to(:get, 'https://example.com/users')
         .with(headers: headers)
     end
 
@@ -100,7 +100,7 @@ RSpec.describe ExampleApiClient, type: :api_client do
 
     it do
       expect { api_request! }
-        .to have_requested_to(:patch, 'https://example.com/users/1')
+        .to request_to(:patch, 'https://example.com/users/1')
         .with(headers: headers, body: { name: 'Modified' })
     end
 
@@ -118,7 +118,7 @@ RSpec.describe ExampleApiClient, type: :api_client do
 
     it do
       expect { api_request! }
-        .to have_requested_to(:delete, 'https://example.com/users/1')
+        .to request_to(:delete, 'https://example.com/users/1')
         .with(headers: headers)
     end
 
