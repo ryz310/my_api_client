@@ -14,6 +14,7 @@ Metrics/BlockLength:
   Max: 50
   Exclude:
     - 'my_api_client.gemspec'
+    - 'lib/my_api_client/rspec/matchers/**/*'
     - 'spec/**/*'
 
 Metrics/MethodLength:
