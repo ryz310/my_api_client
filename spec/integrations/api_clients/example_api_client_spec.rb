@@ -37,6 +37,7 @@ RSpec.describe ExampleApiClient, type: :api_client do
       body = { errors: { code: 20 } }.to_json
       expect { api_request! }
         .to be_handled_as_an_error(MyApiClient::ApiLimitError)
+        .after_retry(2).times
         .when_receive(status_code: 200, body: body)
     end
 

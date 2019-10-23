@@ -7,6 +7,7 @@ RSpec::Matchers.define :be_handled_as_an_error do |expected_error_class|
 
   match do |api_request|
     init
+    set_validation_for_retry_count
     handle_error(api_request).is_a? expected_error_class
   end
 
@@ -15,7 +16,15 @@ RSpec::Matchers.define :be_handled_as_an_error do |expected_error_class|
     handle_error(api_request).nil?
   end
 
+  chain :after_retry, :retry_count
+  chain(:times) { nil }
   chain :when_receive, :expected_response
+
+  description do
+    message = "be handled as #{expected_error_class}"
+    message += " after retry #{retry_count} times" unless retry_count.nil?
+    message
+  end
 
   failure_message do |api_request|
     actual_error = handle_error(api_request)
@@ -34,6 +43,8 @@ RSpec::Matchers.define :be_handled_as_an_error do |expected_error_class|
     "but it was handled as #{actual_error.class.name}"
   end
 
+  attr_reader :sawyer
+
   def init
     disable_logging
     response = dummy_response(
@@ -41,8 +52,14 @@ RSpec::Matchers.define :be_handled_as_an_error do |expected_error_class|
       headers: expected_response[:headers] || {},
       body: expected_response[:body] || nil
     )
-    sawyer = instance_double(Sawyer::Agent, call: response)
+    @sawyer = instance_double(Sawyer::Agent, call: response, sleep: nil)
     allow(Sawyer::Agent).to receive(:new).and_return(sawyer)
+  end
+
+  def set_validation_for_retry_count
+    return if retry_count.nil?
+
+    expect(sawyer).to receive(:call).exactly(retry_count + 1).times
   end
 
   def handle_error(api_request)
