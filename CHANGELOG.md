@@ -3,12 +3,8 @@
 ## 0.10.1 (Oct 23, 2019)
 
 ### Feature
-### Bugfix
-### Breaking Change
-### Misc
 
 * Support `retry_on` testing at shoulda matcher ([#127](git@github.com:ryz310/my_api_client/pull/127))
-
 
 ## 0.10.0 (Oct 23, 2019)
 
