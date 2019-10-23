@@ -4,14 +4,14 @@
 
 ### Bugfix
 
-* Ignore error handling when using request to matcher ([#130](git@github.com:ryz310/my_api_client/pull/130))
-* Fix `be_handled_as_an_error` description ([#131](git@github.com:ryz310/my_api_client/pull/131))
+* Ignore error handling when using request to matcher ([#130](https://github.com/ryz310/my_api_client/pull/130))
+* Fix `be_handled_as_an_error` description ([#131](https://github.com/ryz310/my_api_client/pull/131))
 
 ## 0.10.1 (Oct 23, 2019)
 
 ### Feature
 
-* Support `retry_on` testing at shoulda matcher ([#127](git@github.com:ryz310/my_api_client/pull/127))
+* Support `retry_on` testing at shoulda matcher ([#127](https://github.com/ryz310/my_api_client/pull/127))
 
 ## 0.10.0 (Oct 23, 2019)
 
