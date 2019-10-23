@@ -1,5 +1,17 @@
 # Change log
 
+## 0.10.0 (Oct 23, 2019)
+
+### Feature
+
+* Shoulda-matchers for my_api_client ([#124](https://github.com/ryz310/my_api_client/pull/124))
+
+### Misc
+
+* Modify request specifications ([#120](https://github.com/ryz310/my_api_client/pull/120))
+* Re-generate .rubocop_todo.yml with RuboCop v0.75.1 ([#121](https://github.com/ryz310/my_api_client/pull/121))
+* ryz310/dependabot/bundler/jsonpath-1.0.5 ([#123](https://github.com/ryz310/my_api_client/pull/123))
+
 ## 0.9.2 (Oct 8, 2019)
 
 ### Bugfix

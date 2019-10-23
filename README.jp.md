@@ -301,9 +301,9 @@ class PostUserApiClient < ExampleApiClient
 end
 ```
 
-## Testing
+## RSpec
 
-### RSpec
+### Setup
 
 RSpec を使ったテストをサポートしています。
 以下のコードを `spec/spec_helper.rb` (または `spec/rails_helper.rb`) に追記して下さい。
@@ -312,7 +312,103 @@ RSpec を使ったテストをサポートしています。
 require 'my_api_client/rspec'
 ```
 
-例えば以下のような `ApiClient` を定義しているとします。
+### Testing
+
+以下のような `ApiClient` を定義しているとします。
+
+```ruby
+class ExampleApiClient < MyApiClient::Base
+  endpoint 'https://example.com/v1'
+
+  error_handling status_code: 200, json: { '$.errors.code': 10 },
+                 raise: MyApiClient::ClientError
+
+  attr_reader :access_token
+
+  def initialize(access_token:)
+    @access_token = access_token
+  end
+
+  # GET https://example.com/v1/users
+  def get_users(condition:)
+    get 'users', headers: headers, query: { search: condition }
+  end
+
+  private
+
+  def headers
+    {
+      'Content-Type': 'application/json;charset=UTF-8',
+      'Authorization': "Bearer #{access_token}",
+    }
+  end
+end
+```
+
+通常の場合 `ApiClient` を新たに定義した際にテストすべき項目が 2 つあります。
+
+1. 指定したエンドポイントに対して、任意のパラメータを使ったリクエストが実行されること
+2. 特定のレスポンスに対して適切にエラーハンドリングが実行されること
+
+`my_api_client` ではこれらをテストするための Custom Matcher を用意しています。
+
+#### 1. 指定したエンドポイントに対して、任意のパラメータを使ったリクエストが実行されること
+
+例えば上述の `#get_users` の内部では、入力引数を用いて検索クエリが組み立てられていたり、 Header に `access_token` を利用したりしています。これらの値が正しくリクエストに用いられているかどうかのテストが必要となります。
+
+この場合 `request_to` と `with` という Custom Matcher を利用することで簡単にテストを記述することが出来ます。 `expect` にはブロック `{}` を指定する必要がある点にご注意ください。他にも `with` には `body` というキーワード引数も指定できます。
+
+```ruby
+RSpec.describe ExampleApiClient, type: :api_client do
+  let(:api_client) { described_class.new(access_token: 'access token') }
+  let(:headers) do
+    {
+      'Content-Type': 'application/json;charset=UTF-8',
+      'Authorization': 'Bearer access token',
+    }
+  end
+
+  describe '#get_users' do
+    it do
+      expect { api_client.get_users(condition: 'condition') }
+        .to request_to(:get, 'https://example.com/v1/users')
+        .with(headers: headers, query: { condition: 'condition' })
+    end
+  end
+end
+```
+
+#### 2. 特定のレスポンスに対して適切にエラーハンドリングが実行されること
+
+次に `error_handling` についてのテストも記述していきます。ここではレスポンスのステータスコードが `200` かつ Body に `'$.errors.code': 10` という値が含まれていた場合は `MyApiClient::ClientError` を `raise` する、というエラーハンドリングが定義されています。
+
+ここでは `be_handled_as_an_error` と `when_receive` という Custom Matcher を利用します。ここでも `expect` にはブロック `{}` を指定する必要がある点にご注意ください。
+
+`be_handled_as_an_error` の引数には期待する例外クラスを指定します。 `when_receive` にはリクエスト結果としてどのような値が返ってきたのかを指定します。
+
+なお、 `error_handling` で例外を発生させないケースは現在想定していないため、これ以外の Custom Matcher は定義されていません。何かユースケースがあれば教えて下さい。
+
+```ruby
+it do
+  expect { api_client.get_users(condition: 'condition') }
+    .to be_handled_as_an_error(MyApiClient::ClientError)
+    .when_receive(status_code: 200, body: { errors: { code: 10 } }.to_json)
+end
+```
+
+また、以下のように正常なレスポンスが返ってきた時に誤ってエラーハンドリングされていないかをテストすることもできます。
+
+```ruby
+it do
+  expect { api_client.get_users(condition: 'condition') }
+    .not_to be_handled_as_an_error(MyApiClient::ClientError)
+    .when_receive(status_code: 200, body: { users: { id: 1 } }.to_json)
+end
+```
+
+### Stubbing
+
+以下のような `ApiClient` を定義しているとします。
 
 ```ruby
 class ExampleApiClient < MyApiClient::Base
