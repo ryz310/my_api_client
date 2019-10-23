@@ -27,7 +27,7 @@ RSpec::Matchers.define :request_to do |expected_method, expected_url|
           query: options[:query],
         }.compact
     end.and_return(dummy_response)
-    api_request.call
+    safe_execution(api_request)
     @expected == @actual
   end
 
@@ -42,6 +42,13 @@ RSpec::Matchers.define :request_to do |expected_method, expected_url|
       expected to request to "#{@expected[:request_line]}"
       Diff: #{diff_as_object(@actual, @expected)}
     MESSAGE
+  end
+
+  # To ignore error handling
+  def safe_execution(api_request)
+    api_request.call
+  rescue MyApiClient::Error
+    nil
   end
 
   def request_line(method, url)
