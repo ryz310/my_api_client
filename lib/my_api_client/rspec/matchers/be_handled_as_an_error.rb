@@ -21,7 +21,7 @@ RSpec::Matchers.define :be_handled_as_an_error do |expected_error_class|
   chain :when_receive, :expected_response
 
   description do
-    message = "be handled as #{expected_error_class}"
+    message = "be handled as #{expected_error_class || 'an error'}"
     message += " after retry #{retry_count} times" unless retry_count.nil?
     message
   end
