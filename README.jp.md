@@ -406,6 +406,30 @@ it do
 end
 ```
 
+##### `retry_on` を定義している場合
+
+以下のように `retry_on` を API Client に定義している場合:
+
+```ruby
+class ExampleApiClient < MyApiClient::Base
+  endpoint 'https://example.com'
+
+  error_handling json: { '$.errors.code': 20 }, raise: MyApiClient::ApiLimitError
+  retry_on MyApiClient::ApiLimitError, wait: 30.seconds, attempts: 3
+end
+```
+
+`after_retry` と `times` という Custom Matcher を利用することが出来ます。
+
+```ruby
+it do
+  expect { api_client.get_users(condition: 'condition') }
+    .to be_handled_as_an_error(MyApiClient::ApiLimitError)
+    .after_retry(3).times
+    .when_receive(status_code: 200, body: { errors: { code: 20 } }.to_json)
+end
+```
+
 ### Stubbing
 
 以下のような `ApiClient` を定義しているとします。
