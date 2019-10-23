@@ -52,7 +52,7 @@ RSpec::Matchers.define :be_handled_as_an_error do |expected_error_class|
       headers: expected_response[:headers] || {},
       body: expected_response[:body] || nil
     )
-    @sawyer = instance_double(Sawyer::Agent, call: response, sleep: nil)
+    @sawyer = instance_double(Sawyer::Agent, call: response)
     allow(Sawyer::Agent).to receive(:new).and_return(sawyer)
   end
 
