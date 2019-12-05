@@ -5,7 +5,7 @@
 version: 2.1
 
 orbs:
-  ruby-orbs: sue445/ruby-orbs@1.4.3
+  ruby-orbs: sue445/ruby-orbs@1.4.5
   code-climate: rvla/code-climate@0.0.2
 
 references:
@@ -290,7 +290,7 @@ workflows:
           filters:
             branches:
               only:
-                - production
+                - release
 
   challenge:
     triggers:
@@ -308,4 +308,4 @@ experimental:
     branches:
       only:
         - master
-        - production
+        - release

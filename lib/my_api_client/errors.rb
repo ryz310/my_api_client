@@ -27,7 +27,9 @@ module MyApiClient
   end
 
   NETWORK_ERRORS = [
-    Faraday::ClientError,
+    Faraday::TimeoutError,
+    Faraday::ConnectionFailed,
+    Faraday::SSLError,
     OpenSSL::SSL::SSLError,
     Net::OpenTimeout,
     Net::ReadTimeout,
