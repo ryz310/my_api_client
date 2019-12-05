@@ -1,5 +1,22 @@
 # Change log
 
+## v0.10.3 (Dec 05, 2019)
+
+### Feature
+### Bugfix
+### Breaking Change
+### Misc
+
+* [#136](https://github.com/ryz310/my_api_client/pull/136) Re-generate .rubocop_todo.yml with RuboCop v0.76.0 ([@ryz310](https://github.com/ryz310))
+* [#137](https://github.com/ryz310/my_api_client/pull/137) Configure Renovate ([@ryz310](https://github.com/ryz310))
+* [#138](https://github.com/ryz310/my_api_client/pull/138) Update ruby-orbs orb to v1.4.4 ([@ryz310](https://github.com/ryz310))
+* [#139](https://github.com/ryz310/my_api_client/pull/139) Bump rake from 13.0.0 to 13.0.1 ([@ryz310](https://github.com/ryz310))
+* [#140](https://github.com/ryz310/my_api_client/pull/140) Bump rubocop-performance from 1.5.0 to 1.5.1 ([@ryz310](https://github.com/ryz310))
+* [#141](https://github.com/ryz310/my_api_client/pull/141) Update ruby-orbs orb to v1.4.5 ([@ryz310](https://github.com/ryz310))
+* [#146](https://github.com/ryz310/my_api_client/pull/146) Bump rubocop-rspec from 1.36.0 to 1.37.0 ([@ryz310](https://github.com/ryz310))
+* [#148](https://github.com/ryz310/my_api_client/pull/148) Re-generate .rubocop_todo.yml with RuboCop v0.77.0 ([@ryz310](https://github.com/ryz310))
+* [#150](https://github.com/ryz310/my_api_client/pull/150) Redefine network error class ([@ryz310](https://github.com/ryz310))
+
 ## 0.10.2 (Oct 23, 2019)
 
 ### Bugfix
