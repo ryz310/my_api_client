@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'activesupport', '>= 4.2.0'
+  spec.add_dependency 'faraday', '>= 0.17.1'
   spec.add_dependency 'jsonpath'
   spec.add_dependency 'sawyer', '>= 0.8.2'
 
