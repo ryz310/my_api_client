@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    my_api_client (0.10.2)
+    my_api_client (0.10.3)
       activesupport (>= 4.2.0)
       faraday (>= 0.17.1)
       jsonpath
