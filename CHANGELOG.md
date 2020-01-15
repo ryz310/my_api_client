@@ -1,5 +1,21 @@
 # Change log
 
+## v0.11.0 (Jan 16, 2020)
+
+### Feature
+
+* [#170](https://github.com/ryz310/my_api_client/pull/170) Support ruby 2.7 ([@ryz310](https://github.com/ryz310))
+
+### Rubocop Challenge
+
+* [#158](https://github.com/ryz310/my_api_client/pull/158) Re-generate .rubocop_todo.yml with RuboCop v0.78.0 ([@ryz310](https://github.com/ryz310))
+* [#168](https://github.com/ryz310/my_api_client/pull/168) Re-generate .rubocop_todo.yml with RuboCop v0.79.0 ([@ryz310](https://github.com/ryz310))
+
+### Dependabot
+
+* [#156](https://github.com/ryz310/my_api_client/pull/156) Bump rubocop-rspec from 1.37.0 to 1.37.1 ([@ryz310](https://github.com/ryz310))
+* [#159](https://github.com/ryz310/my_api_client/pull/159) Bump rubocop-performance from 1.5.1 to 1.5.2 ([@ryz310](https://github.com/ryz310))
+
 ## v0.10.3 (Dec 05, 2019)
 
 ### Bugfix
