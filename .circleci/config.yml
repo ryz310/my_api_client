@@ -115,6 +115,9 @@ commands:
       <<: *bundler_options
     steps:
       - checkout
+      - run:
+          name: Install Bundler 2.x
+          command: gem install bundler:2.1.2
       - ruby-orbs/bundle-install:
           cache_key_prefix: v1-dependencies-<< parameters.ruby_version >>
           bundle_extra_args: << parameters.bundler_options >>
