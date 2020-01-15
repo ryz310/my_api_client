@@ -106,7 +106,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport (< 6.0.0)
   bugsnag (>= 6.11.0)
-  bundler (~> 1.16)
+  bundler (>= 2.0)
   my_api_client!
   pry-byebug
   rake (~> 13.0)
@@ -120,4 +120,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.17.3
+   2.1.2

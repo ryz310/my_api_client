@@ -12,13 +12,13 @@ references:
   - &ruby_version
     ruby_version:
       type: enum
-      enum: ['2.4', '2.5', '2.6']
-      default: '2.4'
+      enum: ['2.4', '2.5', '2.6', '2.7']
+      default: '2.7'
   - &rails_version
     rails_version:
       type: enum
       enum: ['4.2', '5.0', '5.1', '5.2', '6.0']
-      default: '4.2'
+      default: '6.0'
   - &bundler_options
     bundler_options:
       type: string
@@ -115,6 +115,9 @@ commands:
       <<: *bundler_options
     steps:
       - checkout
+      - run:
+          name: Install Bundler 2.x
+          command: gem install bundler:2.1.2
       - ruby-orbs/bundle-install:
           cache_key_prefix: v1-dependencies-<< parameters.ruby_version >>
           bundle_extra_args: << parameters.bundler_options >>
@@ -151,7 +154,7 @@ jobs:
       - code-climate/install
       - code-climate/sum-coverage:
           input: codeclimate.*.json
-          parts: 16
+          parts: 19
       - code-climate/upload-coverage
   rubocop:
     executor: default
@@ -228,23 +231,33 @@ workflows:
           ruby_version:  '2.6'
           rails_version: '5.1'
       - build:
-          name: build_on_ruby_2.6_and_rails_5.2_with_integrations
+          name: build_on_ruby_2.6_and_rails_5.2
           ruby_version:  '2.6'
           rails_version: '5.2'
-          bundler_options: '--with integrations'
       - build:
-          name: build_on_ruby_2.6_and_rails_5.2_without_integrations
+          name: build_on_ruby_2.6_and_rails_6.0
           ruby_version:  '2.6'
+          rails_version: '6.0'
+      - build:
+          name: build_on_ruby_2.7_and_rails_5.0
+          ruby_version:  '2.7'
+          rails_version: '5.0'
+      - build:
+          name: build_on_ruby_2.7_and_rails_5.1
+          ruby_version:  '2.7'
+          rails_version: '5.1'
+      - build:
+          name: build_on_ruby_2.7_and_rails_5.2
+          ruby_version:  '2.7'
           rails_version: '5.2'
-          bundler_options: '--without integrations'
       - build:
-          name: build_on_ruby_2.6_and_rails_6.0_with_integrations
-          ruby_version:  '2.6'
+          name: build_on_ruby_2.7_and_rails_6.0_with_integrations
+          ruby_version:  '2.7'
           rails_version: '6.0'
           bundler_options: '--with integrations'
       - build:
-          name: build_on_ruby_2.6_and_rails_6.0_without_integrations
-          ruby_version:  '2.6'
+          name: build_on_ruby_2.7_and_rails_6.0_without_integrations
+          ruby_version:  '2.7'
           rails_version: '6.0'
           bundler_options: '--without integrations'
       - rubocop
@@ -263,10 +276,13 @@ workflows:
             - build_on_ruby_2.6_and_rails_4.2
             - build_on_ruby_2.6_and_rails_5.0
             - build_on_ruby_2.6_and_rails_5.1
-            - build_on_ruby_2.6_and_rails_5.2_with_integrations
-            - build_on_ruby_2.6_and_rails_5.2_without_integrations
-            - build_on_ruby_2.6_and_rails_6.0_with_integrations
-            - build_on_ruby_2.6_and_rails_6.0_without_integrations
+            - build_on_ruby_2.6_and_rails_5.2
+            - build_on_ruby_2.6_and_rails_6.0
+            - build_on_ruby_2.7_and_rails_5.0
+            - build_on_ruby_2.7_and_rails_5.1
+            - build_on_ruby_2.7_and_rails_5.2
+            - build_on_ruby_2.7_and_rails_6.0_with_integrations
+            - build_on_ruby_2.7_and_rails_6.0_without_integrations
       - release:
           context: RubyGems API Key
           requires:
@@ -282,10 +298,13 @@ workflows:
             - build_on_ruby_2.6_and_rails_4.2
             - build_on_ruby_2.6_and_rails_5.0
             - build_on_ruby_2.6_and_rails_5.1
-            - build_on_ruby_2.6_and_rails_5.2_with_integrations
-            - build_on_ruby_2.6_and_rails_5.2_without_integrations
-            - build_on_ruby_2.6_and_rails_6.0_with_integrations
-            - build_on_ruby_2.6_and_rails_6.0_without_integrations
+            - build_on_ruby_2.6_and_rails_5.2
+            - build_on_ruby_2.6_and_rails_6.0
+            - build_on_ruby_2.7_and_rails_5.0
+            - build_on_ruby_2.7_and_rails_5.1
+            - build_on_ruby_2.7_and_rails_5.2
+            - build_on_ruby_2.7_and_rails_6.0_with_integrations
+            - build_on_ruby_2.7_and_rails_6.0_without_integrations
             - rubocop
           filters:
             branches:
