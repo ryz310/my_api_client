@@ -5,7 +5,7 @@ require 'dummy_app/api_clients/example_api_client'
 require 'my_api_client/rspec'
 
 RSpec.describe ExampleApiClient, type: :api_client do
-  let(:api_client) { described_class.new('access_token') }
+  let(:api_client) { described_class.new(access_token: 'access_token') }
   let(:headers) do
     {
       'Content-Type': 'application/json;charset=UTF-8',
@@ -54,8 +54,8 @@ RSpec.describe ExampleApiClient, type: :api_client do
     end
   end
 
-  describe '#create_user' do
-    subject(:api_request!) { api_client.create_user('Username') }
+  describe '#post_user' do
+    subject(:api_request!) { api_client.post_user('Username') }
 
     it do
       expect { api_request! }
@@ -72,8 +72,8 @@ RSpec.describe ExampleApiClient, type: :api_client do
     end
   end
 
-  describe '#read_users' do
-    subject(:api_request!) { api_client.read_users }
+  describe '#get_users' do
+    subject(:api_request!) { api_client.get_users }
 
     it do
       expect { api_request! }
@@ -96,8 +96,8 @@ RSpec.describe ExampleApiClient, type: :api_client do
     end
   end
 
-  describe '#update_user' do
-    subject(:api_request!) { api_client.update_user(1, 'Modified') }
+  describe '#patch_user' do
+    subject(:api_request!) { api_client.patch_user(1, 'Modified') }
 
     it do
       expect { api_request! }

@@ -14,7 +14,7 @@ class ExampleApiClient < ApplicationApiClient
 
   attr_reader :access_token
 
-  def initialize(access_token)
+  def initialize(access_token:)
     @access_token = access_token
   end
 
@@ -22,7 +22,7 @@ class ExampleApiClient < ApplicationApiClient
   #
   # @param name [String] Username which want to create
   # @return [Sawyer::Response] HTTP response parameter
-  def create_user(name)
+  def post_user(name)
     post 'users', headers: headers, body: { name: name }
   end
 
@@ -30,7 +30,7 @@ class ExampleApiClient < ApplicationApiClient
   #
   # @param user_id [Integer] User ID which want to read
   # @return [Sawyer::Response] HTTP response parameter
-  def read_users
+  def get_users
     get 'users', headers: headers
   end
 
@@ -38,7 +38,7 @@ class ExampleApiClient < ApplicationApiClient
   #
   # @param user_id [Integer] User ID which want to read
   # @return [Sawyer::Response] HTTP response parameter
-  def read_user(user_id)
+  def get_user(user_id)
     get "users/#{user_id}", headers: headers
   end
 
@@ -47,7 +47,7 @@ class ExampleApiClient < ApplicationApiClient
   # @param user_id [Integer] User ID which want to read
   # @param name [String] Username which want to be updated
   # @return [Sawyer::Response] HTTP response parameter
-  def update_user(user_id, name)
+  def patch_user(user_id, name)
     patch "users/#{user_id}", headers: headers, body: { name: name }
   end
 

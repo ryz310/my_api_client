@@ -23,6 +23,9 @@ Metrics/MethodLength:
 Metrics/LineLength:
   Max: 100
 
+Naming/AccessorMethodName:
+  Enabled: false
+
 Style/ClassAndModuleChildren:
   Exclude:
     - 'spec/**/*'
