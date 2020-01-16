@@ -16,9 +16,9 @@ RSpec::Matchers.define :be_handled_as_an_error do |expected_error_class|
     handle_error(api_request).nil?
   end
 
-  chain :after_retry, :retry_count
-  chain(:times) { nil }
-  chain :when_receive, :expected_response
+  chain(:after_retry, :retry_count)
+  chain(:times) {}
+  chain(:when_receive, :expected_response)
 
   description do
     message = "be handled as #{expected_error_class || 'an error'}"
