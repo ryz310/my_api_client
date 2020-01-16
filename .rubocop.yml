@@ -36,6 +36,10 @@ Style/TrailingCommaInArrayLiteral:
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: comma
 
+RSpec/DescribeClass:
+  Exclude:
+    - 'spec/lib/my_api_client/rspec/matchers/**/*'
+
 RSpec/ExampleLength:
   Max: 10
 

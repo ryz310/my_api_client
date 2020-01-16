@@ -51,7 +51,7 @@ module MyApiClient
     end
 
     def retry_calling(wait)
-      sleep(wait)
+      Sleeper.call(wait: wait)
       @retry_count += 1
       @retry_result = call(*args)
     end

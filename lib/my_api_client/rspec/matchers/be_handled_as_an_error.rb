@@ -54,6 +54,7 @@ RSpec::Matchers.define :be_handled_as_an_error do |expected_error_class|
     )
     @sawyer = instance_double(Sawyer::Agent, call: response)
     allow(Sawyer::Agent).to receive(:new).and_return(sawyer)
+    allow(MyApiClient::Sleeper).to receive(:call)
   end
 
   def set_validation_for_retry_count
