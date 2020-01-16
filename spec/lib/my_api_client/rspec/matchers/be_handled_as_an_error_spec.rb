@@ -32,15 +32,14 @@ RSpec.describe 'be_handled_as_an_error' do
   end
 
   let(:api_client) { api_client_class.new(access_token: 'access_token') }
+  let(:response_body) { { errors: { code: 10 } }.to_json }
 
   it 'avoids sleep on testing' do
-    beginning_on = Time.now
-    response_body = { errors: { code: 10 } }.to_json
-    expect { api_client.get_users }
-      .to be_handled_as_an_error(MyApiClient::ApiLimitError)
-      .after_retry(2).times
-      .when_receive(body: response_body)
-    ending_on = Time.now
-    expect(ending_on - beginning_on).to be < 1.second
+    expect do
+      expect { api_client.get_users }
+        .to be_handled_as_an_error(MyApiClient::ApiLimitError)
+        .after_retry(2).times
+        .when_receive(body: response_body)
+    end.to complete_within(0.1).second
   end
 end
