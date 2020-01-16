@@ -7,6 +7,7 @@ require 'jsonpath'
 require 'active_support'
 require 'active_support/core_ext'
 require 'sawyer'
+require 'my_api_client/service_abstract'
 require 'my_api_client/version'
 require 'my_api_client/config'
 require 'my_api_client/error_handling/generator'
@@ -18,6 +19,7 @@ require 'my_api_client/params/params'
 require 'my_api_client/params/request'
 require 'my_api_client/request'
 require 'my_api_client/base'
+require 'my_api_client/sleeper'
 
 # Loads gems for feature of integrations
 begin
