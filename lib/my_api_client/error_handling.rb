@@ -42,7 +42,7 @@ module MyApiClient
         options[:block] = block if block_given?
 
         temp = error_handlers.dup
-        temp << ->(response) { Generator.call(options.merge(response: response)) }
+        temp << ->(response) { Generator.call(**options.merge(response: response)) }
         self.error_handlers = temp
       end
     end
