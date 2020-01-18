@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
 require 'dummy_app/api_clients/example_api_client'
 require 'my_api_client/rspec'
 
