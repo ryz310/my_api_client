@@ -4,6 +4,7 @@ module MyApiClient
   module ErrorHandling
     # Generates an error handler proc (or symbol)
     class Generator < ServiceAbstract
+      ARGUMENTS = %i[response status_code json with raise block].freeze
 
       # @param options [Hash]
       #   Options for this generator
@@ -30,7 +31,7 @@ module MyApiClient
 
       private
 
-      attr_reader :_response, :_status_code, :_json, :_with, :_raise, :_block
+      attr_reader(*ARGUMENTS.map { |argument| :"_#{argument}" })
 
       def call
         return unless match?(_status_code, _response.status)
