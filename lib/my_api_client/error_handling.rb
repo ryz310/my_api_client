@@ -44,24 +44,26 @@ module MyApiClient
       #   Executes the block when error detected.
       #   Will be Ignored if `retry` option specified.
       def error_handling(**options, &block)
-        retry_options = options.delete(:retry)
-
-        if retry_options
-          unless options[:raise]
-            raise 'The `retry` option requires `raise` option. ' \
-                  'Please set any `raise` option, which inherits `MyApiClient::Error` class.'
-          end
-
-          block = nil
-          retry_options = {} unless retry_options.is_a? Hash
-          retry_on(options[:raise], **retry_options)
-        end
+        options[:block] = block
+        _process_retry_option(options)
 
         temp = error_handlers.dup
-        temp << lambda { |response|
-          Generator.call(**options.merge(response: response, block: block))
-        }
+        temp << ->(response) { Generator.call(**options.merge(response: response)) }
         self.error_handlers = temp
+      end
+
+      def _process_retry_option(options)
+        retry_options = options.delete(:retry)
+        return unless retry_options
+
+        unless options[:raise]
+          raise 'The `retry` option requires `raise` option. ' \
+                'Please set any `raise` option, which inherits `MyApiClient::Error` class.'
+        end
+
+        options.delete(:block)
+        retry_options = {} unless retry_options.is_a? Hash
+        retry_on(options[:raise], **retry_options)
       end
     end
 
