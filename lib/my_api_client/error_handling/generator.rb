@@ -26,6 +26,7 @@ module MyApiClient
       # @return [Symbol]
       #   Returns value as `Symbol` if given `with` option
       def initialize(**options)
+        options[:raise] ||= MyApiClient::Error
         verify_and_set_arguments(**options)
       end
 

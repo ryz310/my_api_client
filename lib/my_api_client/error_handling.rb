@@ -38,7 +38,6 @@ module MyApiClient
       # @yield [MyApiClient::Params::Params, MyApiClient::Logger]
       #   Executes the block when error detected
       def error_handling(**options, &block)
-        options[:raise] ||= MyApiClient::Error
 
         temp = error_handlers.dup
         temp << lambda { |response|
