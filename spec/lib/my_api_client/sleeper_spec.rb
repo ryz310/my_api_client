@@ -14,8 +14,8 @@ RSpec.describe MyApiClient::Sleeper do
       end
     end
 
-    it_behaves_like 'sleep processing', 0.1
-    it_behaves_like 'sleep processing', 0.2
-    it_behaves_like 'sleep processing', 0.3
+    it_behaves_like 'sleep processing', 0.1.seconds
+    it_behaves_like 'sleep processing', 0.2.seconds
+    it_behaves_like 'sleep processing', 0.3.seconds
   end
 end

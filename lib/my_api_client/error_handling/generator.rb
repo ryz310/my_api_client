@@ -3,8 +3,8 @@
 module MyApiClient
   module ErrorHandling
     # Generates an error handler proc (or symbol)
-    class Generator
-      private_class_method :new
+    class Generator < ServiceAbstract
+      ARGUMENTS = %i[response status_code json with raise block].freeze
 
       # @param options [Hash]
       #   Options for this generator
@@ -25,17 +25,13 @@ module MyApiClient
       #   Returns value as `Proc` if given `raise` or `block` option
       # @return [Symbol]
       #   Returns value as `Symbol` if given `with` option
-      def self.call(**options)
-        new(**options).send(:call)
+      def initialize(**options)
+        verify_and_set_arguments(**options)
       end
 
       private
 
-      attr_reader :_response, :_status_code, :_json, :_with, :_raise, :_block
-
-      def initialize(**options)
-        options.each { |k, v| instance_variable_set("@_#{k}", v) }
-      end
+      attr_reader(*ARGUMENTS.map { |argument| :"_#{argument}" })
 
       def call
         return unless match?(_status_code, _response.status)
@@ -46,7 +42,23 @@ module MyApiClient
         elsif _with
           _with
         else
-          ->(params, _logger) { raise _raise, params }
+          ->(params, _) { raise _raise, params }
+        end
+      end
+
+      # Verify given options and raise error if they are incorrect.
+      # If not, set them to instance variables.
+      #
+      # @param options [Hash]
+      # @raise [RuntimeError]
+      def verify_and_set_arguments(**options)
+        options.each do |k, v|
+          if ARGUMENTS.exclude? k
+            raise "Specified an incorrect option: `#{k}`\n" \
+                  "You can use options that: #{ARGUMENTS}"
+          end
+
+          instance_variable_set("@_#{k}", v)
         end
       end
 
