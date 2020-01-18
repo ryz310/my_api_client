@@ -50,7 +50,7 @@ RSpec/FilePath:
     - 'spec/lib/my_api_client/rspec/**/*'
 
 RSpec/NestedGroups:
-  Max: 4
+  Max: 5
 
 RSpec/MultipleExpectations:
   Max: 4
