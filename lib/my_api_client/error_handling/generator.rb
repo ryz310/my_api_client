@@ -42,7 +42,7 @@ module MyApiClient
         elsif _with
           _with
         else
-          ->(params, _logger) { raise _raise, params }
+          ->(params, _) { raise _raise, params }
         end
       end
 
