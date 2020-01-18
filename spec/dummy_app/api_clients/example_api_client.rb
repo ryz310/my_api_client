@@ -6,11 +6,15 @@ class ExampleApiClient < ApplicationApiClient
   endpoint 'https://example.com'
   http_read_timeout 2.seconds
 
-  retry_on MyApiClient::ApiLimitError, wait: 10.seconds, attempts: 2
+  error_handling json: { '$.errors.code': 10..19 },
+                 with: :my_error_handling
 
-  error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
-  error_handling json: { '$.errors.code': 20 }, raise: MyApiClient::ApiLimitError
-  error_handling json: { '$.errors.message': /Sorry/ }, raise: MyApiClient::ServerError
+  error_handling json: { '$.errors.code': 20 },
+                 raise: MyApiClient::ApiLimitError,
+                 retry: true
+
+  error_handling json: { '$.errors.message': /Sorry/ },
+                 raise: MyApiClient::ServerError
 
   attr_reader :access_token
 

@@ -7,8 +7,9 @@ RSpec.describe 'be_handled_as_an_error' do
     Class.new(MyApiClient::Base) do
       endpoint 'https://example.com'
 
-      retry_on MyApiClient::ApiLimitError, wait: 10.seconds, attempts: 2
-      error_handling json: { '$.errors.code': 10 }, raise: MyApiClient::ApiLimitError
+      error_handling json: { '$.errors.code': 10 },
+                     raise: MyApiClient::ApiLimitError,
+                     retry: { wait: 10.seconds, attempts: 2 }
 
       attr_reader :access_token
 
