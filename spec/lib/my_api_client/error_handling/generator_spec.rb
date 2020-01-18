@@ -15,7 +15,7 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
     { response: http_response }
   end
 
-  shared_examples 'hoge' do
+  shared_examples 'an error was detected' do
     describe 'error handling options' do
       context 'with `raise` option' do
         let(:error_handling_options) do
@@ -43,7 +43,7 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
     end
   end
 
-  shared_examples 'fuga' do
+  shared_examples 'no errors were detected' do
     describe 'error handling options' do
       context 'with `raise` option' do
         let(:error_handling_options) do
@@ -80,13 +80,13 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
       context 'when matcher options matche the HTTP response' do
         let(:http_response) { dummy_response(status: 400) }
 
-        it_behaves_like 'hoge'
+        it_behaves_like 'an error was detected'
       end
 
-      context 'when matcher options matche the HTTP response' do
+      context 'when matcher options does NOT matche the HTTP response' do
         let(:http_response) { dummy_response(status: 500) }
 
-        it_behaves_like 'fuga'
+        it_behaves_like 'no errors were detected'
       end
     end
 
@@ -101,13 +101,13 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
         context 'when matcher options matche the HTTP response' do
           let(:response_body) { { errors: { code: 10 } }.to_json }
 
-          it_behaves_like 'hoge'
+          it_behaves_like 'an error was detected'
         end
 
-        context 'when matcher options matche the HTTP response' do
+        context 'when matcher options does NOT matche the HTTP response' do
           let(:response_body) { { errors: { code: 20 } }.to_json }
 
-          it_behaves_like 'fuga'
+          it_behaves_like 'no errors were detected'
         end
       end
 
@@ -119,13 +119,13 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
         context 'when matcher options matche the HTTP response' do
           let(:response_body) { { errors: { message: 'error' } }.to_json }
 
-          it_behaves_like 'hoge'
+          it_behaves_like 'an error was detected'
         end
 
-        context 'when matcher options matche the HTTP response' do
+        context 'when matcher options does NOT matche the HTTP response' do
           let(:response_body) { { errors: { message: 'warning' } }.to_json }
 
-          it_behaves_like 'fuga'
+          it_behaves_like 'no errors were detected'
         end
       end
 
@@ -137,13 +137,13 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
         context 'when matcher options matche the HTTP response' do
           let(:response_body) { { errors: { is_transient: true } }.to_json }
 
-          it_behaves_like 'hoge'
+          it_behaves_like 'an error was detected'
         end
 
-        context 'when matcher options matche the HTTP response' do
+        context 'when matcher options does NOT matche the HTTP response' do
           let(:response_body) { { errors: { is_transient: false } }.to_json }
 
-          it_behaves_like 'fuga'
+          it_behaves_like 'no errors were detected'
         end
       end
 
@@ -155,13 +155,13 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
         context 'when matcher options matche the HTTP response' do
           let(:response_body) { { errors: { code: 15 } }.to_json }
 
-          it_behaves_like 'hoge'
+          it_behaves_like 'an error was detected'
         end
 
-        context 'when matcher options matche the HTTP response' do
+        context 'when matcher options does NOT matche the HTTP response' do
           let(:response_body) { { errors: { code: 21 } }.to_json }
 
-          it_behaves_like 'fuga'
+          it_behaves_like 'no errors were detected'
         end
       end
 
@@ -173,13 +173,13 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
         context 'when matcher options matche the HTTP response' do
           let(:response_body) { { errors: { message: 'some error occurred' } }.to_json }
 
-          it_behaves_like 'hoge'
+          it_behaves_like 'an error was detected'
         end
 
         context 'when matcher options matche the HTTP response' do
           let(:response_body) { { errors: { message: 'some warning occurred' } }.to_json }
 
-          it_behaves_like 'fuga'
+          it_behaves_like 'no errors were detected'
         end
       end
 
@@ -191,13 +191,13 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
         context 'when matcher options matche the HTTP response' do
           let(:response_body) { { errors: { code: -1 } }.to_json }
 
-          it_behaves_like 'hoge'
+          it_behaves_like 'an error was detected'
         end
 
-        context 'when matcher options matche the HTTP response' do
+        context 'when matcher options does NOT matche the HTTP response' do
           let(:response_body) { { errors: { code: 0 } }.to_json }
 
-          it_behaves_like 'fuga'
+          it_behaves_like 'no errors were detected'
         end
       end
 
@@ -209,13 +209,13 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
         context 'when matcher options matche the HTTP response' do
           let(:response_body) { nil }
 
-          it_behaves_like 'hoge'
+          it_behaves_like 'an error was detected'
         end
 
-        context 'when matcher options matche the HTTP response' do
+        context 'when matcher options does NOT matche the HTTP response' do
           let(:response_body) { '' }
 
-          it_behaves_like 'fuga'
+          it_behaves_like 'no errors were detected'
         end
       end
 
