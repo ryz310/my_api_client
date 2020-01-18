@@ -3,8 +3,7 @@
 module MyApiClient
   module ErrorHandling
     # Generates an error handler proc (or symbol)
-    class Generator
-      private_class_method :new
+    class Generator < ServiceAbstract
 
       # @param options [Hash]
       #   Options for this generator
@@ -25,17 +24,13 @@ module MyApiClient
       #   Returns value as `Proc` if given `raise` or `block` option
       # @return [Symbol]
       #   Returns value as `Symbol` if given `with` option
-      def self.call(**options)
-        new(**options).send(:call)
+      def initialize(**options)
+        options.each { |k, v| instance_variable_set("@_#{k}", v) }
       end
 
       private
 
       attr_reader :_response, :_status_code, :_json, :_with, :_raise, :_block
-
-      def initialize(**options)
-        options.each { |k, v| instance_variable_set("@_#{k}", v) }
-      end
 
       def call
         return unless match?(_status_code, _response.status)
