@@ -26,7 +26,7 @@ module MyApiClient
       # @return [Symbol]
       #   Returns value as `Symbol` if given `with` option
       def self.call(**options)
-        new(options).send(:call)
+        new(**options).send(:call)
       end
 
       private
