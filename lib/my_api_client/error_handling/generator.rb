@@ -26,7 +26,7 @@ module MyApiClient
       # @return [Symbol]
       #   Returns value as `Symbol` if given `with` option
       def initialize(**options)
-        options.each { |k, v| instance_variable_set("@_#{k}", v) }
+        verify_and_set_arguments(**options)
       end
 
       private
@@ -43,6 +43,22 @@ module MyApiClient
           _with
         else
           ->(params, _) { raise _raise, params }
+        end
+      end
+
+      # Verify given options and raise error if they are incorrect.
+      # If not, set them to instance variables.
+      #
+      # @param options [Hash]
+      # @raise [RuntimeError]
+      def verify_and_set_arguments(**options)
+        options.each do |k, v|
+          if ARGUMENTS.exclude? k
+            raise "Specified an incorrect option: `#{k}`\n" \
+                  "You can use options that: #{ARGUMENTS}"
+          end
+
+          instance_variable_set("@_#{k}", v)
         end
       end
 

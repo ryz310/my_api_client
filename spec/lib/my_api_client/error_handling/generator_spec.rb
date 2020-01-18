@@ -230,5 +230,16 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
         it { expect { execute }.to raise_error(/Unexpected operator type was given/) }
       end
     end
+
+    context 'with unexpected option' do
+      let(:matcher_options) do
+        { status: 400 } # It should be "status_code".
+      end
+
+      let(:http_response) { dummy_response(status: 400) }
+      let(:error_handling_options) { { with: :my_error_handling } }
+
+      it { expect { execute }.to raise_error(/Specified an incorrect option/) }
+    end
   end
 end
