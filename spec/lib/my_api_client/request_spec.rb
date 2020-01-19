@@ -125,14 +125,6 @@ RSpec.describe MyApiClient::Request do
         end
       end
 
-      context 'when #error_handling returns Symbol' do
-        before { allow(instance).to receive(:error_handling).and_return(:bad_request) }
-
-        it 'executes received Symbol\'s method' do
-          expect { request! }.to output("The method is called\n").to_stdout
-        end
-      end
-
       context 'when detects some network error' do
         before { allow(agent).to receive(:call).and_raise(Net::OpenTimeout) }
 
