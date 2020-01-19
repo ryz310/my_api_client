@@ -49,7 +49,9 @@ module MyApiClient
         retry_on(options[:raise], **retry_options) if retry_options
 
         temp = error_handlers.dup
-        temp << ->(response) { Generator.call(**options.merge(response: response)) }
+        temp << lambda { |instance, response|
+          Generator.call(**options.merge(instance: instance, response: response))
+        }
         self.error_handlers = temp
       end
     end
@@ -57,10 +59,10 @@ module MyApiClient
     # The error handlers defined later takes precedence
     #
     # @param response [Sawyer::Response] describe_params_here
-    # @return [Proc, Symbol, nil] description_of_returned_object
+    # @return [Proc, nil] description_of_returned_object
     def error_handling(response)
       error_handlers.reverse_each do |error_handler|
-        result = error_handler.call(response)
+        result = error_handler.call(self, response)
         return result unless result.nil?
       end
       nil

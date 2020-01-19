@@ -15,6 +15,8 @@ RSpec.describe MyApiClient::ErrorHandling do
 
     # Commonized error handling
     error_handling status_code: 500, with: :commonized_error_handling
+
+    def commonized_error_handling; end
   end
 
   class self::MockClass < self::SuperMockClass
@@ -52,6 +54,22 @@ RSpec.describe MyApiClient::ErrorHandling do
 
     # Default handling action
     error_handling json: { '$.errors.code': 60 }
+
+    # rubocop:disable Layout/EmptyLineBetweenDefs
+    def status_code_is_monitored_by_regex; end
+    def status_code_is_monitored_by_number; end
+    def status_code_is_monitored_by_range; end
+    def json_is_monitored_by_string; end
+    def json_is_monitored_by_regex; end
+    def json_is_monitored_by_number; end
+    def json_is_monitored_by_range; end
+    def json_is_monitored_by_true_value; end
+    def json_is_monitored_by_false_value; end
+    def json_is_monitored_by_method_calling; end
+    def nil_is_forbidden_with_response_body; end
+    def monitoring_with_status_code_and_json; end
+    def monitoring_with_json_multiple_conditions; end
+    # rubocop:enable Layout/EmptyLineBetweenDefs
   end
 
   class self::AnotherMockClass < self::SuperMockClass
@@ -85,7 +103,11 @@ RSpec.describe MyApiClient::ErrorHandling do
         let(:status_code) { 401 }
 
         it 'monitors given status code with the regex pattern' do
-          expect(error_handler).to eq :status_code_is_monitored_by_regex
+          allow(instance).to receive(:status_code_is_monitored_by_regex)
+          error_handler.call(params, logger)
+          expect(instance)
+            .to have_received(:status_code_is_monitored_by_regex)
+            .with(params, logger)
         end
       end
 
@@ -93,7 +115,11 @@ RSpec.describe MyApiClient::ErrorHandling do
         let(:status_code) { 404 }
 
         it 'monitors given status code with the number' do
-          expect(error_handler).to eq :status_code_is_monitored_by_number
+          allow(instance).to receive(:status_code_is_monitored_by_number)
+          error_handler.call(params, logger)
+          expect(instance)
+            .to have_received(:status_code_is_monitored_by_number)
+            .with(params, logger)
         end
       end
 
@@ -101,7 +127,11 @@ RSpec.describe MyApiClient::ErrorHandling do
         let(:status_code) { 408 }
 
         it 'monitors given status code within the range' do
-          expect(error_handler).to eq :status_code_is_monitored_by_range
+          allow(instance).to receive(:status_code_is_monitored_by_range)
+          error_handler.call(params, logger)
+          expect(instance)
+            .to have_received(:status_code_is_monitored_by_range)
+            .with(params, logger)
         end
       end
     end
@@ -111,7 +141,11 @@ RSpec.describe MyApiClient::ErrorHandling do
       let(:response_body) { nil }
 
       it 'forbid "nil" with response body' do
-        expect(error_handler).to eq :nil_is_forbidden_with_response_body
+        allow(instance).to receive(:nil_is_forbidden_with_response_body)
+        error_handler.call(params, logger)
+        expect(instance)
+          .to have_received(:nil_is_forbidden_with_response_body)
+          .with(params, logger)
       end
     end
 
@@ -128,7 +162,11 @@ RSpec.describe MyApiClient::ErrorHandling do
         end
 
         it 'monitors given JSON with string' do
-          expect(error_handler).to eq :json_is_monitored_by_string
+          allow(instance).to receive(:json_is_monitored_by_string)
+          error_handler.call(params, logger)
+          expect(instance)
+            .to have_received(:json_is_monitored_by_string)
+            .with(params, logger)
         end
       end
 
@@ -142,7 +180,11 @@ RSpec.describe MyApiClient::ErrorHandling do
         end
 
         it 'monitors given JSON with regex pattern' do
-          expect(error_handler).to eq :json_is_monitored_by_regex
+          allow(instance).to receive(:json_is_monitored_by_regex)
+          error_handler.call(params, logger)
+          expect(instance)
+            .to have_received(:json_is_monitored_by_regex)
+            .with(params, logger)
         end
       end
 
@@ -156,7 +198,11 @@ RSpec.describe MyApiClient::ErrorHandling do
         end
 
         it 'monitors given JSON with number' do
-          expect(error_handler).to eq :json_is_monitored_by_number
+          allow(instance).to receive(:json_is_monitored_by_number)
+          error_handler.call(params, logger)
+          expect(instance)
+            .to have_received(:json_is_monitored_by_number)
+            .with(params, logger)
         end
       end
 
@@ -170,7 +216,11 @@ RSpec.describe MyApiClient::ErrorHandling do
         end
 
         it 'monitors given JSON within range' do
-          expect(error_handler).to eq :json_is_monitored_by_range
+          allow(instance).to receive(:json_is_monitored_by_range)
+          error_handler.call(params, logger)
+          expect(instance)
+            .to have_received(:json_is_monitored_by_range)
+            .with(params, logger)
         end
       end
 
@@ -184,7 +234,11 @@ RSpec.describe MyApiClient::ErrorHandling do
         end
 
         it 'monitors given JSON with true' do
-          expect(error_handler).to eq :json_is_monitored_by_true_value
+          allow(instance).to receive(:json_is_monitored_by_true_value)
+          error_handler.call(params, logger)
+          expect(instance)
+            .to have_received(:json_is_monitored_by_true_value)
+            .with(params, logger)
         end
       end
 
@@ -198,7 +252,11 @@ RSpec.describe MyApiClient::ErrorHandling do
         end
 
         it 'monitors given JSON with false' do
-          expect(error_handler).to eq :json_is_monitored_by_false_value
+          allow(instance).to receive(:json_is_monitored_by_false_value)
+          error_handler.call(params, logger)
+          expect(instance)
+            .to have_received(:json_is_monitored_by_false_value)
+            .with(params, logger)
         end
       end
 
@@ -212,7 +270,11 @@ RSpec.describe MyApiClient::ErrorHandling do
         end
 
         it 'monitors given JSON with method calling' do
-          expect(error_handler).to eq :json_is_monitored_by_method_calling
+          allow(instance).to receive(:json_is_monitored_by_method_calling)
+          error_handler.call(params, logger)
+          expect(instance)
+            .to have_received(:json_is_monitored_by_method_calling)
+            .with(params, logger)
         end
       end
 
@@ -237,7 +299,11 @@ RSpec.describe MyApiClient::ErrorHandling do
 
         it 'does not raise parsing error and escalates to other handers' do
           expect { error_handler }.not_to raise_error
-          expect(error_handler).to eq :status_code_is_monitored_by_number
+          allow(instance).to receive(:status_code_is_monitored_by_number)
+          error_handler.call(params, logger)
+          expect(instance)
+            .to have_received(:status_code_is_monitored_by_number)
+            .with(params, logger)
         end
       end
     end
@@ -254,7 +320,11 @@ RSpec.describe MyApiClient::ErrorHandling do
         end
 
         it 'monitors given status code and JSON' do
-          expect(error_handler).to eq :monitoring_with_status_code_and_json
+          allow(instance).to receive(:monitoring_with_status_code_and_json)
+          error_handler.call(params, logger)
+          expect(instance)
+            .to have_received(:monitoring_with_status_code_and_json)
+            .with(params, logger)
         end
       end
 
@@ -270,7 +340,11 @@ RSpec.describe MyApiClient::ErrorHandling do
         end
 
         it 'monitors given JSON for each path' do
-          expect(error_handler).to eq :monitoring_with_json_multiple_conditions
+          allow(instance).to receive(:monitoring_with_json_multiple_conditions)
+          error_handler.call(params, logger)
+          expect(instance)
+            .to have_received(:monitoring_with_json_multiple_conditions)
+            .with(params, logger)
         end
       end
     end
@@ -327,7 +401,11 @@ RSpec.describe MyApiClient::ErrorHandling do
       let(:response_body) { nil }
 
       it 'can be used super class error handlers' do
-        expect(error_handler).to eq :commonized_error_handling
+        allow(instance).to receive(:commonized_error_handling)
+        error_handler.call(params, logger)
+        expect(instance)
+          .to have_received(:commonized_error_handling)
+          .with(params, logger)
       end
     end
 
