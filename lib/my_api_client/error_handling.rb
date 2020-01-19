@@ -34,7 +34,7 @@ module MyApiClient
       # @option with [Symbol]
       #   Calls specified method when error detected
       # @option raise [MyApiClient::Error]
-      #   Raises specified error when error detected.
+      #   Raises specified error when an invalid response detected.
       #   Should be inherited `MyApiClient::Error` class.
       #   default: MyApiClient::Error
       # @option retry [TrueClass, Hash]
@@ -42,28 +42,15 @@ module MyApiClient
       #   You can set `true` or `retry_on` options (`wait` and `attempts`).
       # @yield [MyApiClient::Params::Params, MyApiClient::Logger]
       #   Executes the block when error detected.
-      #   Will be Ignored if `retry` option specified.
+      #   Forbid to be used with the` retry` option.
       def error_handling(**options, &block)
         options[:block] = block
-        _process_retry_option(options)
+        retry_options = ProcessRetryOption.call(error_handling_options: options)
+        retry_on(options[:raise], **retry_options) if retry_options
 
         temp = error_handlers.dup
         temp << ->(response) { Generator.call(**options.merge(response: response)) }
         self.error_handlers = temp
-      end
-
-      def _process_retry_option(options)
-        retry_options = options.delete(:retry)
-        return unless retry_options
-
-        unless options[:raise]
-          raise 'The `retry` option requires `raise` option. ' \
-                'Please set any `raise` option, which inherits `MyApiClient::Error` class.'
-        end
-
-        options.delete(:block)
-        retry_options = {} unless retry_options.is_a? Hash
-        retry_on(options[:raise], **retry_options)
       end
     end
 
