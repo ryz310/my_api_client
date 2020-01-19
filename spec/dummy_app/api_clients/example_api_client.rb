@@ -32,7 +32,6 @@ class ExampleApiClient < ApplicationApiClient
 
   # GET https://example.com/users
   #
-  # @param user_id [Integer] User ID which want to read
   # @return [Sawyer::Response] HTTP response parameter
   def get_users
     get 'users', headers: headers
