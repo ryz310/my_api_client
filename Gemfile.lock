@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    my_api_client (0.11.0)
+    my_api_client (0.12.0)
       activesupport (>= 4.2.0)
       faraday (>= 0.17.1)
       jsonpath
@@ -93,7 +93,7 @@ GEM
     to_regexp (0.2.1)
     tzinfo (1.2.6)
       thread_safe (~> 0.1)
-    unicode-display_width (1.6.0)
+    unicode-display_width (1.6.1)
     webmock (3.8.0)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
