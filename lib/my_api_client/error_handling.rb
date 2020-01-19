@@ -34,12 +34,19 @@ module MyApiClient
       # @option with [Symbol]
       #   Calls specified method when error detected
       # @option raise [MyApiClient::Error]
-      #   Raises specified error when error detected. default: MyApiClient::Error
+      #   Raises specified error when an invalid response detected.
+      #   Should be inherited `MyApiClient::Error` class.
+      #   default: MyApiClient::Error
+      # @option retry [TrueClass, Hash]
+      #   If the error detected, retries the API request. Requires `raise` option.
+      #   You can set `true` or `retry_on` options (`wait` and `attempts`).
       # @yield [MyApiClient::Params::Params, MyApiClient::Logger]
-      #   Executes the block when error detected
+      #   Executes the block when error detected.
+      #   Forbid to be used with the` retry` option.
       def error_handling(**options, &block)
-        options[:raise] ||= MyApiClient::Error
-        options[:block] = block if block_given?
+        options[:block] = block
+        retry_options = ProcessRetryOption.call(error_handling_options: options)
+        retry_on(options[:raise], **retry_options) if retry_options
 
         temp = error_handlers.dup
         temp << ->(response) { Generator.call(**options.merge(response: response)) }
