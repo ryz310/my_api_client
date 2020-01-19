@@ -1,5 +1,17 @@
 # Change log
 
+## v0.12.0 (Jan 19, 2020)
+
+### Feature
+### Bugfix
+### Breaking Change
+### Misc
+
+* [#173](https://github.com/ryz310/my_api_client/pull/173) Avoid sleep on testing ([@ryz310](https://github.com/ryz310))
+* [#174](https://github.com/ryz310/my_api_client/pull/174) Fix warning on ruby 2.7 ([@ryz310](https://github.com/ryz310))
+* [#175](https://github.com/ryz310/my_api_client/pull/175) Verify arguments on error handling definition ([@ryz310](https://github.com/ryz310))
+* [#176](https://github.com/ryz310/my_api_client/pull/176) Provides a syntax sugar of `retry_on` on `error_handling` ([@ryz310](https://github.com/ryz310))
+
 ## v0.11.0 (Jan 16, 2020)
 
 ### Feature
