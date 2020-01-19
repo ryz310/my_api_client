@@ -228,6 +228,36 @@ API リクエストを何度も実行していると回線の不調などによ�
 
 ちなみに一応 `discard_on` も実装していますが、作者自身が有効な用途を見出せていないので、詳細は割愛します。良い利用方法があれば教えてください。
 
+#### 便利な使い方
+
+`error_handling` に `retry` オプションを付与する事で `retry_on` の定義を省略できます。
+例えば以下の 2 つのコードは同じ意味になります。
+
+```ruby
+retry_on MyApiClient::ApiLimitError, wait: 30.seconds, attempts: 3
+error_handling json: { '$.errors.code': 20 },
+               raise: MyApiClient::ApiLimitError
+```
+
+```ruby
+error_handling json: { '$.errors.code': 20 },
+               raise: MyApiClient::ApiLimitError,
+               retry: { wait: 30.seconds, attempts: 3 }
+```
+
+`retry_on` で `wait` や `attempts` を指定する必要がない場合は `retry: true` という記述で動作します。
+
+```ruby
+error_handling json: { '$.errors.code': 20 },
+               raise: MyApiClient::ApiLimitError,
+               retry: true
+```
+
+`retry` オプションを使用する際は以下の点に注意が必要です。
+
+* `error_handling` に `raise` オプションの指定が必須となります。
+* Block を使った `error_handling` の定義は禁止されます。
+
 #### MyApiClient::NetworkError
 
 前述の通りですが、 `MyApiClient` ではネットワーク系の例外はまとめて `MyApiClient::NetworkError` として `raise` されます。他の例外と同じく `MyApiClient::Error` を親クラスとしています。 `MyApiClient::NetworkError` として扱われる例外クラスの一覧は `MyApiClient::NETWORK_ERRORS` で参照できます。また、元となった例外は `#original_error` で参照できます。
