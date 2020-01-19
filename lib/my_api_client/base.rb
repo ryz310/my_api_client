@@ -26,7 +26,7 @@ module MyApiClient
 
     HTTP_METHODS.each do |http_method|
       class_eval <<~METHOD, __FILE__, __LINE__ + 1
-        # Description of #undefined
+        # Description of ##{http_method}
         #
         # @param pathname [String]
         # @param headers [Hash, nil]
