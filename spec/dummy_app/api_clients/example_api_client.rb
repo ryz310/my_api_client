@@ -6,15 +6,19 @@ class ExampleApiClient < ApplicationApiClient
   endpoint 'https://example.com'
   http_read_timeout 2.seconds
 
-  retry_on MyApiClient::ApiLimitError, wait: 0.seconds, attempts: 2
+  error_handling json: { '$.errors.code': 10..19 },
+                 with: :my_error_handling
 
-  error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
-  error_handling json: { '$.errors.code': 20 }, raise: MyApiClient::ApiLimitError
-  error_handling json: { '$.errors.message': /Sorry/ }, raise: MyApiClient::ServerError
+  error_handling json: { '$.errors.code': 20 },
+                 raise: MyApiClient::ApiLimitError,
+                 retry: true
+
+  error_handling json: { '$.errors.message': /Sorry/ },
+                 raise: MyApiClient::ServerError
 
   attr_reader :access_token
 
-  def initialize(access_token)
+  def initialize(access_token:)
     @access_token = access_token
   end
 
@@ -22,7 +26,7 @@ class ExampleApiClient < ApplicationApiClient
   #
   # @param name [String] Username which want to create
   # @return [Sawyer::Response] HTTP response parameter
-  def create_user(name)
+  def post_user(name)
     post 'users', headers: headers, body: { name: name }
   end
 
@@ -30,7 +34,7 @@ class ExampleApiClient < ApplicationApiClient
   #
   # @param user_id [Integer] User ID which want to read
   # @return [Sawyer::Response] HTTP response parameter
-  def read_users
+  def get_users
     get 'users', headers: headers
   end
 
@@ -38,7 +42,7 @@ class ExampleApiClient < ApplicationApiClient
   #
   # @param user_id [Integer] User ID which want to read
   # @return [Sawyer::Response] HTTP response parameter
-  def read_user(user_id)
+  def get_user(user_id)
     get "users/#{user_id}", headers: headers
   end
 
@@ -47,7 +51,7 @@ class ExampleApiClient < ApplicationApiClient
   # @param user_id [Integer] User ID which want to read
   # @param name [String] Username which want to be updated
   # @return [Sawyer::Response] HTTP response parameter
-  def update_user(user_id, name)
+  def patch_user(user_id, name)
     patch "users/#{user_id}", headers: headers, body: { name: name }
   end
 
