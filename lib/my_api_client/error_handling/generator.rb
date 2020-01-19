@@ -4,10 +4,12 @@ module MyApiClient
   module ErrorHandling
     # Generates an error handler proc (or symbol)
     class Generator < ServiceAbstract
-      ARGUMENTS = %i[response status_code json with raise block].freeze
+      ARGUMENTS = %i[instance response status_code json with raise block].freeze
 
       # @param options [Hash]
       #   Options for this generator
+      # @option instance [MyApiClient::Base]
+      #   The API client class.
       # @option response [Sawyer::Response]
       #   The target of verifying
       # @option status_code [String, Range, Integer, Regexp]
@@ -15,16 +17,14 @@ module MyApiClient
       # @option json [Hash, Symbol]
       #   Verifies response body as JSON and raises error if matched.
       #   If specified `:forbid_nil`, it forbid `nil` on response_body.
-      # @option with [Symbol]
+      # @option with [Proc]
       #   Calls specified method when error detected
       # @option raise [MyApiClient::Error]
       #   Raises specified error when error detected. default: MyApiClient::Error
       # @option block [Proc]
       #   Executes the block when error detected
       # @return [Proc]
-      #   Returns value as `Proc` if given `raise` or `block` option
-      # @return [Symbol]
-      #   Returns value as `Symbol` if given `with` option
+      #   Returns value as `Proc`.
       def initialize(**options)
         options[:raise] ||= MyApiClient::Error
         verify_and_set_arguments(**options)
@@ -38,10 +38,14 @@ module MyApiClient
         return unless match?(_status_code, _response.status)
         return unless match_all?(_json, _response.body)
 
+        generate_error_handler
+      end
+
+      def generate_error_handler
         if _block
           ->(params, logger) { _block.call(params, logger) }
         elsif _with
-          _with
+          ->(params, logger) { _instance.send(_with, params, logger) }
         else
           ->(params, _) { raise _raise, params }
         end

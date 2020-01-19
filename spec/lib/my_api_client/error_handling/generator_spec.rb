@@ -8,29 +8,42 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
   subject(:execute) { described_class.call(**options) }
 
   let(:options) do
-    response_option.merge matcher_options.merge error_handling_options
+    required_params.merge matcher_options.merge error_handling_options
   end
 
-  let(:response_option) do
-    { response: http_response }
+  let(:required_params) do
+    { instance: instance, response: http_response }
   end
+
+  let(:instance) { instance_double('api_client', my_error_handling: nil) }
 
   shared_examples 'an error was detected' do
     describe 'error handling options' do
+      let(:params) { instance_double(MyApiClient::Params::Params, metadata: {}) }
+      let(:logger) { instance_double(MyApiClient::Logger) }
+
       context 'with `raise` option' do
         let(:error_handling_options) do
           { raise: MyApiClient::ClientError }
         end
 
-        it { is_expected.to be_kind_of Proc }
+        it 'returns a Proc instance that raises specified exception when executed' do
+          expect { execute.call(params, logger) }
+            .to raise_error(MyApiClient::ClientError)
+        end
       end
 
       context 'with `blcok` option' do
         let(:error_handling_options) do
-          { block: -> {} }
+          { block: block }
         end
 
-        it { is_expected.to be_kind_of Proc }
+        let(:block) { instance_double(Proc, call: nil) }
+
+        it 'returns a Proc instance that specified as the block' do
+          execute.call(params, logger)
+          expect(block).to have_received(:call).with(params, logger)
+        end
       end
 
       context 'with `with` option' do
@@ -38,7 +51,10 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
           { with: :my_error_handling }
         end
 
-        it { is_expected.to eq :my_error_handling }
+        it 'returns a Proc instance that calls the instance method when executed' do
+          execute.call(params, logger)
+          expect(instance).to have_received(:my_error_handling).with(params, logger)
+        end
       end
     end
   end
