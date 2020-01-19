@@ -31,18 +31,19 @@ module MyApiClient
         retry_options = error_handling_options.delete(:retry)
         return unless retry_options
 
-        unless error_handling_options[:raise]
+        verify_error_handling_options
+        retry_options = {} unless retry_options.is_a? Hash
+        retry_options
+      end
+
+      # Requires `retry` option and forbid `block` option.
+      def verify_error_handling_options
+        if !error_handling_options[:raise]
           raise 'The `retry` option requires `raise` option. ' \
                 'Please set any `raise` option, which inherits `MyApiClient::Error` class.'
-        end
-
-        if error_handling_options[:block]
+        elsif error_handling_options[:block]
           raise 'The `block` option is forbidden to be used with the` retry` option.'
         end
-
-        retry_options = {} unless retry_options.is_a? Hash
-
-        retry_options
       end
     end
   end
