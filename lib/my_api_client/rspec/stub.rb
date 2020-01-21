@@ -3,6 +3,11 @@
 module MyApiClient
   # Test helper module for RSpec
   module Stub
+    ERROR_MESSAGE =
+      'If you use the `raise` option as an error instance, the `response` option ' \
+      'is ignored. If you want to use both options, you need to specify the ' \
+      '`raise` option as an error class.'
+
     # Stubs all instance of arbitrary MyApiClient class.
     # And returns a stubbed arbitrary MyApiClient instance.
     #
@@ -16,7 +21,11 @@ module MyApiClient
     #     get_user: { response: { id: 1 } },               # Returns an arbitrary response.
     #     post_users: { id: 1 },                           # You can ommit `response` keyword.
     #     patch_user: ->(params) { { id: params[:id] } },  # Returns calculated result as response.
-    #     delete_user: { raise: MyApiClient::ClientError } # Raises an arbitrary error.
+    #     put_user: { raise: MyApiClient::ClientError }    # Raises an arbitrary error.
+    #     delete_user: {
+    #       raise: MyApiClient::ClientError,
+    #       response: { errors: [{ code: 10 }] },          # You can stub response with exception.
+    #     }
     #   )
     #   response = ExampleApiClient.new.get_user(id: 123)
     #   response.id # => 1
@@ -40,7 +49,11 @@ module MyApiClient
     #     get_user: { response: { id: 1 } },               # Returns an arbitrary response.
     #     post_users: { id: 1 },                           # You can ommit `response` keyword.
     #     patch_user: ->(params) { { id: params[:id] } },  # Returns calculated result as response.
-    #     delete_user: { raise: MyApiClient::ClientError } # Raises an arbitrary error.
+    #     put_user: { raise: MyApiClient::ClientError }    # Raises an arbitrary error.
+    #     delete_user: {
+    #       raise: MyApiClient::ClientError,
+    #       response: { errors: [{ code: 10 }] },          # You can stub response with exception.
+    #     }
     #   )
     #   response = api_client.get_user(id: 123)
     #   response.id # => 1
@@ -58,17 +71,18 @@ module MyApiClient
     def stubbing(instance, action, options)
       case options
       when Proc
-        allow(instance).to receive(action) { |*request| stub_as_sawyer(options.call(*request)) }
+        allow(instance).to receive(action) { |*request| stub_as_resource(options.call(*request)) }
       when Hash
         if options[:raise].present?
-          allow(instance).to receive(action).and_raise(process_raise_option(options[:raise]))
+          exception = process_raise_option(options[:raise], options[:response])
+          allow(instance).to receive(action).and_raise(exception)
         elsif options[:response]
-          allow(instance).to receive(action).and_return(stub_as_sawyer(options[:response]))
+          allow(instance).to receive(action).and_return(stub_as_resource(options[:response]))
         else
-          allow(instance).to receive(action).and_return(stub_as_sawyer(options))
+          allow(instance).to receive(action).and_return(stub_as_resource(options))
         end
       else
-        allow(instance).to receive(action).and_return(stub_as_sawyer(options))
+        allow(instance).to receive(action).and_return(stub_as_resource(options))
       end
     end
     # rubocop:enable Metrics/AbcSize
@@ -81,26 +95,37 @@ module MyApiClient
     # @param exception [Clsas, MyApiClient::Error] Processing target.
     # @return [MyApiClient::Error] Processed exception.
     # @raise [RuntimeError] Unsupported error class was set.
-    def process_raise_option(exception)
+    def process_raise_option(exception, response = {})
       case exception
       when Class
-        params = instance_double(MyApiClient::Params::Params, metadata: {})
+        params = MyApiClient::Params::Params.new(nil, stub_as_response(response))
         if exception == MyApiClient::NetworkError
           exception.new(params, Net::OpenTimeout.new)
         else
           exception.new(params)
         end
       when MyApiClient::Error
+        raise ERROR_MESSAGE if response.present?
         exception
       else
         raise "Unsupported error class was set: #{exception.inspect}"
       end
     end
 
-    def stub_as_sawyer(params)
+    def stub_as_response(params)
+      instance_double(
+        Sawyer::Response,
+        status: 400,
+        headers: {},
+        data: stub_as_resource(params),
+        timing: 0.123
+      )
+    end
+
+    def stub_as_resource(params)
       case params
       when Hash  then Sawyer::Resource.new(agent, params)
-      when Array then params.map { |hash| stub_as_sawyer(hash) }
+      when Array then params.map { |hash| stub_as_resource(hash) }
       when nil   then nil
       else params
       end
