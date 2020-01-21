@@ -80,7 +80,7 @@ RSpec.describe MyApiClient::ErrorHandling do
 
   describe '.error_handling' do
     let(:instance) { self.class::MockClass.new }
-    let(:error_handler) { instance.error_handling(response) }
+    let(:error_handler) { instance._error_handling(response) }
     let(:response) do
       instance_double(
         Sawyer::Response, status: status_code, body: response_body
@@ -500,25 +500,25 @@ RSpec.describe MyApiClient::ErrorHandling do
     # rubocop:disable RSpec/ExampleLength
     it 'prioritizes error handlers which defined later' do
       allow(instance).to receive(:error_number_13_with_error_message)
-      instance.error_handling(response_1).call(params, logger)
+      instance._error_handling(response_1).call(params, logger)
       expect(instance).to have_received(:error_number_13_with_error_message)
 
       allow(instance).to receive(:error_number_13)
-      instance.error_handling(response_2).call(params, logger)
+      instance._error_handling(response_2).call(params, logger)
       expect(instance).to have_received(:error_number_13)
 
       allow(instance).to receive(:error_number_1x)
-      instance.error_handling(response_3).call(params, logger)
+      instance._error_handling(response_3).call(params, logger)
       expect(instance).to have_received(:error_number_1x)
 
       allow(instance).to receive(:bad_request)
-      instance.error_handling(response_4).call(params, logger)
+      instance._error_handling(response_4).call(params, logger)
       expect(instance).to have_received(:bad_request)
     end
     # rubocop:enable RSpec/ExampleLength
 
     it 'returns nil when detected nothing' do
-      expect(instance.error_handling(response_5)).to be_nil
+      expect(instance._error_handling(response_5)).to be_nil
     end
 
     class self::BadMockClass < self::ParentMockClass
@@ -527,7 +527,7 @@ RSpec.describe MyApiClient::ErrorHandling do
 
     it 'raises error when set unexpected operator type' do
       instance = self.class::BadMockClass.new
-      expect { instance.error_handling(response_1) }
+      expect { instance._error_handling(response_1) }
         .to raise_error(/Unexpected operator type was given/)
     end
   end

@@ -60,7 +60,7 @@ module MyApiClient
     #
     # @param response [Sawyer::Response] describe_params_here
     # @return [Proc, nil] description_of_returned_object
-    def error_handling(response)
+    def _error_handling(response)
       error_handlers.reverse_each do |error_handler|
         result = error_handler.call(self, response)
         return result unless result.nil?

@@ -76,7 +76,7 @@ module MyApiClient
     # @return [nil] description_of_returned_object
     # @raise [MyApiClient::Error]
     def _verify(params, request_logger)
-      error_handler = error_handling(params.response)
+      error_handler = _error_handling(params.response)
       return if error_handler.nil?
 
       error_handler.call(params, request_logger)
