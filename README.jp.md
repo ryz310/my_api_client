@@ -201,7 +201,21 @@ WIP
 
 #### MyApiClient::Error
 
-WIP
+API リクエストのレスポンスが `error_handling` で定義した matcher に合致した場合、 `raise` で指定した例外処理が発生します。この例外クラスは `MyApiClient::Error` を継承している必要があります。
+
+この例外クラスには `#params` というメソッドが存在し、リクエストやレスポンスのパラメータを参照することが出来ます。
+
+```ruby
+begin
+  api_client.request
+rescue MyApiClient::Error => e
+  e.params.inspect
+  # => {
+  #      :request=>"#<MyApiClient::Params::Request#inspect>",
+  #      :response=>"#<Sawyer::Response#inspect>",
+  #    }
+end
+```
 
 #### Bugsnag breadcrumbs
 
@@ -532,6 +546,25 @@ end
 
 stub_api_client_all(ExampleApiClient, request: { raise: MyApiClient::Error })
 expect { execute_api_request }.to raise_error(MyApiClient::Error)
+```
+
+なお、発生した例外に含まれるレスポンスパラメータもスタブ化したい場合は、 `response` オプションと同時に指定することが可能です。
+
+```ruby
+stub_api_client_all(
+  ExampleApiClient,
+  request: {
+    raise: MyApiClient::Error,
+    response: { message: 'error' }
+  }
+)
+
+begin
+  ExampleApiClient.new.request(user_id: 1)
+rescue MyApiClient::Error => e
+  response_body = e.params.response.data.to_h
+  expect(response_body).to eq(message: 'error')
+end
 ```
 
 ## Contributing

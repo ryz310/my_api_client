@@ -132,7 +132,7 @@ RSpec.describe MyApiClient::Stub do
       end
     end
 
-    context 'when use response option' do
+    context 'when use `response` option' do
       let(:api_client) do
         stub_api_client(
           self.class::ExampleApiClient,
@@ -146,6 +146,86 @@ RSpec.describe MyApiClient::Stub do
         expect(response1.id).to eq 12_345
         response2 = api_client.request_all
         expect(response2).to eq [10, 20, 30]
+      end
+    end
+
+    context 'when use `raise` and `respones` options' do
+      shared_examples 'a stub to raise an error' do |error|
+        let(:api_client) do
+          stub_api_client(
+            self.class::ExampleApiClient,
+            request: { raise: error, response: { message: 'error 1' } },
+            request_all: { raise: error, response: { message: 'error 2' } }
+          )
+        end
+
+        it 'stubs ApiClient to raise error set in `raise`' do
+          expect { api_client.request(user_id: 1) }.to raise_error(error)
+          expect { api_client.request_all }.to raise_error(error)
+        end
+
+        it 'stubs ApiClient to return params set in `response`' do
+          begin
+            api_client.request(user_id: 1)
+          rescue error => e
+            response_body = e.params.response.data.to_h
+            expect(response_body).to eq(message: 'error 1')
+          end
+        end
+
+        it 'stubs ApiClient to return params with metadata' do
+          begin
+            api_client.request_all
+          rescue error => e
+            expect(e.params.metadata).to eq(
+              duration: 0.123,
+              response_body: { message: 'error 2' },
+              response_headers: {},
+              response_status: 400
+            )
+          end
+        end
+      end
+
+      context 'with MyApiClient::Error class' do
+        it_behaves_like 'a stub to raise an error', MyApiClient::ClientError
+      end
+
+      context 'with MyApiClient::NetworkError class' do
+        it_behaves_like 'a stub to raise an error', MyApiClient::NetworkError
+      end
+
+      context 'with MyApiClient::Error instance' do
+        let(:api_client) do
+          params = instance_double(MyApiClient::Params::Params, metadata: {})
+          error = MyApiClient::ServerError.new(params)
+          stub_api_client(
+            self.class::ExampleApiClient,
+            request: { raise: error, response: { message: 'error 1' } },
+            request_all: { raise: error, response: { message: 'error 2' } }
+          )
+        end
+
+        it 'stubs ApiClient to raise error set in `raise`' do
+          expect { api_client.request(user_id: 1) }
+            .to raise_error(/the `response` option is ignored/)
+          expect { api_client.request_all }
+            .to raise_error(/the `response` option is ignored/)
+        end
+      end
+
+      context 'with not an MyApiClient::Error class or instance' do
+        let(:stubbing!) do
+          stub_api_client(
+            self.class::ExampleApiClient,
+            request: { raise: 1 },
+            request_all: { raise: 2 }
+          )
+        end
+
+        it 'raises exception' do
+          expect { stubbing! }.to raise_error(/Unsupported error class was set/)
+        end
       end
     end
 
