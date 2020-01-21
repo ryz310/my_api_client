@@ -430,6 +430,8 @@ RSpec.describe MyApiClient::ErrorHandling do
 
     error_handling status_code: 400,
                    with: :bad_request
+
+    def bad_request; end
   end
 
   class self::ChildMockClass < self::ParentMockClass
@@ -439,12 +441,19 @@ RSpec.describe MyApiClient::ErrorHandling do
     error_handling status_code: 400,
                    json: { '$.errors.code': 13 },
                    with: :error_number_13
+
+    # rubocop:disable Layout/EmptyLineBetweenDefs
+    def error_number_1x; end
+    def error_number_13; end
+    # rubocop:enable Layout/EmptyLineBetweenDefs
   end
 
   class self::GrandchildMockClass < self::ChildMockClass
     error_handling status_code: 400,
                    json: { '$.errors.code': 13, '$.errors.message': 'error' },
                    with: :error_number_13_with_error_message
+
+    def error_number_13_with_error_message; end
   end
 
   describe '#error_handling' do
@@ -485,12 +494,28 @@ RSpec.describe MyApiClient::ErrorHandling do
       instance_double(Sawyer::Response, status: 200, body: nil)
     end
 
+    let(:params) { instance_double(MyApiClient::Params::Params, metadata: {}) }
+    let(:logger) { instance_double(MyApiClient::Logger) }
+
+    # rubocop:disable RSpec/ExampleLength
     it 'prioritizes error handlers which defined later' do
-      expect(instance.error_handling(response_1)).to eq :error_number_13_with_error_message
-      expect(instance.error_handling(response_2)).to eq :error_number_13
-      expect(instance.error_handling(response_3)).to eq :error_number_1x
-      expect(instance.error_handling(response_4)).to eq :bad_request
+      allow(instance).to receive(:error_number_13_with_error_message)
+      instance.error_handling(response_1).call(params, logger)
+      expect(instance).to have_received(:error_number_13_with_error_message)
+
+      allow(instance).to receive(:error_number_13)
+      instance.error_handling(response_2).call(params, logger)
+      expect(instance).to have_received(:error_number_13)
+
+      allow(instance).to receive(:error_number_1x)
+      instance.error_handling(response_3).call(params, logger)
+      expect(instance).to have_received(:error_number_1x)
+
+      allow(instance).to receive(:bad_request)
+      instance.error_handling(response_4).call(params, logger)
+      expect(instance).to have_received(:bad_request)
     end
+    # rubocop:enable RSpec/ExampleLength
 
     it 'returns nil when detected nothing' do
       expect(instance.error_handling(response_5)).to be_nil
