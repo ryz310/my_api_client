@@ -1,5 +1,14 @@
 # Change log
 
+## v0.13.0 (Jan 21, 2020)
+
+### Feature
+### Bugfix
+### Breaking Change
+### Misc
+
+* [#180](https://github.com/ryz310/my_api_client/pull/180) Stub response on raising error ([@ryz310](https://github.com/ryz310))
+
 ## v0.12.0 (Jan 19, 2020)
 
 ### Feature
