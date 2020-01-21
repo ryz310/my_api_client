@@ -106,6 +106,7 @@ module MyApiClient
         end
       when MyApiClient::Error
         raise ERROR_MESSAGE if response.present?
+
         exception
       else
         raise "Unsupported error class was set: #{exception.inspect}"
