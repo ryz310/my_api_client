@@ -17,7 +17,7 @@ module MyApiClient
       # @option json [Hash, Symbol]
       #   Verifies response body as JSON and raises error if matched.
       #   If specified `:forbid_nil`, it forbid `nil` on response_body.
-      # @option with [Proc]
+      # @option with [Symbol]
       #   Calls specified method when error detected
       # @option raise [MyApiClient::Error]
       #   Raises specified error when error detected. default: MyApiClient::Error
