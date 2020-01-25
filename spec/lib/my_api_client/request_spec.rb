@@ -36,7 +36,7 @@ RSpec.describe MyApiClient::Request do
       allow(MyApiClient::Logger).to receive(:new).and_return(request_logger)
       allow(Sawyer::Agent).to receive(:new).and_return(agent)
       allow(Faraday).to receive(:new).and_call_original
-      allow(instance).to receive(:error_handling).and_call_original
+      allow(instance).to receive(:_error_handling).and_call_original
       stub_request(http_method, 'https://example.com/v1/path/to/resource')
         .with(query: query)
         .to_return(body: response_body, headers: headers)
@@ -106,7 +106,7 @@ RSpec.describe MyApiClient::Request do
 
       it 'verifies the API response with `#error_handling` definition' do
         request!
-        expect(instance).to have_received(:error_handling).with(response)
+        expect(instance).to have_received(:_error_handling).with(response)
       end
 
       it 'returns the API response' do
@@ -116,20 +116,12 @@ RSpec.describe MyApiClient::Request do
 
     shared_examples 'to handle errors' do
       context 'when #error_handling returns Proc' do
-        before { allow(instance).to receive(:error_handling).and_return(proc) }
+        before { allow(instance).to receive(:_error_handling).and_return(proc) }
 
         let(:proc) { ->(_params, _request_logger) { puts 'The procedure is called' } }
 
         it 'calls received procedure' do
           expect { request! }.to output("The procedure is called\n").to_stdout
-        end
-      end
-
-      context 'when #error_handling returns Symbol' do
-        before { allow(instance).to receive(:error_handling).and_return(:bad_request) }
-
-        it 'executes received Symbol\'s method' do
-          expect { request! }.to output("The method is called\n").to_stdout
         end
       end
 
@@ -142,7 +134,7 @@ RSpec.describe MyApiClient::Request do
       end
 
       context 'when raises a error which inherit MyApiClient::Error' do
-        before { allow(instance).to receive(:error_handling).and_return(proc) }
+        before { allow(instance).to receive(:_error_handling).and_return(proc) }
 
         let(:proc) { ->(params, _request_logger) { raise MyApiClient::Error, params } }
 
