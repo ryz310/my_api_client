@@ -1,5 +1,20 @@
 {
   "extends": [
     "config:base"
+  ],
+  "packageRules": [
+    {
+      "updateTypes": ["major"],
+      "labels": ["renovate", "major"]
+    },
+    {
+      "updateTypes": ["minor"],
+      "labels": ["renovate", "minor"]
+    },
+    {
+      "updateTypes": ["patch"],
+      "labels": ["renovate", "patch", "auto merge"],
+      "automerge": true
+    }
   ]
 }
