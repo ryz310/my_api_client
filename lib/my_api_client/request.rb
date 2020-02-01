@@ -15,7 +15,9 @@ module MyApiClient
         # @param body [Hash, nil]
         # @return [Sawyer::Resouce] description_of_returned_object
         def #{http_method}(pathname, headers: nil, query: nil, body: nil)
-          response = _request :#{http_method}, pathname, headers, query, body, logger
+          query_strings = query.present? ? '?' + query&.to_query : ''
+          uri = URI.join(File.join(endpoint, pathname), query_strings)
+          response = _request :#{http_method}, uri, headers, body, logger
           response.data
         end
       METHOD
@@ -25,42 +27,15 @@ module MyApiClient
     # Description of #_request
     #
     # @param http_method [Symbol] describe_http_method_here
-    # @param pathname [String] describe_pathname_here
+    # @param uri [URI] describe_uri_here
     # @param headers [Hash, nil] describe_headers_here
-    # @param query [Hash, nil] describe_query_here
     # @param body [Hash, nil] describe_body_here
     # @param logger [::Logger] describe_logger_here
     # @return [Sawyer::Response] description_of_returned_object
-    # rubocop:disable Metrics/ParameterLists
-    def _request(http_method, pathname, headers, query, body, logger)
-      processed_path = [common_path, pathname].join('/').gsub('//', '/')
-      request_params = Params::Request.new(http_method, processed_path, headers, query, body)
-      agent # Initializes for faraday
-      request_logger = Logger.new(logger, faraday, http_method, processed_path)
+    def _request(http_method, uri, headers, body, logger)
+      request_params = Params::Request.new(http_method, uri, headers, body)
+      request_logger = Logger.new(logger, http_method, uri)
       call(:_execute, request_params, request_logger)
-    end
-    # rubocop:enable Metrics/ParameterLists
-
-    # Extracts schema and hostname from endpoint
-    #
-    # @example Extracts schema and hostname from 'https://example.com/path/to/api'
-    #   schema_and_hostname # => 'https://example.com'
-    # @return [String] description_of_returned_object
-    def schema_and_hostname
-      if _uri.default_port == _uri.port
-        "#{_uri.scheme}://#{_uri.host}"
-      else
-        "#{_uri.scheme}://#{_uri.host}:#{_uri.port}"
-      end
-    end
-
-    # Extracts pathname from endpoint
-    #
-    # @example Extracts pathname from 'https://example.com/path/to/api'
-    #   common_path # => 'path/to/api'
-    # @return [String] The pathanem
-    def common_path
-      _uri.path
     end
 
     private
@@ -69,7 +44,7 @@ module MyApiClient
     #
     # @return [Sawyer::Agent] description_of_returned_object
     def agent
-      @agent ||= Sawyer::Agent.new(schema_and_hostname, faraday: faraday)
+      @agent ||= Sawyer::Agent.new('', faraday: faraday)
     end
 
     # Description of #faraday
@@ -84,11 +59,6 @@ module MyApiClient
             open_timeout: (http_open_timeout if respond_to?(:http_open_timeout)),
           }.compact
         )
-    end
-
-    # @return [URI] Returns a memoized URI instance
-    def _uri
-      @_uri ||= URI.parse(endpoint)
     end
 
     # Description of #_execute
