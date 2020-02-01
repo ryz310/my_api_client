@@ -15,7 +15,8 @@ module MyApiClient
         # @param body [Hash, nil]
         # @return [Sawyer::Resouce] description_of_returned_object
         def #{http_method}(pathname, headers: nil, query: nil, body: nil)
-          _request :#{http_method}, pathname, headers, query, body, logger
+          response = _request :#{http_method}, pathname, headers, query, body, logger
+          response.data
         end
       METHOD
     end
@@ -29,7 +30,7 @@ module MyApiClient
     # @param query [Hash, nil] describe_query_here
     # @param body [Hash, nil] describe_body_here
     # @param logger [::Logger] describe_logger_here
-    # @return [Sawyer::Resource] description_of_returned_object
+    # @return [Sawyer::Response] description_of_returned_object
     # rubocop:disable Metrics/ParameterLists
     def _request(http_method, pathname, headers, query, body, logger)
       processed_path = [common_path, pathname].join('/').gsub('//', '/')
@@ -67,7 +68,7 @@ module MyApiClient
     #
     # @param request_params [MyApiClient::Params::Request] describe_request_params_here
     # @param request_logger [MyApiClient::Logger] describe_request_logger_here
-    # @return [Sawyer::Resource] description_of_returned_object
+    # @return [Sawyer::Response] description_of_returned_object
     # @raise [MyApiClient::Error]
     def _execute(request_params, request_logger)
       request_logger.info('Start')
@@ -84,7 +85,7 @@ module MyApiClient
       raise e
     else
       request_logger.info("Success (#{response.status})")
-      response.data
+      response
     end
 
     # Description of #_verify

@@ -110,7 +110,7 @@ RSpec.describe MyApiClient::Request do
       end
 
       it 'returns the API response' do
-        expect(request!).to eq resource
+        expect(request!).to eq response
       end
     end
 
