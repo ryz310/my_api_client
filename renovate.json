@@ -9,7 +9,8 @@
     },
     {
       "updateTypes": ["minor"],
-      "labels": ["renovate", "minor"]
+      "labels": ["renovate", "minor", "auto merge"],
+      "automerge": true
     },
     {
       "updateTypes": ["patch"],
