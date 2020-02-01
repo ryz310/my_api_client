@@ -8,9 +8,12 @@ RSpec.describe MyApiClient::Request do
     include MyApiClient::ErrorHandling
 
     if ActiveSupport::VERSION::STRING >= '5.2.0'
+      class_attribute :logger, instance_writer: false, default: ::Logger.new(STDOUT)
       class_attribute :error_handlers, default: []
     else
+      class_attribute :logger
       class_attribute :error_handlers
+      self.logger = ::Logger.new(STDOUT)
       self.error_handlers = []
     end
 
@@ -22,6 +25,39 @@ RSpec.describe MyApiClient::Request do
 
     def bad_request(_params, _logger)
       puts 'The method is called'
+    end
+  end
+
+  let(:instance) { self.class::MockClass.new }
+
+  described_class::HTTP_METHODS.each do |http_method|
+    describe "##{http_method}" do
+      subject(:execute) do
+        instance.public_send(http_method, pathname, headers: headers, query: query, body: body)
+      end
+
+      before { allow(instance).to receive(:_request).and_return(response) }
+
+      let(:pathname) { 'path/to/resource' }
+      let(:headers) { { 'Content-Type': 'application/json;charset=UTF-8' } }
+      let(:query) { { key: 'value' } }
+      let(:body) { nil }
+      let(:response) { instance_double(Sawyer::Response, data: resource) }
+      let(:resource) { instance_double(Sawyer::Resource) }
+
+      it 'calls #_request method and then processes the response' do
+        execute
+        expect(instance)
+          .to have_received(:_request)
+          .with(http_method, pathname, headers, query, body, instance_of(::Logger))
+          .ordered
+        expect(response)
+          .to have_received(:data)
+          .with(no_args)
+          .ordered
+      end
+
+      it { is_expected.to eq resource }
     end
   end
 
@@ -42,7 +78,6 @@ RSpec.describe MyApiClient::Request do
         .to_return(body: response_body, headers: headers)
     end
 
-    let(:instance) { self.class::MockClass.new }
     let(:headers) { { 'Content-Type': 'application/json;charset=UTF-8' } }
     let(:request_logger) { instance_double(MyApiClient::Logger, info: nil, warn: nil, error: nil) }
     let(:agent) { instance_double(Sawyer::Agent, call: response) }
