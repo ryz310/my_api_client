@@ -219,4 +219,40 @@ RSpec.describe MyApiClient::Request do
       it_behaves_like 'to handle errors'
     end
   end
+
+  describe '#schema_and_hostname' do
+    context 'with domain name and path' do
+      before { self.class::MockClass.endpoint('https://example.com/path/to/resource') }
+
+      it 'extracts schema and hostname from endpoint' do
+        expect(instance.schema_and_hostname).to eq 'https://example.com'
+      end
+    end
+
+    context 'when given endpoint: "localhost:3000"' do
+      before { self.class::MockClass.endpoint('http://localhost:3000/path/to/resource') }
+
+      it 'extracts schema and hostname from endpoint' do
+        expect(instance.schema_and_hostname).to eq 'http://localhost:3000'
+      end
+    end
+  end
+
+  describe '#common_path' do
+    context 'with domain name and path' do
+      before { self.class::MockClass.endpoint('https://example.com/path/to/resource') }
+
+      it 'extracts pathname from endpoint' do
+        expect(instance.common_path).to eq '/path/to/resource'
+      end
+    end
+
+    context 'when given endpoint: "localhost:3000"' do
+      before { self.class::MockClass.endpoint('http://localhost:3000/path/to/resource') }
+
+      it 'extracts pathname from endpoint' do
+        expect(instance.common_path).to eq '/path/to/resource'
+      end
+    end
+  end
 end

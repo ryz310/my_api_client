@@ -41,6 +41,28 @@ module MyApiClient
     end
     # rubocop:enable Metrics/ParameterLists
 
+    # Extracts schema and hostname from endpoint
+    #
+    # @example Extracts schema and hostname from 'https://example.com/path/to/api'
+    #   schema_and_hostname # => 'https://example.com'
+    # @return [String] description_of_returned_object
+    def schema_and_hostname
+      if _uri.default_port == _uri.port
+        "#{_uri.scheme}://#{_uri.host}"
+      else
+        "#{_uri.scheme}://#{_uri.host}:#{_uri.port}"
+      end
+    end
+
+    # Extracts pathname from endpoint
+    #
+    # @example Extracts pathname from 'https://example.com/path/to/api'
+    #   common_path # => 'path/to/api'
+    # @return [String] The pathanem
+    def common_path
+      _uri.path
+    end
+
     private
 
     # Description of #agent
@@ -62,6 +84,11 @@ module MyApiClient
             open_timeout: (http_open_timeout if respond_to?(:http_open_timeout)),
           }.compact
         )
+    end
+
+    # @return [URI] Returns a memoized URI instance
+    def _uri
+      @_uri ||= URI.parse(endpoint)
     end
 
     # Description of #_execute
