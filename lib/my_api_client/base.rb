@@ -21,23 +21,5 @@ module MyApiClient
     # NOTE: This class **MUST NOT** implement #initialize method. Because it
     #       will become constraint that need call #super in the #initialize at
     #       definition of the child classes.
-
-    HTTP_METHODS = %i[get post patch delete].freeze
-
-    HTTP_METHODS.each do |http_method|
-      class_eval <<~METHOD, __FILE__, __LINE__ + 1
-        # Description of ##{http_method}
-        #
-        # @param pathname [String]
-        # @param headers [Hash, nil]
-        # @param query [Hash, nil]
-        # @param body [Hash, nil]
-        # @return [Sawyer::Resouce] description_of_returned_object
-        def #{http_method}(pathname, headers: nil, query: nil, body: nil)
-          _request :#{http_method}, pathname, headers, query, body, logger
-        end
-      METHOD
-    end
-    alias put patch
   end
 end
