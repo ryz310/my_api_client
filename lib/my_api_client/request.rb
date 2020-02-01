@@ -17,7 +17,7 @@ module MyApiClient
         def #{http_method}(pathname, headers: nil, query: nil, body: nil)
           query_strings = query.present? ? '?' + query&.to_query : ''
           uri = URI.join(File.join(endpoint, pathname), query_strings)
-          response = _request :#{http_method}, uri, headers, body, logger
+          response = call(:_request, :#{http_method}, uri, headers, body, logger)
           response.data
         end
       METHOD
@@ -35,7 +35,7 @@ module MyApiClient
     def _request(http_method, uri, headers, body, logger)
       request_params = Params::Request.new(http_method, uri, headers, body)
       request_logger = Logger.new(logger, http_method, uri)
-      call(:_execute, request_params, request_logger)
+      _execute request_params, request_logger
     end
 
     private
