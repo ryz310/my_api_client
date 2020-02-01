@@ -3,20 +3,19 @@
 module MyApiClient
   # Description of Logger
   class Logger
-    attr_reader :logger, :method, :pathname
+    attr_reader :logger, :method, :uri
 
     LOG_LEVEL = %i[debug info warn error fatal].freeze
 
     # Description of #initialize
     #
     # @param logger [::Logger] describe_logger_here
-    # @param faraday [Faraday::Connection] describe_faraday_here
     # @param method [String] HTTP method
-    # @param pathname [String] The path name
-    def initialize(logger, faraday, method, pathname)
+    # @param uri [URI] Target URI
+    def initialize(logger, method, uri)
       @logger = logger
       @method = method.to_s.upcase
-      @pathname = faraday.build_exclusive_url(pathname)
+      @uri = uri
     end
 
     LOG_LEVEL.each do |level|
@@ -30,7 +29,7 @@ module MyApiClient
     private
 
     def format(message)
-      "API request `#{method} #{pathname}`: \"#{message}\""
+      "API request `#{method} #{uri}`: \"#{message}\""
     end
   end
 end
