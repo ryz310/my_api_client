@@ -87,7 +87,7 @@ RSpec.describe MyApiClient::ErrorHandling do
       )
     end
     let(:params) { instance_double(MyApiClient::Params::Params, metadata: {}) }
-    let(:logger) { instance_double(MyApiClient::Logger) }
+    let(:logger) { instance_double(MyApiClient::Request::Logger) }
 
     context 'when response is valid' do
       let(:status_code) { 200 }
@@ -495,7 +495,7 @@ RSpec.describe MyApiClient::ErrorHandling do
     end
 
     let(:params) { instance_double(MyApiClient::Params::Params, metadata: {}) }
-    let(:logger) { instance_double(MyApiClient::Logger) }
+    let(:logger) { instance_double(MyApiClient::Request::Logger) }
 
     # rubocop:disable RSpec/ExampleLength
     it 'prioritizes error handlers which defined later' do

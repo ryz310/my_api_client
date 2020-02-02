@@ -4,8 +4,8 @@ module MyApiClient
   # Helper module for rspec custom matcher
   module MatcherHelper
     def disable_logging
-      logger = instance_double(MyApiClient::Logger, info: nil, warn: nil)
-      allow(MyApiClient::Logger).to receive(:new).and_return(logger)
+      logger = instance_double(MyApiClient::Request::Logger, info: nil, warn: nil)
+      allow(MyApiClient::Request::Logger).to receive(:new).and_return(logger)
     end
 
     def dummy_response(status: 200, headers: {}, body: nil)

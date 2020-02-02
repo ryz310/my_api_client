@@ -40,7 +40,7 @@ module MyApiClient
       # @option retry [TrueClass, Hash]
       #   If the error detected, retries the API request. Requires `raise` option.
       #   You can set `true` or `retry_on` options (`wait` and `attempts`).
-      # @yield [MyApiClient::Params::Params, MyApiClient::Logger]
+      # @yield [MyApiClient::Params::Params, MyApiClient::Request::Logger]
       #   Executes the block when error detected.
       #   Forbid to be used with the` retry` option.
       def error_handling(**options, &block)

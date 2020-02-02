@@ -20,7 +20,7 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
   shared_examples 'an error was detected' do
     describe 'error handling options' do
       let(:params) { instance_double(MyApiClient::Params::Params, metadata: {}) }
-      let(:logger) { instance_double(MyApiClient::Logger) }
+      let(:logger) { instance_double(MyApiClient::Request::Logger) }
 
       context 'with `raise` option' do
         let(:error_handling_options) do

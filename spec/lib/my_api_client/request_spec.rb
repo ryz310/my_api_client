@@ -70,7 +70,7 @@ RSpec.describe MyApiClient::Request do
     before do
       allow(MyApiClient::Params::Request).to receive(:new).and_call_original
       allow(MyApiClient::Params::Params).to receive(:new).and_call_original
-      allow(MyApiClient::Logger).to receive(:new).and_return(request_logger)
+      allow(MyApiClient::Request::Logger).to receive(:new).and_return(request_logger)
       allow(Sawyer::Agent).to receive(:new).and_return(agent)
       allow(Faraday).to receive(:new).and_call_original
       allow(instance).to receive(:_error_handling).and_call_original
@@ -78,7 +78,7 @@ RSpec.describe MyApiClient::Request do
     end
 
     let(:headers) { { 'Content-Type': 'application/json;charset=UTF-8' } }
-    let(:request_logger) { instance_double(MyApiClient::Logger, info: nil, warn: nil, error: nil) }
+    let(:request_logger) { instance_double(MyApiClient::Request::Logger, info: nil, warn: nil, error: nil) }
     let(:agent) { instance_double(Sawyer::Agent, call: response) }
     let(:response) do
       instance_double(Sawyer::Response, status: 200, data: resource, timing: 0.1, headers: nil)
@@ -95,7 +95,7 @@ RSpec.describe MyApiClient::Request do
 
       it 'builds a request logger instance with arguments' do
         request!
-        expect(MyApiClient::Logger)
+        expect(MyApiClient::Request::Logger)
           .to have_received(:new).with(instance_of(::Logger), http_method, uri)
       end
 
