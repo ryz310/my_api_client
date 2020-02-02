@@ -45,7 +45,7 @@ module MyApiClient
       #   Forbid to be used with the` retry` option.
       def error_handling(**options, &block)
         options[:block] = block
-        retry_options = ProcessRetryOption.call(error_handling_options: options)
+        retry_options = RetryOptionProcessor.call(error_handling_options: options)
         retry_on(options[:raise], **retry_options) if retry_options
 
         temp = error_handlers.dup
