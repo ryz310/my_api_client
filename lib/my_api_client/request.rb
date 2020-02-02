@@ -68,20 +68,27 @@ module MyApiClient
     # @raise [MyApiClient::Error]
     def _execute(request_params, request_logger)
       request_logger.info('Start')
-      response = agent.call(*request_params.to_sawyer_args)
+      response = _api_request(request_params)
       request_logger.info("Duration #{response.timing} sec")
-      params = Params::Params.new(request_params, response)
-      _verify(params, request_logger)
-    rescue *NETWORK_ERRORS => e
-      params ||= Params::Params.new(request_params, nil)
-      request_logger.error("Network Error (#{e.message})")
-      raise MyApiClient::NetworkError.new(params, e)
+      _verify(request_params, response, request_logger)
     rescue MyApiClient::Error => e
-      request_logger.warn("Failure (#{response.status})")
-      raise e
+      request_logger.warn("Failure (#{e.message})")
+      raise
     else
       request_logger.info("Success (#{response.status})")
       response
+    end
+
+    # Description of #_api_request
+    #
+    # @param request_params [MyApiClient::Params::Request] describe_request_params_here
+    # @return [Sawyer::Response] description_of_returned_object
+    # @raise [MyApiClient::NetworkError]
+    def _api_request(request_params)
+      agent.call(*request_params.to_sawyer_args)
+    rescue *NETWORK_ERRORS => e
+      params = Params::Params.new(request_params, nil)
+      raise MyApiClient::NetworkError.new(params, e)
     end
 
     # Description of #_verify
@@ -90,8 +97,9 @@ module MyApiClient
     # @param request_logger [MyApiClient::Logger] describe_request_logger_here
     # @return [nil] description_of_returned_object
     # @raise [MyApiClient::Error]
-    def _verify(params, request_logger)
-      error_handler = _error_handling(params.response)
+    def _verify(request_params, response, request_logger)
+      params = Params::Params.new(request_params, response)
+      error_handler = _error_handling(response)
       return if error_handler.nil?
 
       error_handler.call(params, request_logger)

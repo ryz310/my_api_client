@@ -77,6 +77,14 @@ RSpec.describe MyApiClient::Request do
       stub_request(http_method, uri.to_s).to_return(body: response_body, headers: headers)
     end
 
+    let(:request_with_error_handling!) do
+      begin
+        instance._request(http_method, uri, headers, body)
+      rescue MyApiClient::Error
+        nil
+      end
+    end
+
     let(:headers) { { 'Content-Type': 'application/json;charset=UTF-8' } }
     let(:request_logger) do
       instance_double(MyApiClient::Request::Logger, info: nil, warn: nil, error: nil)
@@ -139,6 +147,13 @@ RSpec.describe MyApiClient::Request do
       it 'returns the API response' do
         expect(request!).to eq response
       end
+
+      it 'logs the API request flow to the logger as successful' do
+        request!
+        expect(request_logger).to have_received(:info).with('Start').ordered
+        expect(request_logger).to have_received(:info).with('Duration 0.1 sec').ordered
+        expect(request_logger).to have_received(:info).with('Success (200)').ordered
+      end
     end
 
     shared_examples 'to handle errors' do
@@ -158,6 +173,12 @@ RSpec.describe MyApiClient::Request do
         it 'raises MyApiClient::NetworkError' do
           expect { request! }.to raise_error(MyApiClient::NetworkError)
         end
+
+        it 'logs the API request flow to the logger as network error' do
+          request_with_error_handling!
+          expect(request_logger).to have_received(:info).with('Start').ordered
+          expect(request_logger).to have_received(:warn).with('Failure (Net::OpenTimeout)').ordered
+        end
       end
 
       context 'when raises a error which inherit MyApiClient::Error' do
@@ -167,6 +188,16 @@ RSpec.describe MyApiClient::Request do
 
         it 'escalates the error' do
           expect { request! }.to raise_error(MyApiClient::Error)
+        end
+
+        it 'logs the API request flow to the logger as error' do
+          request_with_error_handling!
+          expect(request_logger)
+            .to have_received(:info).with('Start').ordered
+          expect(request_logger)
+            .to have_received(:info).with('Duration 0.1 sec').ordered
+          expect(request_logger)
+            .to have_received(:warn).with('Failure (MyApiClient::Error)').ordered
         end
       end
     end
