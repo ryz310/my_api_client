@@ -17,7 +17,7 @@ module MyApiClient
         def #{http_method}(pathname, headers: nil, query: nil, body: nil)
           query_strings = query.present? ? '?' + query&.to_query : ''
           uri = URI.join(File.join(endpoint, pathname), query_strings)
-          response = call(:_request, :#{http_method}, uri, headers, body, logger)
+          response = call(:_request, :#{http_method}, uri, headers, body)
           response.data
         end
       METHOD
@@ -30,9 +30,8 @@ module MyApiClient
     # @param uri [URI] describe_uri_here
     # @param headers [Hash, nil] describe_headers_here
     # @param body [Hash, nil] describe_body_here
-    # @param logger [::Logger] describe_logger_here
     # @return [Sawyer::Response] description_of_returned_object
-    def _request(http_method, uri, headers, body, logger)
+    def _request(http_method, uri, headers, body)
       request_params = Params::Request.new(http_method, uri, headers, body)
       request_logger = Logger.new(logger, http_method, uri)
       _execute request_params, request_logger

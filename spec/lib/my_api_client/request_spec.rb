@@ -50,7 +50,7 @@ RSpec.describe MyApiClient::Request do
         execute
         expect(instance)
           .to have_received(:_request)
-          .with(http_method, uri, headers, body, instance_of(::Logger))
+          .with(http_method, uri, headers, body)
           .ordered
         expect(response)
           .to have_received(:data)
@@ -64,7 +64,7 @@ RSpec.describe MyApiClient::Request do
 
   describe '#_request' do
     subject(:request!) do
-      instance._request(http_method, uri, headers, body, logger)
+      instance._request(http_method, uri, headers, body)
     end
 
     before do
@@ -84,7 +84,6 @@ RSpec.describe MyApiClient::Request do
       instance_double(Sawyer::Response, status: 200, data: resource, timing: 0.1, headers: nil)
     end
     let(:resource) { instance_double(Sawyer::Resource) }
-    let(:logger) { instance_double(::Logger) }
     let(:response_body) { { message: 'OK' }.to_json }
 
     shared_examples 'to initialize an instance of each class' do
@@ -97,7 +96,7 @@ RSpec.describe MyApiClient::Request do
       it 'builds a request logger instance with arguments' do
         request!
         expect(MyApiClient::Logger)
-          .to have_received(:new).with(logger, http_method, uri)
+          .to have_received(:new).with(instance_of(::Logger), http_method, uri)
       end
 
       it 'builds a Sawyer::Agent instance' do
