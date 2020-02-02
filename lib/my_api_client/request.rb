@@ -3,24 +3,40 @@
 module MyApiClient
   # Description of Request
   module Request
+    HTTP_METHODS = %i[get post patch delete].freeze
+
+    HTTP_METHODS.each do |http_method|
+      class_eval <<~METHOD, __FILE__, __LINE__ + 1
+        # Description of ##{http_method}
+        #
+        # @param pathname [String]
+        # @param headers [Hash, nil]
+        # @param query [Hash, nil]
+        # @param body [Hash, nil]
+        # @return [Sawyer::Resouce] description_of_returned_object
+        def #{http_method}(pathname, headers: nil, query: nil, body: nil)
+          query_strings = query.present? ? '?' + query&.to_query : ''
+          uri = URI.join(File.join(endpoint, pathname), query_strings)
+          response = call(:_request, :#{http_method}, uri, headers, body, logger)
+          response.data
+        end
+      METHOD
+    end
+    alias put patch
+
     # Description of #_request
     #
     # @param http_method [Symbol] describe_http_method_here
-    # @param pathname [String] describe_pathname_here
+    # @param uri [URI] describe_uri_here
     # @param headers [Hash, nil] describe_headers_here
-    # @param query [Hash, nil] describe_query_here
     # @param body [Hash, nil] describe_body_here
     # @param logger [::Logger] describe_logger_here
-    # @return [Sawyer::Resource] description_of_returned_object
-    # rubocop:disable Metrics/ParameterLists
-    def _request(http_method, pathname, headers, query, body, logger)
-      processed_path = [common_path, pathname].join('/').gsub('//', '/')
-      request_params = Params::Request.new(http_method, processed_path, headers, query, body)
-      agent # Initializes for faraday
-      request_logger = Logger.new(logger, faraday, http_method, processed_path)
-      call(:_execute, request_params, request_logger)
+    # @return [Sawyer::Response] description_of_returned_object
+    def _request(http_method, uri, headers, body, logger)
+      request_params = Params::Request.new(http_method, uri, headers, body)
+      request_logger = Logger.new(logger, http_method, uri)
+      _execute request_params, request_logger
     end
-    # rubocop:enable Metrics/ParameterLists
 
     private
 
@@ -28,7 +44,7 @@ module MyApiClient
     #
     # @return [Sawyer::Agent] description_of_returned_object
     def agent
-      @agent ||= Sawyer::Agent.new(schema_and_hostname, faraday: faraday)
+      @agent ||= Sawyer::Agent.new('', faraday: faraday)
     end
 
     # Description of #faraday
@@ -49,7 +65,7 @@ module MyApiClient
     #
     # @param request_params [MyApiClient::Params::Request] describe_request_params_here
     # @param request_logger [MyApiClient::Logger] describe_request_logger_here
-    # @return [Sawyer::Resource] description_of_returned_object
+    # @return [Sawyer::Response] description_of_returned_object
     # @raise [MyApiClient::Error]
     def _execute(request_params, request_logger)
       request_logger.info('Start')
@@ -66,7 +82,7 @@ module MyApiClient
       raise e
     else
       request_logger.info("Success (#{response.status})")
-      response.data
+      response
     end
 
     # Description of #_verify

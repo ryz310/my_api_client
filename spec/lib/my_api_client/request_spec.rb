@@ -8,9 +8,12 @@ RSpec.describe MyApiClient::Request do
     include MyApiClient::ErrorHandling
 
     if ActiveSupport::VERSION::STRING >= '5.2.0'
+      class_attribute :logger, instance_writer: false, default: ::Logger.new(STDOUT)
       class_attribute :error_handlers, default: []
     else
+      class_attribute :logger
       class_attribute :error_handlers
+      self.logger = ::Logger.new(STDOUT)
       self.error_handlers = []
     end
 
@@ -25,9 +28,43 @@ RSpec.describe MyApiClient::Request do
     end
   end
 
+  let(:instance) { self.class::MockClass.new }
+
+  described_class::HTTP_METHODS.each do |http_method|
+    describe "##{http_method}" do
+      subject(:execute) do
+        instance.public_send(http_method, pathname, headers: headers, query: query, body: body)
+      end
+
+      before { allow(instance).to receive(:_request).and_return(response) }
+
+      let(:pathname) { 'path/to/resource' }
+      let(:headers) { { 'Content-Type': 'application/json;charset=UTF-8' } }
+      let(:query) { { key: 'value' } }
+      let(:body) { nil }
+      let(:response) { instance_double(Sawyer::Response, data: resource) }
+      let(:resource) { instance_double(Sawyer::Resource) }
+      let(:uri) { URI.parse('https://example.com/v1/path/to/resource?key=value') }
+
+      it 'calls #_request method and then processes the response' do
+        execute
+        expect(instance)
+          .to have_received(:_request)
+          .with(http_method, uri, headers, body, instance_of(::Logger))
+          .ordered
+        expect(response)
+          .to have_received(:data)
+          .with(no_args)
+          .ordered
+      end
+
+      it { is_expected.to eq resource }
+    end
+  end
+
   describe '#_request' do
     subject(:request!) do
-      instance._request(http_method, '/path/to/resource', headers, query, body, logger)
+      instance._request(http_method, uri, headers, body, logger)
     end
 
     before do
@@ -37,12 +74,9 @@ RSpec.describe MyApiClient::Request do
       allow(Sawyer::Agent).to receive(:new).and_return(agent)
       allow(Faraday).to receive(:new).and_call_original
       allow(instance).to receive(:_error_handling).and_call_original
-      stub_request(http_method, 'https://example.com/v1/path/to/resource')
-        .with(query: query)
-        .to_return(body: response_body, headers: headers)
+      stub_request(http_method, uri.to_s).to_return(body: response_body, headers: headers)
     end
 
-    let(:instance) { self.class::MockClass.new }
     let(:headers) { { 'Content-Type': 'application/json;charset=UTF-8' } }
     let(:request_logger) { instance_double(MyApiClient::Logger, info: nil, warn: nil, error: nil) }
     let(:agent) { instance_double(Sawyer::Agent, call: response) }
@@ -57,21 +91,20 @@ RSpec.describe MyApiClient::Request do
       it 'builds a request parameter instance with arguments' do
         request!
         expect(MyApiClient::Params::Request)
-          .to have_received(:new).with(http_method, '/v1/path/to/resource', headers, query, body)
+          .to have_received(:new).with(http_method, uri, headers, body)
       end
 
       it 'builds a request logger instance with arguments' do
         request!
         expect(MyApiClient::Logger)
-          .to have_received(:new)
-          .with(logger, instance_of(Faraday::Connection), http_method, '/v1/path/to/resource')
+          .to have_received(:new).with(logger, http_method, uri)
       end
 
-      it 'builds a Sawyer::Agent instance with the configuration parameter' do
+      it 'builds a Sawyer::Agent instance' do
         request!
         expect(Sawyer::Agent)
           .to have_received(:new)
-          .with('https://example.com', faraday: instance_of(Faraday::Connection))
+          .with('', faraday: instance_of(Faraday::Connection))
       end
 
       it 'builds a Faraday instance with configuration parameters' do
@@ -87,13 +120,6 @@ RSpec.describe MyApiClient::Request do
           .to have_received(:new)
           .with(instance_of(MyApiClient::Params::Request), response)
       end
-
-      it 'initializes in order of faraday, sawyer, logger' do
-        request!
-        expect(Faraday).to have_received(:new).ordered
-        expect(Sawyer::Agent).to have_received(:new).ordered
-        expect(MyApiClient::Logger).to have_received(:new).ordered
-      end
     end
 
     shared_examples 'to execute an HTTP request' do
@@ -101,7 +127,7 @@ RSpec.describe MyApiClient::Request do
         request!
         expect(agent)
           .to have_received(:call)
-          .with(http_method, '/v1/path/to/resource', body, headers: headers, query: query)
+          .with(http_method, uri.to_s, body, headers: headers)
       end
 
       it 'verifies the API response with `#error_handling` definition' do
@@ -110,7 +136,7 @@ RSpec.describe MyApiClient::Request do
       end
 
       it 'returns the API response' do
-        expect(request!).to eq resource
+        expect(request!).to eq response
       end
     end
 
@@ -146,7 +172,7 @@ RSpec.describe MyApiClient::Request do
 
     context 'when requesting with GET method' do
       let(:http_method) { :get }
-      let(:query) { { key: 'value' } }
+      let(:uri) { URI.parse('https://example.com/v1/path/to/resource?key=value') }
       let(:body) { nil }
 
       it_behaves_like 'to initialize an instance of each class'
@@ -156,7 +182,7 @@ RSpec.describe MyApiClient::Request do
 
     context 'when requesting with POST method' do
       let(:http_method) { :post }
-      let(:query) { nil }
+      let(:uri) { URI.parse('https://example.com/v1/path/to/resource') }
       let(:body) { { name: 'name', birthday: Date.new(1999, 1, 1) } }
 
       it_behaves_like 'to initialize an instance of each class'
@@ -166,7 +192,7 @@ RSpec.describe MyApiClient::Request do
 
     context 'when requesting with PATCH method' do
       let(:http_method) { :patch }
-      let(:query) { nil }
+      let(:uri) { URI.parse('https://example.com/v1/path/to/resource') }
       let(:body) { { name: 'name', birthday: Date.new(1999, 1, 1) } }
 
       it_behaves_like 'to initialize an instance of each class'
@@ -176,7 +202,7 @@ RSpec.describe MyApiClient::Request do
 
     context 'when requesting with DELETE method' do
       let(:http_method) { :delete }
-      let(:query) { nil }
+      let(:uri) { URI.parse('https://example.com/v1/path/to/resource') }
       let(:body) { nil }
 
       it_behaves_like 'to initialize an instance of each class'
