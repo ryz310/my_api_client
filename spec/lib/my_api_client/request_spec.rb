@@ -78,7 +78,9 @@ RSpec.describe MyApiClient::Request do
     end
 
     let(:headers) { { 'Content-Type': 'application/json;charset=UTF-8' } }
-    let(:request_logger) { instance_double(MyApiClient::Request::Logger, info: nil, warn: nil, error: nil) }
+    let(:request_logger) do
+      instance_double(MyApiClient::Request::Logger, info: nil, warn: nil, error: nil)
+    end
     let(:agent) { instance_double(Sawyer::Agent, call: response) }
     let(:response) do
       instance_double(Sawyer::Response, status: 200, data: resource, timing: 0.1, headers: nil)
