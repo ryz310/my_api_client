@@ -48,11 +48,11 @@ module MyApiClient
         retry_options = RetryOptionProcessor.call(error_handling_options: options)
         retry_on(options[:raise], **retry_options) if retry_options
 
-        temp = error_handlers.dup
-        temp << lambda { |instance, response|
+        new_error_handlers = error_handlers.dup
+        new_error_handlers << lambda { |instance, response|
           Generator.call(**options.merge(instance: instance, response: response))
         }
-        self.error_handlers = temp
+        self.error_handlers = new_error_handlers
       end
     end
   end
