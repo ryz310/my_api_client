@@ -34,75 +34,26 @@ module MyApiClient
     def _request(http_method, uri, headers, body)
       request_params = Params::Request.new(http_method, uri, headers, body)
       request_logger = Logger.new(logger, http_method, uri)
-      _execute request_params, request_logger
+      Executor.call(
+        instance: self,
+        request_params: request_params,
+        request_logger: request_logger,
+        faraday_options: faraday_options
+      )
     end
 
     private
 
-    # Description of #agent
+    # Description of #faraday_options
     #
-    # @return [Sawyer::Agent] description_of_returned_object
-    def agent
-      @agent ||= Sawyer::Agent.new('', faraday: faraday)
-    end
-
-    # Description of #faraday
-    #
-    # @return [Faraday::Connection] description_of_returned_object
-    def faraday
-      @faraday ||=
-        Faraday.new(
-          nil,
-          request: {
-            timeout: (http_read_timeout if respond_to?(:http_read_timeout)),
-            open_timeout: (http_open_timeout if respond_to?(:http_open_timeout)),
-          }.compact
-        )
-    end
-
-    # Description of #_execute
-    #
-    # @param request_params [MyApiClient::Params::Request] describe_request_params_here
-    # @param request_logger [MyApiClient::Logger] describe_request_logger_here
-    # @return [Sawyer::Response] description_of_returned_object
-    # @raise [MyApiClient::Error]
-    def _execute(request_params, request_logger)
-      request_logger.info('Start')
-      response = _api_request(request_params)
-      request_logger.info("Duration #{response.timing} sec")
-      _verify(request_params, response, request_logger)
-    rescue MyApiClient::Error => e
-      request_logger.warn("Failure (#{e.message})")
-      raise
-    else
-      request_logger.info("Success (#{response.status})")
-      response
-    end
-
-    # Description of #_api_request
-    #
-    # @param request_params [MyApiClient::Params::Request] describe_request_params_here
-    # @return [Sawyer::Response] description_of_returned_object
-    # @raise [MyApiClient::NetworkError]
-    def _api_request(request_params)
-      agent.call(*request_params.to_sawyer_args)
-    rescue *NETWORK_ERRORS => e
-      params = Params::Params.new(request_params, nil)
-      raise MyApiClient::NetworkError.new(params, e)
-    end
-
-    # Description of #_verify
-    #
-    # @param params [MyApiClient::Params::Params] describe_params_here
-    # @param request_logger [MyApiClient::Logger] describe_request_logger_here
-    # @return [nil] description_of_returned_object
-    # @raise [MyApiClient::Error]
-    def _verify(request_params, response, request_logger)
-      params = Params::Params.new(request_params, response)
-      error_handler = _error_handling(response)
-      return if error_handler.nil?
-
-      error_handler.call(params, request_logger)
+    # @return [Hash] description_of_returned_object
+    def faraday_options
+      {
+        request: {
+          timeout: (http_read_timeout if respond_to?(:http_read_timeout)),
+          open_timeout: (http_open_timeout if respond_to?(:http_open_timeout)),
+        }.compact,
+      }
     end
   end
 end
