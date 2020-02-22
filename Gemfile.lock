@@ -33,6 +33,7 @@ GEM
     i18n (1.8.2)
       concurrent-ruby (~> 1.0)
     jaro_winkler (1.5.4)
+    json (2.3.0)
     jsonpath (1.0.5)
       multi_json
       to_regexp (~> 0.2.1)
@@ -85,10 +86,11 @@ GEM
     sawyer (0.8.2)
       addressable (>= 2.3.5)
       faraday (> 0.8, < 2.0)
-    simplecov (0.18.2)
+    simplecov (0.17.1)
       docile (~> 1.1)
-      simplecov-html (~> 0.11)
-    simplecov-html (0.12.0)
+      json (>= 1.8, < 3)
+      simplecov-html (~> 0.10.0)
+    simplecov-html (0.10.2)
     thread_safe (0.3.6)
     to_regexp (0.2.1)
     tzinfo (1.2.6)
@@ -115,7 +117,7 @@ DEPENDENCIES
   rubocop
   rubocop-performance
   rubocop-rspec
-  simplecov
+  simplecov (= 0.17.1)
   webmock
   yard
 
