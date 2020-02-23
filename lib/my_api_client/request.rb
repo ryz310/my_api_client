@@ -30,6 +30,8 @@ module MyApiClient
     end
     alias put patch
 
+    private
+
     # Executes HTTP request.
     #
     # @param http_method [Symbol]
@@ -52,8 +54,6 @@ module MyApiClient
         faraday_options: faraday_options
       )
     end
-
-    private
 
     # Generates options for the faraday instance.
     #
