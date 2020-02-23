@@ -32,7 +32,6 @@ class ExampleApiClient < ApplicationApiClient
 
   # GET https://example.com/users
   #
-  # @param user_id [Integer] User ID which want to read
   # @return [Sawyer::Response] HTTP response parameter
   def get_users
     get 'users', headers: headers
@@ -78,7 +77,7 @@ class ExampleApiClient < ApplicationApiClient
   # Dump a response body
   #
   # @param params [MyApiClient::Params::Params] HTTP req and res params
-  # @param logger [MyApiClient::Logger] Logger for a request processing
+  # @param logger [MyApiClient::Request::Logger] Logger for a request processing
   def my_error_handling(params, logger)
     logger.warn "Response Body: #{params.response.body.inspect}"
     raise MyApiClient::ClientError, params

@@ -4,20 +4,18 @@ module MyApiClient
   module Params
     # Description of Params
     class Request
-      attr_reader :method, :pathname, :headers, :query, :body
+      attr_reader :method, :uri, :headers, :body
 
       # Description of #initialize
       #
       # @param method [Symbol] describe_method_here
-      # @param pathname [String] describe_pathname_here
+      # @param uri [URI] describe_uri_here
       # @param headers [Hash, nil] describe_headers_here
-      # @param query [Hash, nil] describe_query_here
       # @param body [Hash, nil] describe_body_here
-      def initialize(method, pathname, headers, query, body)
+      def initialize(method, uri, headers, body)
         @method = method
-        @pathname = pathname
+        @uri = uri
         @headers = headers
-        @query = query
         @body = body
       end
 
@@ -25,7 +23,7 @@ module MyApiClient
       #
       # @return [Array<Object>] Arguments for Sawyer::Agent#call
       def to_sawyer_args
-        [method, pathname, body, { headers: headers, query: query }]
+        [method, uri.to_s, body, { headers: headers }]
       end
 
       # Generate metadata for bugsnag.
@@ -34,9 +32,8 @@ module MyApiClient
       # @return [Hash] Metadata for bugsnag
       def metadata
         {
-          line: "#{method.upcase} #{pathname}",
+          line: "#{method.upcase} #{uri}",
           headers: headers,
-          query: query,
           body: body,
         }.compact
       end
@@ -46,7 +43,7 @@ module MyApiClient
       #
       # @return [String] Contents as string
       def inspect
-        { method: method, pathname: pathname, headers: headers, query: query, body: body }.inspect
+        { method: method, uri: uri.to_s, headers: headers, body: body }.inspect
       end
     end
   end

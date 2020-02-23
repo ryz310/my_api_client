@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
-RSpec.describe MyApiClient::Logger do
-  let(:instance) { described_class.new(logger, faraday, method, pathname) }
+RSpec.describe MyApiClient::Request::Logger do
+  let(:instance) { described_class.new(logger, method, uri) }
   let(:logger) { instance_double(::Logger, logging_methods) }
-  let(:logging_methods) { MyApiClient::Logger::LOG_LEVEL.zip([]).to_h }
-  let(:faraday) { instance_double(Faraday::Connection, build_exclusive_url: endpoint) }
-  let(:endpoint) { "https://example.com/#{pathname}" }
+  let(:logging_methods) { described_class::LOG_LEVEL.zip([]).to_h }
+  let(:uri) { URI.parse('https://example.com/path/to/resouce') }
   let(:method) { :get }
-  let(:pathname) { 'path/to/resouce' }
 
-  MyApiClient::Logger::LOG_LEVEL.each do |log_level|
+  described_class::LOG_LEVEL.each do |log_level|
     describe "##{log_level}" do
       it "outputs message to the logger as `#{log_level}`, with the request information" do
         instance.public_send(log_level, 'message')

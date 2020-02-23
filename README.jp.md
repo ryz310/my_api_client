@@ -105,7 +105,7 @@ class ExampleApiClient < MyApiClient::Base
   private
 
   # @param params [MyApiClient::Params::Params] HTTP req and res params
-  # @param logger [MyApiClient::Logger] Logger for a request processing
+  # @param logger [MyApiClient::Request::Logger] Logger for a request processing
   def my_error_handling(params, logger)
     logger.warn "Response Body: #{params.response.body.inspect}"
     raise MyApiClient::ClientError, params
@@ -163,7 +163,7 @@ error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
 
 ```ruby
 # @param params [MyApiClient::Params::Params] HTTP req and res params
-# @param logger [MyApiClient::Logger] Logger for a request processing
+# @param logger [MyApiClient::Request::Logger] Logger for a request processing
 def my_error_handling(params, logger)
   logger.warn "Response Body: #{params.response.body.inspect}"
   raise MyApiClient::ClientError, params
