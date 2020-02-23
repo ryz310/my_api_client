@@ -7,13 +7,19 @@ module MyApiClient
 
     HTTP_METHODS.each do |http_method|
       class_eval <<~METHOD, __FILE__, __LINE__ + 1
-        # Description of ##{http_method}
+        # Executes HTTP request with #{http_method.upcase} method
         #
         # @param pathname [String]
+        #   Pathname of the request target URL.
+        #   It's joined with the defined `endpoint`.
         # @param headers [Hash, nil]
+        #   Request headers.
         # @param query [Hash, nil]
+        #   Query string.
         # @param body [Hash, nil]
-        # @return [Sawyer::Resouce] description_of_returned_object
+        #   Request body. You should not specify it when use GET method.
+        # @return [Sawyer::Resouce]
+        #   Response body instance.
         def #{http_method}(pathname, headers: nil, query: nil, body: nil)
           query_strings = query.present? ? '?' + query&.to_query : ''
           uri = URI.join(File.join(endpoint, pathname), query_strings)
@@ -24,13 +30,18 @@ module MyApiClient
     end
     alias put patch
 
-    # Description of #_request
+    # Executes HTTP request.
     #
-    # @param http_method [Symbol] describe_http_method_here
-    # @param uri [URI] describe_uri_here
-    # @param headers [Hash, nil] describe_headers_here
-    # @param body [Hash, nil] describe_body_here
-    # @return [Sawyer::Response] description_of_returned_object
+    # @param http_method [Symbol]
+    #   HTTP method. e.g. `:get`, `:post`, `:patch` and `:delete`.
+    # @param uri [URI]
+    #   Request target URI including query strings.
+    # @param headers [Hash, nil]
+    #   Request headers.
+    # @param body [Hash, nil]
+    #   Request body.
+    # @return [Sawyer::Response]
+    #   Response instance.
     def _request(http_method, uri, headers, body)
       request_params = Params::Request.new(http_method, uri, headers, body)
       request_logger = Logger.new(logger, http_method, uri)
@@ -44,9 +55,9 @@ module MyApiClient
 
     private
 
-    # Description of #faraday_options
+    # Generates options for the faraday instance.
     #
-    # @return [Hash] description_of_returned_object
+    # @return [Hash] Generated options.
     def faraday_options
       {
         request: {
