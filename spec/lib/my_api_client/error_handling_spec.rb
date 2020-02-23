@@ -1,534 +1,201 @@
 # frozen_string_literal: true
 
 RSpec.describe MyApiClient::ErrorHandling do
-  class self::SomeError < MyApiClient::Error; end
-
-  class self::SuperMockClass
-    include MyApiClient::ErrorHandling
-
-    if ActiveSupport::VERSION::STRING >= '5.2.0'
-      class_attribute :error_handlers, default: []
-    else
-      class_attribute :error_handlers
-      self.error_handlers = []
-    end
-
-    # Commonized error handling
-    error_handling status_code: 500, with: :commonized_error_handling
-
-    def commonized_error_handling; end
-  end
-
-  class self::MockClass < self::SuperMockClass
-    # Use `status_code`
-    error_handling status_code: /40[0-3]/, with: :status_code_is_monitored_by_regex
-    error_handling status_code: 404, with: :status_code_is_monitored_by_number
-    error_handling status_code: 405..499, with: :status_code_is_monitored_by_range
-
-    # Use `json`
-    error_handling json: { '$.errors.message': 'maintenance' }, with: :json_is_monitored_by_string
-    error_handling json: { '$.errors.message': /[sS]orry/ }, with: :json_is_monitored_by_regex
-    error_handling json: { '$.errors.code': 10 }, with: :json_is_monitored_by_number
-    error_handling json: { '$.errors.code': 20..29 }, with: :json_is_monitored_by_range
-    error_handling json: { '$.errors.is_transient': true }, with: :json_is_monitored_by_true_value
-    error_handling json: { '$.errors.is_transient': false }, with: :json_is_monitored_by_false_value
-    error_handling json: { '$.errors.code': :negative? }, with: :json_is_monitored_by_method_calling
-
-    # Use `forbid_nil`
-    error_handling status_code: 200, json: :forbid_nil, with: :nil_is_forbidden_with_response_body
-
-    # Use complex patterns
-    error_handling status_code: 200, json: { '$.errors.code': 30 },
-                   with: :monitoring_with_status_code_and_json
-    error_handling json: { '$.errors.code': 31, '$.errors.message': /[Uu]nknown/ },
-                   with: :monitoring_with_json_multiple_conditions
-
-    # Use `raise`
-    error_handling json: { '$.errors.code': 40 },
-                   raise: RSpec::ExampleGroups::MyApiClientErrorHandling::SomeError
-
-    # Use `block`
-    error_handling json: { '$.errors.code': 50 } do
-      puts 'Error code 50 is detected'
-    end
-
-    # Default handling action
-    error_handling json: { '$.errors.code': 60 }
-
-    # rubocop:disable Layout/EmptyLineBetweenDefs
-    def status_code_is_monitored_by_regex; end
-    def status_code_is_monitored_by_number; end
-    def status_code_is_monitored_by_range; end
-    def json_is_monitored_by_string; end
-    def json_is_monitored_by_regex; end
-    def json_is_monitored_by_number; end
-    def json_is_monitored_by_range; end
-    def json_is_monitored_by_true_value; end
-    def json_is_monitored_by_false_value; end
-    def json_is_monitored_by_method_calling; end
-    def nil_is_forbidden_with_response_body; end
-    def monitoring_with_status_code_and_json; end
-    def monitoring_with_json_multiple_conditions; end
-    # rubocop:enable Layout/EmptyLineBetweenDefs
-  end
-
-  class self::AnotherMockClass < self::SuperMockClass
-    error_handling json: { '$.errors.code': 10 }
-    error_handling json: { '$.errors.code': 20 }
-    error_handling json: { '$.errors.code': 30 }
-  end
-
   describe '.error_handling' do
-    let(:instance) { self.class::MockClass.new }
-    let(:error_handler) { instance._error_handling(response) }
-    let(:response) do
-      instance_double(
-        Sawyer::Response, status: status_code, body: response_body
-      )
-    end
-    let(:params) { instance_double(MyApiClient::Params::Params, metadata: {}) }
-    let(:logger) { instance_double(MyApiClient::Logger) }
+    let(:parent_mock_class) do
+      Class.new do
+        include MyApiClient::ErrorHandling
+        include MyApiClient::Exceptions
 
-    context 'when response is valid' do
-      let(:status_code) { 200 }
-      let(:response_body) { 'expected result' }
-
-      it { expect(error_handler).to be_nil }
-    end
-
-    describe 'use `status_code`' do
-      let(:response_body) { nil }
-
-      describe 'with Regexp' do
-        let(:status_code) { 401 }
-
-        it 'monitors given status code with the regex pattern' do
-          allow(instance).to receive(:status_code_is_monitored_by_regex)
-          error_handler.call(params, logger)
-          expect(instance)
-            .to have_received(:status_code_is_monitored_by_regex)
-            .with(params, logger)
+        if ActiveSupport::VERSION::STRING >= '5.2.0'
+          class_attribute :error_handlers, default: []
+        else
+          class_attribute :error_handlers
+          self.error_handlers = []
         end
+
+        error_handling status_code: 400..499, raise: MyApiClient::ClientError
+        error_handling status_code: 500..599, raise: MyApiClient::ServerError
       end
+    end
 
-      describe 'with Integer' do
-        let(:status_code) { 404 }
-
-        it 'monitors given status code with the number' do
-          allow(instance).to receive(:status_code_is_monitored_by_number)
-          error_handler.call(params, logger)
-          expect(instance)
-            .to have_received(:status_code_is_monitored_by_number)
-            .with(params, logger)
-        end
+    let(:child_mock_class) do
+      Class.new(parent_mock_class) do
+        error_handling status_code: 404, with: :not_found
+        error_handling json: { '$.errors.code': 10 }, with: :error_code_10
+        error_handling status_code: 200, json: :forbid_nil, with: :forbidden_from_being_blank
       end
+    end
 
-      describe 'with Range' do
-        let(:status_code) { 408 }
-
-        it 'monitors given status code within the range' do
-          allow(instance).to receive(:status_code_is_monitored_by_range)
-          error_handler.call(params, logger)
-          expect(instance)
-            .to have_received(:status_code_is_monitored_by_range)
-            .with(params, logger)
+    let(:grand_child_mock_class) do
+      Class.new(child_mock_class) do
+        error_handling json: { '$.errors.code': 20 } do
+          puts 'Use block'
         end
       end
     end
 
-    describe 'use `forbid_nil`' do
-      let(:status_code) { 200 }
-      let(:response_body) { nil }
-
-      it 'forbid "nil" with response body' do
-        allow(instance).to receive(:nil_is_forbidden_with_response_body)
-        error_handler.call(params, logger)
-        expect(instance)
-          .to have_received(:nil_is_forbidden_with_response_body)
-          .with(params, logger)
+    let(:another_mock_class) do
+      Class.new(parent_mock_class) do
+        error_handling json: { '$.errors.code': 30 },
+                       raise: MyApiClient::ApiLimitError,
+                       retry_on: { wait: 1.minute }
       end
     end
 
-    describe 'use `json`' do
-      let(:status_code) { 200 }
+    let(:instance) { instance_double(parent_mock_class) }
+    let(:response) { instance_double(Sawyer::Response) }
 
-      describe 'with String' do
-        let(:response_body) do
-          {
-            errors: {
-              message: 'maintenance',
-            },
-          }.to_json
-        end
-
-        it 'monitors given JSON with string' do
-          allow(instance).to receive(:json_is_monitored_by_string)
-          error_handler.call(params, logger)
-          expect(instance)
-            .to have_received(:json_is_monitored_by_string)
-            .with(params, logger)
-        end
+    before do
+      allow(MyApiClient::ErrorHandling::Generator).to receive(:call)
+      allow(MyApiClient::ErrorHandling::RetryOptionProcessor).to receive(:call) do |options|
+        options[:error_handling_options].delete(:retry_on)
       end
+      allow(parent_mock_class).to receive(:retry_on)
+    end
 
-      describe 'with Regexp' do
-        let(:response_body) do
-          {
-            errors: {
-              message: 'Sorry, something went wrong.',
-            },
-          }.to_json
-        end
-
-        it 'monitors given JSON with regex pattern' do
-          allow(instance).to receive(:json_is_monitored_by_regex)
-          error_handler.call(params, logger)
-          expect(instance)
-            .to have_received(:json_is_monitored_by_regex)
-            .with(params, logger)
-        end
+    shared_examples 'includes error handlers which defined parent class' do
+      # rubocop:disable RSpec/ExampleLength
+      it 'creates and adds error handlers to the list in a defined order' do
+        target_mock_class.error_handlers[0].call(instance, response)
+        expect(MyApiClient::ErrorHandling::Generator).to have_received(:call).with(
+          status_code: 400..499,
+          raise: MyApiClient::ClientError,
+          instance: instance,
+          response: response,
+          block: nil
+        )
+        target_mock_class.error_handlers[1].call(instance, response)
+        expect(MyApiClient::ErrorHandling::Generator).to have_received(:call).with(
+          status_code: 500..599,
+          raise: MyApiClient::ServerError,
+          instance: instance,
+          response: response,
+          block: nil
+        )
       end
+      # rubocop:enable RSpec/ExampleLength
+    end
 
-      describe 'with Integer' do
-        let(:response_body) do
-          {
-            errors: {
-              code: 10,
-            },
-          }.to_json
-        end
-
-        it 'monitors given JSON with number' do
-          allow(instance).to receive(:json_is_monitored_by_number)
-          error_handler.call(params, logger)
-          expect(instance)
-            .to have_received(:json_is_monitored_by_number)
-            .with(params, logger)
-        end
+    shared_examples 'includes error handlers which defined child class' do
+      # rubocop:disable RSpec/ExampleLength
+      it 'creates and adds error handlers to the list in a defined order after the parent class' do
+        target_mock_class.error_handlers[2].call(instance, response)
+        expect(MyApiClient::ErrorHandling::Generator).to have_received(:call).with(
+          status_code: 404,
+          with: :not_found,
+          instance: instance,
+          response: response,
+          block: nil
+        )
+        target_mock_class.error_handlers[3].call(instance, response)
+        expect(MyApiClient::ErrorHandling::Generator).to have_received(:call).with(
+          json: { '$.errors.code': 10 },
+          with: :error_code_10,
+          instance: instance,
+          response: response,
+          block: nil
+        )
+        target_mock_class.error_handlers[4].call(instance, response)
+        expect(MyApiClient::ErrorHandling::Generator).to have_received(:call).with(
+          status_code: 200,
+          json: :forbid_nil,
+          with: :forbidden_from_being_blank,
+          instance: instance,
+          response: response,
+          block: nil
+        )
       end
+      # rubocop:enable RSpec/ExampleLength
+    end
 
-      describe 'with Range' do
-        let(:response_body) do
-          {
-            errors: {
-              code: 23,
-            },
-          }.to_json
-        end
-
-        it 'monitors given JSON within range' do
-          allow(instance).to receive(:json_is_monitored_by_range)
-          error_handler.call(params, logger)
-          expect(instance)
-            .to have_received(:json_is_monitored_by_range)
-            .with(params, logger)
-        end
-      end
-
-      describe 'with true value' do
-        let(:response_body) do
-          {
-            errors: {
-              is_transient: true,
-            },
-          }.to_json
-        end
-
-        it 'monitors given JSON with true' do
-          allow(instance).to receive(:json_is_monitored_by_true_value)
-          error_handler.call(params, logger)
-          expect(instance)
-            .to have_received(:json_is_monitored_by_true_value)
-            .with(params, logger)
-        end
-      end
-
-      describe 'with false value' do
-        let(:response_body) do
-          {
-            errors: {
-              is_transient: false,
-            },
-          }.to_json
-        end
-
-        it 'monitors given JSON with false' do
-          allow(instance).to receive(:json_is_monitored_by_false_value)
-          error_handler.call(params, logger)
-          expect(instance)
-            .to have_received(:json_is_monitored_by_false_value)
-            .with(params, logger)
-        end
-      end
-
-      describe 'with Symbol' do
-        let(:response_body) do
-          {
-            errors: {
-              code: -1,
-            },
-          }.to_json
-        end
-
-        it 'monitors given JSON with method calling' do
-          allow(instance).to receive(:json_is_monitored_by_method_calling)
-          error_handler.call(params, logger)
-          expect(instance)
-            .to have_received(:json_is_monitored_by_method_calling)
-            .with(params, logger)
-        end
-      end
-
-      describe 'when given text/html response' do
-        let(:status_code) { 404 }
-        let(:response_body) { <<~HTML }
-          <!doctype html>
-          <html>
-          <head>
-              <title>Example Domain</title>
-          </head>
-          <body>
-          <div>
-             <h1>Example Domain</h1>
-             <p>This domain is established to be used for illustrative examples in documents. You may use this
-             domain in examples without prior coordination or asking for permission.</p>
-             <p><a href="http://www.iana.org/domains/example">More information...</a></p>
-          </div>
-          </body>
-          </html>
-        HTML
-
-        it 'does not raise parsing error and escalates to other handers' do
-          expect { error_handler }.not_to raise_error
-          allow(instance).to receive(:status_code_is_monitored_by_number)
-          error_handler.call(params, logger)
-          expect(instance)
-            .to have_received(:status_code_is_monitored_by_number)
-            .with(params, logger)
-        end
+    shared_examples 'includes error handlers which defined grand child class' do
+      it 'creates and adds error handlers to the list in a defined order after the child class' do
+        target_mock_class.error_handlers[5].call(instance, response)
+        expect(MyApiClient::ErrorHandling::Generator).to have_received(:call).with(
+          json: { '$.errors.code': 20 },
+          instance: instance,
+          response: response,
+          block: instance_of(Proc)
+        )
       end
     end
 
-    describe 'use complex patterns' do
-      describe 'status code and JSON' do
-        let(:status_code) { 200 }
-        let(:response_body) do
-          {
-            errors: {
-              code: 30,
-            },
-          }.to_json
-        end
-
-        it 'monitors given status code and JSON' do
-          allow(instance).to receive(:monitoring_with_status_code_and_json)
-          error_handler.call(params, logger)
-          expect(instance)
-            .to have_received(:monitoring_with_status_code_and_json)
-            .with(params, logger)
-        end
-      end
-
-      describe 'JSON multiple conditions' do
-        let(:status_code) { 200 }
-        let(:response_body) do
-          {
-            errors: {
-              code: 31,
-              message: 'Unknown error',
-            },
-          }.to_json
-        end
-
-        it 'monitors given JSON for each path' do
-          allow(instance).to receive(:monitoring_with_json_multiple_conditions)
-          error_handler.call(params, logger)
-          expect(instance)
-            .to have_received(:monitoring_with_json_multiple_conditions)
-            .with(params, logger)
-        end
+    shared_examples 'includes error handlers which defined another class' do
+      it 'creates and adds error handlers, which is isolated from other child classes' do
+        target_mock_class.error_handlers[2].call(instance, response)
+        expect(MyApiClient::ErrorHandling::Generator).to have_received(:call).with(
+          json: { '$.errors.code': 30 },
+          raise: MyApiClient::ApiLimitError,
+          instance: instance,
+          response: response,
+          block: nil
+        )
       end
     end
 
-    describe 'use `raise`' do
-      let(:status_code) { 200 }
-      let(:response_body) do
-        {
-          errors: {
-            code: 40,
-          },
-        }.to_json
-      end
-
-      it 'raises the error when detected' do
-        expect { error_handler.call(params, logger) }.to raise_error(self.class::SomeError)
+    shared_examples 'defines retry handling' do
+      it 'defines retry handling because it includes a "retry_on" option' do
+        target_mock_class
+        expect(parent_mock_class).to have_received(:retry_on).with(
+          MyApiClient::ApiLimitError, wait: 1.minute
+        )
       end
     end
 
-    describe 'use `block`' do
-      let(:status_code) { 200 }
-      let(:response_body) do
-        {
-          errors: {
-            code: 50,
-          },
-        }.to_json
-      end
-
-      it 'executes the block when detected' do
-        expect { error_handler.call(params, logger) }
-          .to output("Error code 50 is detected\n")
-          .to_stdout
+    shared_examples 'does not define retry handling' do
+      it 'does not define retry handling because it does not include "retry_on" options' do
+        target_mock_class
+        expect(parent_mock_class).not_to have_received(:retry_on)
       end
     end
 
-    describe 'default handling action' do
-      let(:status_code) { 200 }
-      let(:response_body) do
-        {
-          errors: {
-            code: 60,
-          },
-        }.to_json
-      end
+    describe 'Parent Class' do
+      let(:target_mock_class) { parent_mock_class }
 
-      it 'raises default error when detected' do
-        expect { error_handler.call(params, logger) }.to raise_error(MyApiClient::Error)
+      it_behaves_like 'includes error handlers which defined parent class'
+      it_behaves_like 'does not define retry handling'
+
+      it 'is defined 2 error handlers' do
+        expect(target_mock_class.error_handlers.count).to eq 2
       end
     end
 
-    describe 'inheritance' do
-      let(:status_code) { 500 }
-      let(:response_body) { nil }
+    describe 'Child Class' do
+      let(:target_mock_class) { child_mock_class }
 
-      it 'can be used super class error handlers' do
-        allow(instance).to receive(:commonized_error_handling)
-        error_handler.call(params, logger)
-        expect(instance)
-          .to have_received(:commonized_error_handling)
-          .with(params, logger)
+      it_behaves_like 'includes error handlers which defined parent class'
+      it_behaves_like 'includes error handlers which defined child class'
+      it_behaves_like 'does not define retry handling'
+
+      it 'is defined 5 error handlers' do
+        expect(target_mock_class.error_handlers.count).to eq 5
       end
     end
 
-    describe 'definition' do
-      it 'is isolatedly defined for each classes' do
-        expect(self.class::SuperMockClass.error_handlers.count).to eq 1
-        expect(self.class::MockClass.error_handlers.count).to eq 17
-        expect(self.class::AnotherMockClass.error_handlers.count).to eq 4
+    describe 'Grand Child Class' do
+      let(:target_mock_class) { grand_child_mock_class }
+
+      it_behaves_like 'includes error handlers which defined parent class'
+      it_behaves_like 'includes error handlers which defined child class'
+      it_behaves_like 'includes error handlers which defined grand child class'
+      it_behaves_like 'does not define retry handling'
+
+      it 'is defined 6 error handlers' do
+        expect(target_mock_class.error_handlers.count).to eq 6
       end
     end
-  end
 
-  class self::ParentMockClass
-    include MyApiClient::ErrorHandling
+    describe 'Another Class' do
+      let(:target_mock_class) { another_mock_class }
 
-    if ActiveSupport::VERSION::STRING >= '5.2.0'
-      class_attribute :error_handlers, default: []
-    else
-      class_attribute :error_handlers
-      self.error_handlers = []
-    end
+      it_behaves_like 'includes error handlers which defined parent class'
+      it_behaves_like 'includes error handlers which defined another class'
+      it_behaves_like 'defines retry handling'
 
-    error_handling status_code: 400,
-                   with: :bad_request
-
-    def bad_request; end
-  end
-
-  class self::ChildMockClass < self::ParentMockClass
-    error_handling status_code: 400,
-                   json: { '$.errors.code': 10..19 },
-                   with: :error_number_1x
-    error_handling status_code: 400,
-                   json: { '$.errors.code': 13 },
-                   with: :error_number_13
-
-    # rubocop:disable Layout/EmptyLineBetweenDefs
-    def error_number_1x; end
-    def error_number_13; end
-    # rubocop:enable Layout/EmptyLineBetweenDefs
-  end
-
-  class self::GrandchildMockClass < self::ChildMockClass
-    error_handling status_code: 400,
-                   json: { '$.errors.code': 13, '$.errors.message': 'error' },
-                   with: :error_number_13_with_error_message
-
-    def error_number_13_with_error_message; end
-  end
-
-  describe '#error_handling' do
-    let(:instance) { self.class::GrandchildMockClass.new }
-    let(:response_1) do
-      instance_double(
-        Sawyer::Response, status: 400, body: {
-          errors: { code: 13, message: 'error' },
-        }.to_json
-      )
-    end
-
-    let(:response_2) do
-      instance_double(
-        Sawyer::Response, status: 400, body: {
-          errors: { code: 13, message: 'warning' },
-        }.to_json
-      )
-    end
-
-    let(:response_3) do
-      instance_double(
-        Sawyer::Response, status: 400, body: {
-          errors: { code: 15, message: 'error' },
-        }.to_json
-      )
-    end
-
-    let(:response_4) do
-      instance_double(
-        Sawyer::Response, status: 400, body: {
-          errors: { code: 20, message: 'error' },
-        }.to_json
-      )
-    end
-
-    let(:response_5) do
-      instance_double(Sawyer::Response, status: 200, body: nil)
-    end
-
-    let(:params) { instance_double(MyApiClient::Params::Params, metadata: {}) }
-    let(:logger) { instance_double(MyApiClient::Logger) }
-
-    # rubocop:disable RSpec/ExampleLength
-    it 'prioritizes error handlers which defined later' do
-      allow(instance).to receive(:error_number_13_with_error_message)
-      instance._error_handling(response_1).call(params, logger)
-      expect(instance).to have_received(:error_number_13_with_error_message)
-
-      allow(instance).to receive(:error_number_13)
-      instance._error_handling(response_2).call(params, logger)
-      expect(instance).to have_received(:error_number_13)
-
-      allow(instance).to receive(:error_number_1x)
-      instance._error_handling(response_3).call(params, logger)
-      expect(instance).to have_received(:error_number_1x)
-
-      allow(instance).to receive(:bad_request)
-      instance._error_handling(response_4).call(params, logger)
-      expect(instance).to have_received(:bad_request)
-    end
-    # rubocop:enable RSpec/ExampleLength
-
-    it 'returns nil when detected nothing' do
-      expect(instance._error_handling(response_5)).to be_nil
-    end
-
-    class self::BadMockClass < self::ParentMockClass
-      error_handling status_code: Object
-    end
-
-    it 'raises error when set unexpected operator type' do
-      instance = self.class::BadMockClass.new
-      expect { instance._error_handling(response_1) }
-        .to raise_error(/Unexpected operator type was given/)
+      it 'is defined 3 error handlers' do
+        expect(target_mock_class.error_handlers.count).to eq 3
+      end
     end
   end
 end

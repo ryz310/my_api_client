@@ -29,4 +29,18 @@ RSpec.describe MyApiClient::Error do
                ':params=>"#<MyApiClient::Params::Params#inspect>"}'
     end
   end
+
+  describe '#message' do
+    subject { instance.message }
+
+    context 'when no error message is given' do
+      it { is_expected.to eq 'MyApiClient::Error' }
+    end
+
+    context 'when error message is given' do
+      let(:instance) { described_class.new(params, 'error message') }
+
+      it { is_expected.to eq 'error message' }
+    end
+  end
 end

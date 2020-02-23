@@ -7,6 +7,9 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   TargetRubyVersion: 2.4
 
+Layout/LineLength:
+  Max: 100
+
 Metrics/AbcSize:
   Max: 20
 
@@ -19,9 +22,6 @@ Metrics/BlockLength:
 
 Metrics/MethodLength:
   Max: 15
-
-Metrics/LineLength:
-  Max: 100
 
 Naming/AccessorMethodName:
   Enabled: false

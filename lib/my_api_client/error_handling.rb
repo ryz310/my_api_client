@@ -40,32 +40,20 @@ module MyApiClient
       # @option retry [TrueClass, Hash]
       #   If the error detected, retries the API request. Requires `raise` option.
       #   You can set `true` or `retry_on` options (`wait` and `attempts`).
-      # @yield [MyApiClient::Params::Params, MyApiClient::Logger]
+      # @yield [MyApiClient::Params::Params, MyApiClient::Request::Logger]
       #   Executes the block when error detected.
       #   Forbid to be used with the` retry` option.
       def error_handling(**options, &block)
         options[:block] = block
-        retry_options = ProcessRetryOption.call(error_handling_options: options)
+        retry_options = RetryOptionProcessor.call(error_handling_options: options)
         retry_on(options[:raise], **retry_options) if retry_options
 
-        temp = error_handlers.dup
-        temp << lambda { |instance, response|
+        new_error_handlers = error_handlers.dup
+        new_error_handlers << lambda { |instance, response|
           Generator.call(**options.merge(instance: instance, response: response))
         }
-        self.error_handlers = temp
+        self.error_handlers = new_error_handlers
       end
-    end
-
-    # The error handlers defined later takes precedence
-    #
-    # @param response [Sawyer::Response] describe_params_here
-    # @return [Proc, nil] description_of_returned_object
-    def _error_handling(response)
-      error_handlers.reverse_each do |error_handler|
-        result = error_handler.call(self, response)
-        return result unless result.nil?
-      end
-      nil
     end
   end
 end

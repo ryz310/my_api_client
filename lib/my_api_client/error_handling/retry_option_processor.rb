@@ -3,7 +3,7 @@
 module MyApiClient
   module ErrorHandling
     # Processes the `retry` option.
-    class ProcessRetryOption < ServiceAbstract
+    class RetryOptionProcessor < ServiceAbstract
       # @param error_handling_options [Hash]
       #   Options for the retry.
       # @option raise [MyApiClient::Error]
