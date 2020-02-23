@@ -2,27 +2,81 @@
 
 ## v0.14.0.pre (Feb 23, 2020)
 
-### Feature
-### Bugfix
-### Breaking Change
-### Misc
+### Refactoring
 
-* [#183](https://github.com/ryz310/my_api_client/pull/183) Bump pry-byebug from 3.7.0 to 3.8.0 ([@ryz310](https://github.com/ryz310))
 * [#179](https://github.com/ryz310/my_api_client/pull/179) Change the "with" option structure ([@ryz310](https://github.com/ryz310))
-* [#184](https://github.com/ryz310/my_api_client/pull/184) Update ruby-orbs orb to v1.5.1 ([@ryz310](https://github.com/ryz310))
-* [#185](https://github.com/ryz310/my_api_client/pull/185) Update ruby-orbs orb to v1.5.4 ([@ryz310](https://github.com/ryz310))
-* [#189](https://github.com/ryz310/my_api_client/pull/189) Update the renovate settings ([@ryz310](https://github.com/ryz310))
-* [#187](https://github.com/ryz310/my_api_client/pull/187) Update ruby-orbs orb to v1.5.6 ([@ryz310](https://github.com/ryz310))
-* [#190](https://github.com/ryz310/my_api_client/pull/190) Add a config file of the dependabot ([@ryz310](https://github.com/ryz310))
-* [#193](https://github.com/ryz310/my_api_client/pull/193) Change renovate automerge setting ([@ryz310](https://github.com/ryz310))
-* [#194](https://github.com/ryz310/my_api_client/pull/194) ryz310/dependabot/bundler/bugsnag-6.13.0 ([@ryz310](https://github.com/ryz310))
-* [#192](https://github.com/ryz310/my_api_client/pull/192) Update ruby-orbs orb to v1.6.0 ([@ryz310](https://github.com/ryz310))
-* [#196](https://github.com/ryz310/my_api_client/pull/196) Change the request structure ([@ryz310](https://github.com/ryz310))
-* [#197](https://github.com/ryz310/my_api_client/pull/197) Bump webmock from 3.8.0 to 3.8.1 ([@ryz310](https://github.com/ryz310))
-* [#199](https://github.com/ryz310/my_api_client/pull/199) Bump webmock from 3.8.1 to 3.8.2 ([@ryz310](https://github.com/ryz310))
-* [#205](https://github.com/ryz310/my_api_client/pull/205) Re-generate .rubocop_todo.yml with RuboCop v0.80.0 ([@ryz310](https://github.com/ryz310))
 * [#206](https://github.com/ryz310/my_api_client/pull/206) Rebuild api request processing ([@ryz310](https://github.com/ryz310))
 * [#207](https://github.com/ryz310/my_api_client/pull/207) Fix offending codes ([@ryz310](https://github.com/ryz310))
+
+### Breaking Change
+
+* [#196](https://github.com/ryz310/my_api_client/pull/196) Change the request structure ([@ryz310](https://github.com/ryz310))
+
+> ### logging
+>
+> **before**
+>
+> ```
+> I, [2020-02-02T15:26:53.788092 #93220]  INFO -- : API request `GET https://api.esa.io/v1/teams/feedforce/posts`: "Start"
+> I, [2020-02-02T15:26:55.760452 #93220]  INFO -- : API request `GET https://api.esa.io/v1/teams/feedforce/posts`: "Duration 1.97186 sec"
+> I, [2020-02-02T15:26:55.760739 #93220]  INFO -- : API request `GET https://api.esa.io/v1/teams/feedforce/posts`: "Success (200)"
+> ```
+>
+> **after**
+>
+> Shows URL with query strings.
+>
+> ```
+> I, [2020-02-02T15:20:47.471040 #90870]  INFO -- : API request `GET https://api.esa.io/v1/teams/feedforce/posts?page=1&per_page=100&q=user%3Aryosuke_sato+category%3Aunsorted`: "Start"
+> I, [2020-02-02T15:20:49.516099 #90870]  INFO -- : API request `GET https://api.esa.io/v1/teams/feedforce/posts?page=1&per_page=100&q=user%3Aryosuke_sato+category%3Aunsorted`: "Duration 2.034907 sec"
+> I, [2020-02-02T15:20:49.516391 #90870]  INFO -- : API request `GET https://api.esa.io/v1/teams/feedforce/posts?page=1&per_page=100&q=user%3Aryosuke_sato+category%3Aunsorted`: "Success (200)"
+> ```
+>
+> ### MyApiClient::Params::Request
+>
+> **before**
+>
+> ```rb
+> request_params.metadata # =>
+> # {
+> #   line: 'GET path/to/resource',
+> #   headers: { 'Content-Type': 'application/json; charset=utf-8' },
+> #   query: { key: 'value' }
+> # }
+> ```
+>
+> **after**
+>
+> The `#metadata` does not include `query` key and then includes full URL into `line` value.
+>
+> ```rb
+> request_params.metadata # =>
+> # {
+> #   line: 'GET https://example.com/path/to/resource?key=value',
+> #   headers: { 'Content-Type': 'application/json; charset=utf-8' }
+> # }
+> ```
+
+### Rubocop Challenge
+
+* [#205](https://github.com/ryz310/my_api_client/pull/205) Re-generate .rubocop_todo.yml with RuboCop v0.80.0 ([@ryz310](https://github.com/ryz310))
+
+### Dependabot
+
+* [#190](https://github.com/ryz310/my_api_client/pull/190) Add a config file of the dependabot ([@ryz310](https://github.com/ryz310))
+* [#183](https://github.com/ryz310/my_api_client/pull/183) Bump pry-byebug from 3.7.0 to 3.8.0 ([@ryz310](https://github.com/ryz310))
+* [#194](https://github.com/ryz310/my_api_client/pull/194) Bump bugsnag from 6.12.2 to 6.13.0 ([@ryz310](https://github.com/ryz310))
+* [#197](https://github.com/ryz310/my_api_client/pull/197) Bump webmock from 3.8.0 to 3.8.1 ([@ryz310](https://github.com/ryz310))
+* [#199](https://github.com/ryz310/my_api_client/pull/199) Bump webmock from 3.8.1 to 3.8.2 ([@ryz310](https://github.com/ryz310))
+
+### Renovate
+
+* [#193](https://github.com/ryz310/my_api_client/pull/193) Change renovate automerge setting ([@ryz310](https://github.com/ryz310))
+* [#189](https://github.com/ryz310/my_api_client/pull/189) Update the renovate settings ([@ryz310](https://github.com/ryz310))
+* [#184](https://github.com/ryz310/my_api_client/pull/184) Update ruby-orbs orb to v1.5.1 ([@ryz310](https://github.com/ryz310))
+* [#185](https://github.com/ryz310/my_api_client/pull/185) Update ruby-orbs orb to v1.5.4 ([@ryz310](https://github.com/ryz310))
+* [#187](https://github.com/ryz310/my_api_client/pull/187) Update ruby-orbs orb to v1.5.6 ([@ryz310](https://github.com/ryz310))
+* [#192](https://github.com/ryz310/my_api_client/pull/192) Update ruby-orbs orb to v1.6.0 ([@ryz310](https://github.com/ryz310))
 
 ## v0.13.0 (Jan 21, 2020)
 
