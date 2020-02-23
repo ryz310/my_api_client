@@ -1,30 +1,32 @@
 # frozen_string_literal: true
 
 RSpec.describe MyApiClient::Request do
-  class self::MockClass
-    include MyApiClient::Request
-    include MyApiClient::Config
-    include MyApiClient::Exceptions
-
-    endpoint 'https://example.com/v1'
-
-    http_open_timeout 2.seconds
-    http_read_timeout 3.seconds
-
-    attr_reader :logger
-
-    def initialize
-      @logger = ::Logger.new(STDOUT)
-    end
-  end
-
   described_class::HTTP_METHODS.each do |http_method|
     describe "##{http_method}" do
       subject(:execute) do
         instance.public_send(http_method, pathname, headers: headers, query: query, body: body)
       end
 
-      let(:instance) { self.class::MockClass.new }
+      let(:mock_class) do
+        Class.new do
+          include MyApiClient::Request
+          include MyApiClient::Config
+          include MyApiClient::Exceptions
+
+          endpoint 'https://example.com/v1'
+
+          http_open_timeout 2.seconds
+          http_read_timeout 3.seconds
+
+          attr_reader :logger
+
+          def initialize
+            @logger = ::Logger.new(STDOUT)
+          end
+        end
+      end
+
+      let(:instance) { mock_class.new }
       let(:pathname) { 'path/to/resource' }
       let(:headers) { { 'Content-Type': 'application/json;charset=UTF-8' } }
       let(:request_params) { instance_double(MyApiClient::Params::Request) }

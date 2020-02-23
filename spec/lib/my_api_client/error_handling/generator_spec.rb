@@ -101,7 +101,7 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
         it_behaves_like 'an error was detected'
       end
 
-      context 'when matcher options partially match the HTTP response' do
+      context 'when matcher options partially match the status code in the HTTP response' do
         let(:http_response) do
           dummy_response(status: 400, body: { errors: { code: 20 } }.to_json)
         end
@@ -109,7 +109,7 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
         it_behaves_like 'no errors were detected'
       end
 
-      context 'when matcher options partially match the HTTP response' do
+      context 'when matcher options partially match the body in the HTTP response' do
         let(:http_response) do
           dummy_response(status: 403, body: { errors: { code: 10 } }.to_json)
         end
@@ -230,7 +230,7 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
           it_behaves_like 'an error was detected'
         end
 
-        context 'when matcher options match the HTTP response' do
+        context 'when matcher options does not match the HTTP response' do
           let(:response_body) { { errors: { message: 'some warning occurred' } }.to_json }
 
           it_behaves_like 'no errors were detected'

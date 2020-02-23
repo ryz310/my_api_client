@@ -5,22 +5,24 @@ require 'my_api_client/rspec/stub'
 RSpec.describe MyApiClient::Stub do
   include described_class
 
-  class self::ExampleApiClient < MyApiClient::Base
-    endpoint 'https://example.com'
+  let(:example_api_client) do
+    Class.new(MyApiClient::Base) do
+      endpoint 'https://example.com'
 
-    def request(user_id:)
-      get "users/#{user_id}"
-    end
+      def request(user_id:)
+        get "users/#{user_id}"
+      end
 
-    def request_all
-      get 'users'
+      def request_all
+        get 'users'
+      end
     end
   end
 
   describe '#stub_api_client_all' do
     subject(:stubbing_all!) do
       stub_api_client_all(
-        self.class::ExampleApiClient,
+        example_api_client,
         request: { id: 1 },
         request_all: [{ id: 1 }, { id: 2 }, { id: 3 }]
       )
@@ -29,7 +31,7 @@ RSpec.describe MyApiClient::Stub do
     it 'stubs all instance of the ApiClient' do
       stubbing_all!
       10.times do |i|
-        api_client = self.class::ExampleApiClient.new
+        api_client = example_api_client.new
         response1 = api_client.request(user_id: i)
         expect(response1.id).to eq 1
         response2 = api_client.request_all
@@ -43,7 +45,7 @@ RSpec.describe MyApiClient::Stub do
       expect(self)
         .to have_received(:stub_api_client)
         .with(
-          self.class::ExampleApiClient,
+          example_api_client,
           request: { id: 1 },
           request_all: [{ id: 1 }, { id: 2 }, { id: 3 }]
         )
@@ -60,7 +62,7 @@ RSpec.describe MyApiClient::Stub do
     context 'when use Proc' do
       let(:api_client) do
         stub_api_client(
-          self.class::ExampleApiClient,
+          example_api_client,
           request: ->(params) { { id: params[:user_id] } },
           request_all: -> { [{ id: 20 }, { id: 10 }, { id: 30 }].sort_by { |v| v[:id] } }
         )
@@ -80,7 +82,7 @@ RSpec.describe MyApiClient::Stub do
       shared_examples 'a stub to raise an error' do |error|
         let(:api_client) do
           stub_api_client(
-            self.class::ExampleApiClient,
+            example_api_client,
             request: { raise: error },
             request_all: { raise: error }
           )
@@ -105,7 +107,7 @@ RSpec.describe MyApiClient::Stub do
           params = instance_double(MyApiClient::Params::Params, metadata: {})
           error = MyApiClient::ServerError.new(params)
           stub_api_client(
-            self.class::ExampleApiClient,
+            example_api_client,
             request: { raise: error },
             request_all: { raise: error }
           )
@@ -120,7 +122,7 @@ RSpec.describe MyApiClient::Stub do
       context 'with not an MyApiClient::Error class or instance' do
         let(:stubbing!) do
           stub_api_client(
-            self.class::ExampleApiClient,
+            example_api_client,
             request: { raise: 1 },
             request_all: { raise: 2 }
           )
@@ -135,7 +137,7 @@ RSpec.describe MyApiClient::Stub do
     context 'when use `response` option' do
       let(:api_client) do
         stub_api_client(
-          self.class::ExampleApiClient,
+          example_api_client,
           request: { response: { id: 12_345 } },
           request_all: { response: [10, 20, 30] }
         )
@@ -153,7 +155,7 @@ RSpec.describe MyApiClient::Stub do
       shared_examples 'a stub to raise an error' do |error|
         let(:api_client) do
           stub_api_client(
-            self.class::ExampleApiClient,
+            example_api_client,
             request: { raise: error, response: { message: 'error 1' } },
             request_all: { raise: error, response: { message: 'error 2' } }
           )
@@ -200,7 +202,7 @@ RSpec.describe MyApiClient::Stub do
           params = instance_double(MyApiClient::Params::Params, metadata: {})
           error = MyApiClient::ServerError.new(params)
           stub_api_client(
-            self.class::ExampleApiClient,
+            example_api_client,
             request: { raise: error, response: { message: 'error 1' } },
             request_all: { raise: error, response: { message: 'error 2' } }
           )
@@ -217,7 +219,7 @@ RSpec.describe MyApiClient::Stub do
       context 'with not an MyApiClient::Error class or instance' do
         let(:stubbing!) do
           stub_api_client(
-            self.class::ExampleApiClient,
+            example_api_client,
             request: { raise: 1 },
             request_all: { raise: 2 }
           )
@@ -232,7 +234,7 @@ RSpec.describe MyApiClient::Stub do
     context 'when use other values' do
       let(:api_client) do
         stub_api_client(
-          self.class::ExampleApiClient,
+          example_api_client,
           request: { id: 'alias' },
           request_all: nil
         )
