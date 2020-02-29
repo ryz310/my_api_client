@@ -9,6 +9,8 @@ AllCops:
 
 Layout/LineLength:
   Max: 100
+  Exclude:
+    - my_api/config/application.rb
 
 Metrics/BlockLength:
   Exclude:

@@ -21,7 +21,9 @@ Jets.application.configure do
   # config.function.role = "arn:aws:iam::#{Jets.aws.account}:role/service-role/pre-created"
   # config.function.memory_size = 1536
 
-  # config.api.endpoint_type = 'PRIVATE' # Default is 'EDGE' (https://docs.aws.amazon.com/apigateway/api-reference/link-relation/restapi-create/#endpointConfiguration)
+  # Default is 'EDGE'
+  # https://docs.aws.amazon.com/apigateway/api-reference/link-relation/restapi-create/#endpointConfiguration
+  # config.api.endpoint_type = 'PRIVATE'
 
   # config.function.environment = {
   #   global_app_key1: "global_app_value1",
@@ -42,9 +44,14 @@ Jets.application.configure do
   # to public-read on s3 and served directly. IE: public/assets public/images public/packs
   # config.assets.folders = %w[assets images packs]
   # config.assets.max_age = 3600 # when to expire assets
-  # config.assets.cache_control = nil # IE: "public, max-age=3600" # override max_age for more fine-grain control.
-  # config.assets.base_url = nil # IE: https://cloudfront.com/my/base/path, defaults to the s3 bucket url
-  #                                IE: https://s3-us-west-2.amazonaws.com/demo-dev-s3bucket-1inlzkvujq8zb
+  #
+  # # IE: "public, max-age=3600" # override max_age for more fine-grain control.
+  # config.assets.cache_control = nil
+  #
+  # IE: https://cloudfront.com/my/base/path, defaults to the s3 bucket url
+  # IE: https://s3-us-west-2.amazonaws.com/demo-dev-s3bucket-1inlzkvujq8zb
+  # config.assets.base_url = nil
+  #
 
   # config.api.endpoint_type = 'PRIVATE' # Default is 'EDGE' https://amzn.to/2r0Iu2L
   # config.api.authorization_type = "AWS_IAM" # default is 'NONE' https://amzn.to/2qZ7zLh

@@ -14,9 +14,10 @@ Jets.boot
 
 require 'jets/spec_helpers'
 
+# Rspec helper module
 module Helpers
   def payload(name)
-    JSON.load(IO.read("spec/fixtures/payloads/#{name}.json"))
+    JSON.parse(IO.read("spec/fixtures/payloads/#{name}.json"))
   end
 end
 
