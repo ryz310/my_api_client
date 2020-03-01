@@ -17,6 +17,7 @@ Metrics/BlockLength:
     - 'my_api_client.gemspec'
     - 'lib/my_api_client/rspec/matchers/**/*'
     - 'spec/**/*'
+    - 'my_api/spec/**/*'
 
 Metrics/MethodLength:
   Max: 15
