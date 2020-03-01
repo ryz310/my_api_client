@@ -63,6 +63,8 @@ commands:
           name: Install RSync
           command: sudo apt-get install -y rsync
       - run:
+          # This command is not currently work. It could't reference uploaded gem file.
+          # You can execute `$ bundle exec jets deploy` on your local.
           name: Deploy the API server with jets
           command: JETS_AGREE=yes bundle exec jets deploy
   run_rspec_for_gem:
@@ -223,102 +225,81 @@ workflows:
 
   commit:
     jobs:
-      - deploy_api:
-          ruby_version: '2.5'
       - build_gem:
           name: build_on_ruby_2.4_and_rails_4.2
-          requires: [deploy_api]
           ruby_version:  '2.4'
           rails_version: '4.2'
       - build_gem:
           name: build_on_ruby_2.4_and_rails_5.0
-          requires: [deploy_api]
           ruby_version:  '2.4'
           rails_version: '5.0'
       - build_gem:
           name: build_on_ruby_2.4_and_rails_5.1
-          requires: [deploy_api]
           ruby_version:  '2.4'
           rails_version: '5.1'
       - build_gem:
           name: build_on_ruby_2.4_and_rails_5.2
-          requires: [deploy_api]
           ruby_version:  '2.4'
           rails_version: '5.2'
       - build_gem:
           name: build_on_ruby_2.5_and_rails_4.2
-          requires: [deploy_api]
           ruby_version:  '2.5'
           rails_version: '4.2'
       - build_gem:
           name: build_on_ruby_2.5_and_rails_5.0
-          requires: [deploy_api]
           ruby_version:  '2.5'
           rails_version: '5.0'
       - build_gem:
           name: build_on_ruby_2.5_and_rails_5.1
-          requires: [deploy_api]
           ruby_version:  '2.5'
           rails_version: '5.1'
       - build_gem:
           name: build_on_ruby_2.5_and_rails_5.2
-          requires: [deploy_api]
           ruby_version:  '2.5'
           rails_version: '5.2'
       - build_gem:
           name: build_on_ruby_2.5_and_rails_6.0
-          requires: [deploy_api]
           ruby_version:  '2.5'
           rails_version: '6.0'
       - build_gem:
           name: build_on_ruby_2.6_and_rails_4.2
-          requires: [deploy_api]
           ruby_version:  '2.6'
           rails_version: '4.2'
       - build_gem:
           name: build_on_ruby_2.6_and_rails_5.0
-          requires: [deploy_api]
           ruby_version:  '2.6'
           rails_version: '5.0'
       - build_gem:
           name: build_on_ruby_2.6_and_rails_5.1
-          requires: [deploy_api]
           ruby_version:  '2.6'
           rails_version: '5.1'
       - build_gem:
           name: build_on_ruby_2.6_and_rails_5.2
-          requires: [deploy_api]
           ruby_version:  '2.6'
           rails_version: '5.2'
       - build_gem:
           name: build_on_ruby_2.6_and_rails_6.0
-          requires: [deploy_api]
           ruby_version:  '2.6'
           rails_version: '6.0'
       - build_gem:
           name: build_on_ruby_2.7_and_rails_5.0
-          requires: [deploy_api]
           ruby_version:  '2.7'
           rails_version: '5.0'
       - build_gem:
           name: build_on_ruby_2.7_and_rails_5.1
-          requires: [deploy_api]
           ruby_version:  '2.7'
           rails_version: '5.1'
       - build_gem:
           name: build_on_ruby_2.7_and_rails_5.2
-          requires: [deploy_api]
           ruby_version:  '2.7'
           rails_version: '5.2'
       - build_gem:
           name: build_on_ruby_2.7_and_rails_6.0_with_integrations
-          requires: [deploy_api]
           ruby_version:  '2.7'
           rails_version: '6.0'
           bundler_options: '--with integrations'
       - build_gem:
           name: build_on_ruby_2.7_and_rails_6.0_without_integrations
-          requires: [deploy_api]
           ruby_version:  '2.7'
           rails_version: '6.0'
           bundler_options: '--without integrations'
@@ -379,10 +360,22 @@ workflows:
           cron: "30 23 * * *" # 8:30am every day (JST)
           filters:
             branches:
-              only:
-                - master
+              only: [master]
     jobs:
       - rubocop_challenge
+
+  # deploy_api_server:
+  #   triggers:
+  #     - schedule:
+  #         cron: "0 12 * * *" # 3:00am every day (JST)
+  #         filters:
+  #           branches:
+  #             only: [master]
+  #   jobs:
+  #     - deploy_api:
+  #         ruby_version: '2.5'
+  #     - build_gem:
+  #         requires: [deploy_api]
 
 experimental:
   notify:
