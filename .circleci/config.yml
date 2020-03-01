@@ -25,7 +25,7 @@ references:
       default: ''
 
 executors:
-  default:
+  executor_for_gem:
     parameters:
       <<: *ruby_version
     docker:
@@ -41,8 +41,8 @@ commands:
       - run: |
           cp gemfiles/rails_<< parameters.rails_version >>.gemfile Gemfile
           bundle update activesupport
-  run_rspec:
-    description: Run RSpec
+  run_rspec_for_gem:
+    description: Run RSpec for the gem
     steps:
       - code-climate/install
       - run:
@@ -121,33 +121,33 @@ commands:
       - ruby-orbs/bundle-install:
           cache_key_prefix: v1-dependencies-<< parameters.ruby_version >>
           bundle_extra_args: << parameters.bundler_options >>
-  test_and_build:
+  test_and_build_for_gem:
     description: Build the RubyGem
     parameters:
       <<: *rails_version
     steps:
       - modify_active_support_version:
           rails_version: << parameters.rails_version >>
-      - run_rspec
+      - run_rspec_for_gem
       - rake_build
 
 jobs:
-  build:
+  build_gem:
     parameters:
       <<: *ruby_version
       <<: *rails_version
       <<: *bundler_options
     executor:
-      name: default
+      name: executor_for_gem
       ruby_version: << parameters.ruby_version >>
     steps:
       - setup:
           ruby_version: << parameters.ruby_version >>
           bundler_options: << parameters.bundler_options >>
-      - test_and_build:
+      - test_and_build_for_gem:
           rails_version: << parameters.rails_version >>
   upload-coverage:
-    executor: default
+    executor: executor_for_gem
     steps:
       - attach_workspace:
           at: ~/repo
@@ -157,22 +157,22 @@ jobs:
           parts: 19
       - code-climate/upload-coverage
   rubocop:
-    executor: default
+    executor: executor_for_gem
     steps:
       - setup
       - rubocop
   yardoc:
-    executor: default
+    executor: executor_for_gem
     steps:
       - setup
       - yardoc
   rubocop_challenge:
-    executor: default
+    executor: executor_for_gem
     steps:
       - checkout
       - rubocop_challenge
   release:
-    executor: default
+    executor: executor_for_gem
     steps:
       - setup
       - release
@@ -182,80 +182,80 @@ workflows:
 
   commit:
     jobs:
-      - build:
+      - build_gem:
           name: build_on_ruby_2.4_and_rails_4.2
           ruby_version:  '2.4'
           rails_version: '4.2'
-      - build:
+      - build_gem:
           name: build_on_ruby_2.4_and_rails_5.0
           ruby_version:  '2.4'
           rails_version: '5.0'
-      - build:
+      - build_gem:
           name: build_on_ruby_2.4_and_rails_5.1
           ruby_version:  '2.4'
           rails_version: '5.1'
-      - build:
+      - build_gem:
           name: build_on_ruby_2.4_and_rails_5.2
           ruby_version:  '2.4'
           rails_version: '5.2'
-      - build:
+      - build_gem:
           name: build_on_ruby_2.5_and_rails_4.2
           ruby_version:  '2.5'
           rails_version: '4.2'
-      - build:
+      - build_gem:
           name: build_on_ruby_2.5_and_rails_5.0
           ruby_version:  '2.5'
           rails_version: '5.0'
-      - build:
+      - build_gem:
           name: build_on_ruby_2.5_and_rails_5.1
           ruby_version:  '2.5'
           rails_version: '5.1'
-      - build:
+      - build_gem:
           name: build_on_ruby_2.5_and_rails_5.2
           ruby_version:  '2.5'
           rails_version: '5.2'
-      - build:
+      - build_gem:
           name: build_on_ruby_2.5_and_rails_6.0
           ruby_version:  '2.5'
           rails_version: '6.0'
-      - build:
+      - build_gem:
           name: build_on_ruby_2.6_and_rails_4.2
           ruby_version:  '2.6'
           rails_version: '4.2'
-      - build:
+      - build_gem:
           name: build_on_ruby_2.6_and_rails_5.0
           ruby_version:  '2.6'
           rails_version: '5.0'
-      - build:
+      - build_gem:
           name: build_on_ruby_2.6_and_rails_5.1
           ruby_version:  '2.6'
           rails_version: '5.1'
-      - build:
+      - build_gem:
           name: build_on_ruby_2.6_and_rails_5.2
           ruby_version:  '2.6'
           rails_version: '5.2'
-      - build:
+      - build_gem:
           name: build_on_ruby_2.6_and_rails_6.0
           ruby_version:  '2.6'
           rails_version: '6.0'
-      - build:
+      - build_gem:
           name: build_on_ruby_2.7_and_rails_5.0
           ruby_version:  '2.7'
           rails_version: '5.0'
-      - build:
+      - build_gem:
           name: build_on_ruby_2.7_and_rails_5.1
           ruby_version:  '2.7'
           rails_version: '5.1'
-      - build:
+      - build_gem:
           name: build_on_ruby_2.7_and_rails_5.2
           ruby_version:  '2.7'
           rails_version: '5.2'
-      - build:
+      - build_gem:
           name: build_on_ruby_2.7_and_rails_6.0_with_integrations
           ruby_version:  '2.7'
           rails_version: '6.0'
           bundler_options: '--with integrations'
-      - build:
+      - build_gem:
           name: build_on_ruby_2.7_and_rails_6.0_without_integrations
           ruby_version:  '2.7'
           rails_version: '6.0'
