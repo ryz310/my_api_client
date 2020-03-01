@@ -1,1 +1,2 @@
 export GITHUB_ACCESS_TOKEN={GITHUB_ACCESS_TOKEN}
+export MY_API_ENDPOINT={API gateway endtpoint of "my_api" for integration testing}

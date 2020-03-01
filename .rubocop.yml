@@ -9,19 +9,22 @@ AllCops:
 
 Layout/LineLength:
   Max: 100
+  Exclude:
+    - my_api/config/application.rb
 
 Metrics/BlockLength:
   Exclude:
     - 'my_api_client.gemspec'
     - 'lib/my_api_client/rspec/matchers/**/*'
     - 'spec/**/*'
+    - 'my_api/spec/**/*'
 
 Metrics/MethodLength:
   Max: 15
 
 Naming/AccessorMethodName:
   Exclude:
-    - spec/dummy_app/api_clients/example_api_client.rb
+    - example/api_clients/**/*
     - spec/lib/my_api_client/rspec/matchers/be_handled_as_an_error_spec.rb
 
 Style/TrailingCommaInArrayLiteral:
@@ -32,6 +35,7 @@ Style/TrailingCommaInHashLiteral:
 
 RSpec/DescribeClass:
   Exclude:
+    - 'spec/integrations/api_clients/**/*'
     - 'spec/lib/my_api_client/rspec/matchers/**/*'
 
 RSpec/ExampleLength:
