@@ -20,7 +20,7 @@ This is a simple REST API that returns a specified response.
 
 This API returns arbitrary status code.
 
-_Comming soon._
+* `GET status/:status`
 
 ### My Error API
 
