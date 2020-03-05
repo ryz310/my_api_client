@@ -9,7 +9,7 @@ class MyStatusApiClient < ApplicationApiClient
   error_handling status_code: 401, raise: MyErrors::Unauthorized
   error_handling status_code: 403, raise: MyErrors::Forbidden
 
-  # GET status
+  # GET status/:status
   def get_status(status:)
     get "status/#{status}", headers: headers
   end

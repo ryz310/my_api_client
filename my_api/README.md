@@ -26,7 +26,7 @@ This API returns arbitrary status code.
 
 This API returns arbitrary error code as JSON.
 
-_Comming soon._
+* `GET error/:code`
 
 ## Deployment
 
