@@ -2,15 +2,7 @@
 
 require './example/api_clients/my_rest_api_client'
 
-RSpec.describe 'Integration test with My REST API' do
-  before do
-    WebMock.disable_net_connect!(allow: /#{ENV['MY_API_ENDPOINT']}*/)
-  end
-
-  after do
-    WebMock.disable_net_connect!
-  end
-
+RSpec.describe 'Integration test with My REST API', type: :integration do
   let(:api_client) { MyRestApiClient.new }
   let(:id) { rand(100) }
 
