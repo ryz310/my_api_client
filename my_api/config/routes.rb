@@ -6,6 +6,7 @@ Jets.application.routes.draw do
   resources 'rest', only: %i[index show create update delete]
 
   get 'status/:status', to: 'status#show'
+  get 'error/:code', to: 'error#show'
 
   # The jets/public#show controller can serve static utf8 content out of the public folder.
   # Note, as part of the deploy process Jets uploads files in the public folder to s3
