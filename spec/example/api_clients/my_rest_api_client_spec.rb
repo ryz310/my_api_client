@@ -5,8 +5,6 @@ require './example/api_clients/my_rest_api_client'
 
 RSpec.describe MyRestApiClient, type: :api_client do
   let(:api_client) { described_class.new }
-  let(:id) { rand(100) }
-
   let(:endpoint) { ENV['MY_API_ENDPOINT'] }
   let(:headers) do
     { 'Content-Type': 'application/json;charset=UTF-8' }
@@ -26,13 +24,27 @@ RSpec.describe MyRestApiClient, type: :api_client do
     end
   end
 
-  describe '#get_all_id' do
-    subject(:api_request!) { api_client.get_all_id }
+  describe '#get_posts' do
+    subject(:api_request!) { api_client.get_posts(order: order) }
 
-    it 'requests to "GET rest"' do
-      expect { api_request! }
-        .to request_to(:get, URI.join(endpoint, 'rest'))
-        .with(headers: headers)
+    let(:order) { :asc }
+
+    context 'with order: :asc' do
+      it do
+        expect { api_request! }
+          .to request_to(:get, URI.join(endpoint, 'rest'))
+          .with(headers: headers, query: { order: 'asc' })
+      end
+    end
+
+    context 'with order: :desc' do
+      let(:order) { :desc }
+
+      it do
+        expect { api_request! }
+          .to request_to(:get, URI.join(endpoint, 'rest'))
+          .with(headers: headers, query: { order: 'desc' })
+      end
     end
 
     it_behaves_like 'to handle errors' do
@@ -44,12 +56,12 @@ RSpec.describe MyRestApiClient, type: :api_client do
     end
   end
 
-  describe '#get_id' do
-    subject(:api_request!) { api_client.get_id(id: id) }
+  describe '#get_post' do
+    subject(:api_request!) { api_client.get_post(id: 1) }
 
     it 'requests to "GET rest/:id' do
       expect { api_request! }
-        .to request_to(:get, URI.join(endpoint, "rest/#{id}"))
+        .to request_to(:get, URI.join(endpoint, 'rest/1'))
         .with(headers: headers)
     end
 
@@ -62,13 +74,13 @@ RSpec.describe MyRestApiClient, type: :api_client do
     end
   end
 
-  describe '#post_id' do
-    subject(:api_request!) { api_client.post_id }
+  describe '#create_post' do
+    subject(:api_request!) { api_client.create_post(title: 'New title') }
 
     it 'requests to "POST rest"' do
       expect { api_request! }
         .to request_to(:post, URI.join(endpoint, 'rest'))
-        .with(headers: headers)
+        .with(headers: headers, body: { title: 'New title' })
     end
 
     it_behaves_like 'to handle errors' do
@@ -80,13 +92,13 @@ RSpec.describe MyRestApiClient, type: :api_client do
     end
   end
 
-  describe '#patch_id' do
-    subject(:api_request!) { api_client.patch_id(id: id) }
+  describe '#update_post' do
+    subject(:api_request!) { api_client.update_post(id: 1, title: 'Modified title') }
 
     it 'requests to "PATCH rest/:id"' do
       expect { api_request! }
-        .to request_to(:patch, URI.join(endpoint, "rest/#{id}"))
-        .with(headers: headers)
+        .to request_to(:patch, URI.join(endpoint, 'rest/1'))
+        .with(headers: headers, body: { title: 'Modified title' })
     end
 
     it_behaves_like 'to handle errors' do
@@ -98,12 +110,12 @@ RSpec.describe MyRestApiClient, type: :api_client do
     end
   end
 
-  describe '#delete_id' do
-    subject(:api_request!) { api_client.delete_id(id: id) }
+  describe '#delete_post' do
+    subject(:api_request!) { api_client.delete_post(id: 1) }
 
     it 'requests to "DELETE rest/:id"' do
       expect { api_request! }
-        .to request_to(:delete, URI.join(endpoint, "rest/#{id}"))
+        .to request_to(:delete, URI.join(endpoint, 'rest/1'))
         .with(headers: headers)
     end
 

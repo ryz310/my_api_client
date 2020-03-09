@@ -4,44 +4,54 @@ require './example/api_clients/my_rest_api_client'
 
 RSpec.describe 'Integration test with My REST API', type: :integration do
   let(:api_client) { MyRestApiClient.new }
-  let(:id) { rand(100) }
 
   describe 'GET rest' do
-    it 'returns array of ID' do
-      response = api_client.get_all_id
-      expect(response[0].id).to eq 1
-      expect(response[1].id).to eq 2
-      expect(response[2].id).to eq 3
+    context 'with order: :asc' do
+      it 'returns an array of posts ordered by id' do
+        response = api_client.get_posts(order: :asc)
+        expect(response[0].id).to eq 1
+        expect(response[1].id).to eq 2
+        expect(response[2].id).to eq 3
+      end
+    end
+
+    context 'with order: :desc' do
+      it 'returns an array of posts reverse ordered by id' do
+        response = api_client.get_posts(order: :desc)
+        expect(response[0].id).to eq 3
+        expect(response[1].id).to eq 2
+        expect(response[2].id).to eq 1
+      end
     end
   end
 
   describe 'GET rest/:id' do
-    it 'returns specified ID and message' do
-      response = api_client.get_id(id: id)
-      expect(response.id).to eq id
-      expect(response.message).to eq 'The resource is readed.'
+    it 'returns a post' do
+      response = api_client.get_post(id: 2)
+      expect(response.id).to eq 2
+      expect(response.title).to eq 'Title 2'
     end
   end
 
   describe 'POST rest' do
-    it 'returns ID and message' do
-      response = api_client.post_id
-      expect(response.id).to eq 1
-      expect(response.message).to eq 'The resource is created.'
+    it 'returns a created post' do
+      response = api_client.create_post(title: 'New title')
+      expect(response.id).to eq 4
+      expect(response.title).to eq 'New title'
     end
   end
 
   describe 'POST/PUT/PATCH rest/:id' do
-    it 'returns specified ID and message' do
-      response = api_client.patch_id(id: id)
-      expect(response.id).to eq id
-      expect(response.message).to eq 'The resource is updated.'
+    it 'returns a updated post' do
+      response = api_client.update_post(id: 3, title: 'Modified title')
+      expect(response.id).to eq 3
+      expect(response.title).to eq 'Modified title'
     end
   end
 
   describe 'DELETE rest/:id' do
     it 'returns no contents' do
-      response = api_client.delete_id(id: id)
+      response = api_client.delete_post(id: 1)
       expect(response).to be_nil
     end
   end
