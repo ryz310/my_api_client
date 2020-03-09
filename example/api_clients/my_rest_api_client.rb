@@ -6,27 +6,31 @@ require_relative 'application_api_client'
 # See also: my_api/app/controllers/rest_controller.rb
 class MyRestApiClient < ApplicationApiClient
   # GET rest
-  def get_all_id
-    get 'rest', headers: headers
+  def get_posts(order: :asc)
+    order = :desc unless order == :asc
+    query = { order: order }
+    get 'rest', query: query, headers: headers
   end
 
   # GET rest/:id
-  def get_id(id:)
+  def get_post(id:)
     get "rest/#{id}", headers: headers
   end
 
   # POST rest
-  def post_id
-    post 'rest', headers: headers
+  def create_post(title:)
+    body = { title: title }
+    post 'rest', body: body, headers: headers
   end
 
   # POST/PUT/PATCH rest/:id
-  def patch_id(id:)
-    patch "rest/#{id}", headers: headers
+  def update_post(id:, title:)
+    body = { title: title }
+    patch "rest/#{id}", body: body, headers: headers
   end
 
   # DELETE rest/:id
-  def delete_id(id:)
+  def delete_post(id:)
     delete "rest/#{id}", headers: headers
   end
 
