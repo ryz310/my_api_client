@@ -2,59 +2,77 @@
 
 describe RestController, type: :controller do
   describe '#index' do
-    let(:expected_response) do
-      [{ id: 1 }, { id: 2 }, { id: 3 }].to_json
+    context 'with order = asc' do
+      let(:array_of_posts) do
+        [
+          { id: 1, title: 'Title 1' },
+          { id: 2, title: 'Title 2' },
+          { id: 3, title: 'Title 3' },
+        ].to_json
+      end
+
+      it 'returns an array of posts ordered by id' do
+        get '/rest', order: 'asc'
+        expect(response.status).to eq 200
+        expect(response.body).to eq array_of_posts
+      end
     end
 
-    it 'returns a success response' do
-      get '/rest'
-      expect(response.status).to eq 200
-      expect(response.body).to eq expected_response
+    context 'with order = desc' do
+      let(:array_of_posts) do
+        [
+          { id: 3, title: 'Title 3' },
+          { id: 2, title: 'Title 2' },
+          { id: 1, title: 'Title 1' },
+        ].to_json
+      end
+
+      it 'returns an array of posts reverse ordered by id' do
+        get '/rest', order: 'desc'
+        expect(response.status).to eq 200
+        expect(response.body).to eq array_of_posts
+      end
     end
   end
 
   describe '#show' do
-    let(:expected_response) do
-      { id: 123, message: 'The resource is readed.' }.to_json
+    let(:post) do
+      { id: 1, title: 'Title 1' }.to_json
     end
 
-    it 'returns a success response' do
-      get '/rest/:id', id: 123
+    it 'returns a post' do
+      get '/rest/:id', id: 1
       expect(response.status).to eq 200
-      expect(response.body).to eq expected_response
+      expect(response.body).to eq post
     end
   end
 
   describe '#create' do
-    let(:expected_response) do
-      { id: 1, message: 'The resource is created.' }.to_json
+    let(:new_post) do
+      { id: 4, title: 'New title' }.to_json
     end
 
-    it 'returns a success response' do
-      post '/rest'
+    it 'returns a created post' do
+      post '/rest', title: 'New title'
       expect(response.status).to eq 201
-      expect(response.body).to eq expected_response
+      expect(response.body).to eq new_post
     end
   end
 
   describe '#update' do
-    let(:expected_response) do
-      { id: 123, message: 'The resource is updated.' }.to_json
+    let(:post) do
+      { id: 1, title: 'Modified title' }.to_json
     end
 
-    it 'returns a success response' do
-      patch '/rest/:id', id: 123
+    it 'returns a updated post' do
+      patch '/rest/:id', id: 1, title: 'Modified title'
       expect(response.status).to eq 200
-      expect(response.body).to eq expected_response
+      expect(response.body).to eq post
     end
   end
 
   describe '#delete' do
-    let(:expected_response) do
-      { id: 123, message: 'The resource is deleted.' }.to_json
-    end
-
-    it 'returns a success response' do
+    it 'returns no body' do
       delete '/rest/:id', id: 123
       expect(response.status).to eq 204
       expect(response.body).to be_empty
