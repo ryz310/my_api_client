@@ -8,10 +8,9 @@ RSpec::Matchers.define :request_to do |expected_method, expected_url|
   match do |api_request|
     disable_logging
     @expected = {
-      request_line: request_line(expected_method, expected_url),
+      request_line: request_line(expected_method, expected_url, expected_options[:query]),
       body: expected_options[:body],
       headers: expected_options[:headers],
-      query: expected_options[:query],
     }.compact
     @actual = {}
     sawyer = instance_double(Sawyer::Agent)
@@ -24,7 +23,6 @@ RSpec::Matchers.define :request_to do |expected_method, expected_url|
           request_line: request_line(method, @actual_schema_and_hostname + pathname),
           body: body,
           headers: options[:headers],
-          query: options[:query],
         }.compact
     end.and_return(dummy_response)
     safe_execution(api_request)
@@ -51,7 +49,8 @@ RSpec::Matchers.define :request_to do |expected_method, expected_url|
     nil
   end
 
-  def request_line(method, url)
+  def request_line(method, url, query = nil)
+    url += '?' + query.to_query if query.present?
     "#{method.upcase} #{url}"
   end
 
