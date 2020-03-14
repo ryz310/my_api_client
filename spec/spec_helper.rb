@@ -21,4 +21,12 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  config.before :each, type: :integration do
+    WebMock.disable_net_connect!(allow: /#{ENV['MY_API_ENDPOINT']}*/)
+  end
+
+  config.after :each, type: :integration do
+    WebMock.disable_net_connect!
+  end
 end
