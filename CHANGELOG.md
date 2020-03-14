@@ -1,5 +1,19 @@
 # Change log
 
+## v0.14.0 (Mar 14, 2020)
+
+### Feature
+### Bugfix
+### Breaking Change
+### Misc
+
+* [#210](https://github.com/ryz310/my_api_client/pull/210) Re-generate .rubocop_todo.yml with RuboCop v0.80.1 ([@ryz310](https://github.com/ryz310))
+* [#211](https://github.com/ryz310/my_api_client/pull/211) Integration testing with jets ([@ryz310](https://github.com/ryz310))
+* [#213](https://github.com/ryz310/my_api_client/pull/213) Add status API ([@ryz310](https://github.com/ryz310))
+* [#214](https://github.com/ryz310/my_api_client/pull/214) Add error API ([@ryz310](https://github.com/ryz310))
+* [#215](https://github.com/ryz310/my_api_client/pull/215) Update the REST API to enhance integration testing ([@ryz310](https://github.com/ryz310))
+* [#216](https://github.com/ryz310/my_api_client/pull/216) Bump webmock from 3.8.2 to 3.8.3 ([@ryz310](https://github.com/ryz310))
+
 ## v0.14.0.pre (Feb 23, 2020)
 
 ### Refactoring
