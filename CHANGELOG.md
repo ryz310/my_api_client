@@ -1,6 +1,13 @@
 # Change log
 
-## v0.14.0.pre (Feb 23, 2020)
+## v0.14.0 (Mar 14, 2020)
+
+### Feature
+
+* [#211](https://github.com/ryz310/my_api_client/pull/211) Integration testing using the jets framework ([@ryz310](https://github.com/ryz310))
+* [#213](https://github.com/ryz310/my_api_client/pull/213) Add status API to integration testing ([@ryz310](https://github.com/ryz310))
+* [#214](https://github.com/ryz310/my_api_client/pull/214) Add error API to integration testing ([@ryz310](https://github.com/ryz310))
+* [#215](https://github.com/ryz310/my_api_client/pull/215) Update the REST API to enhance integration testing ([@ryz310](https://github.com/ryz310))
 
 ### Refactoring
 
@@ -60,6 +67,7 @@
 ### Rubocop Challenge
 
 * [#205](https://github.com/ryz310/my_api_client/pull/205) Re-generate .rubocop_todo.yml with RuboCop v0.80.0 ([@ryz310](https://github.com/ryz310))
+* [#210](https://github.com/ryz310/my_api_client/pull/210) Re-generate .rubocop_todo.yml with RuboCop v0.80.1 ([@ryz310](https://github.com/ryz310))
 
 ### Dependabot
 
@@ -68,6 +76,7 @@
 * [#194](https://github.com/ryz310/my_api_client/pull/194) Bump bugsnag from 6.12.2 to 6.13.0 ([@ryz310](https://github.com/ryz310))
 * [#197](https://github.com/ryz310/my_api_client/pull/197) Bump webmock from 3.8.0 to 3.8.1 ([@ryz310](https://github.com/ryz310))
 * [#199](https://github.com/ryz310/my_api_client/pull/199) Bump webmock from 3.8.1 to 3.8.2 ([@ryz310](https://github.com/ryz310))
+* [#216](https://github.com/ryz310/my_api_client/pull/216) Bump webmock from 3.8.2 to 3.8.3 ([@ryz310](https://github.com/ryz310))
 
 ### Renovate
 
