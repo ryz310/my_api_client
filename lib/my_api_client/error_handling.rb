@@ -29,8 +29,9 @@ module MyApiClient
       # @option status_code [String, Range, Integer, Regexp]
       #   Verifies response HTTP status code and raises error if matched
       # @option json [Hash, Symbol]
-      #   Verifies response body as JSON and raises error if matched.
-      #   If specified `:forbid_nil`, it forbid `nil` on response_body.
+      #   Specify the validation target value path included in the response body
+      #   as JsonPath expression.
+      #   If specified `:forbid_nil`, it forbid `nil` at the response body.
       # @option with [Symbol]
       #   Calls specified method when error detected
       # @option raise [MyApiClient::Error]

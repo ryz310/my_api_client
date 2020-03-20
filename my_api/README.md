@@ -28,6 +28,12 @@ This API returns arbitrary error code as JSON.
 
 * `GET error/:code`
 
+### My Pagination API
+
+This API returns a response including pagination links.
+
+* `GET pagination?page=1`
+
 ## Deployment
 
 You need to prepare following environment variables:

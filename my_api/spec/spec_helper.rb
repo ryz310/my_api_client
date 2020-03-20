@@ -2,6 +2,7 @@
 
 ENV['JETS_TEST'] = '1'
 ENV['JETS_ENV'] ||= 'test'
+ENV['JETS_STAGE'] ||= 'test'
 # Ensures aws api never called. Fixture home folder does not contain ~/.aws/credentails
 ENV['HOME'] = 'spec/fixtures/home'
 
@@ -23,4 +24,8 @@ end
 
 RSpec.configure do |c|
   c.include Helpers
+end
+
+Jets.application.configure do
+  config.helpers.host = 'https://example.com'
 end
