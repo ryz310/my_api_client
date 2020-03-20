@@ -3,11 +3,49 @@
 ## v0.15.0 (Mar 21, 2020)
 
 ### Feature
-### Bugfix
-### Breaking Change
-### Misc
 
 * [#220](https://github.com/ryz310/my_api_client/pull/220) Pageable HTTP request ([@ryz310](https://github.com/ryz310))
+    * Add `#pageable_get` method (alias: `#pget`)
+    * For example:
+        * API client definition
+          ```ruby
+          class MyPaginationApiClient < ApplicationApiClient
+            endpoint 'https://example.com/v1'
+
+            # GET pagination?page=1
+            def pagination
+              pageable_get 'pagination', paging: '$.links.next', headers: headers, query: { page: 1 }
+            end
+
+            private
+
+            def headers
+              { 'Content-Type': 'application/json;charset=UTF-8' }
+            end
+          end
+          ```
+        * The pagination API response
+          ```json
+          {
+            "links": {
+              "next": "https://example.com/pagination?page=3",
+              "previous": "https://example.com/pagination?page=1",
+            },
+            "page": 2
+          }
+          ```
+        * Usage
+          ```ruby
+          api_clinet = MyPaginationApiClient.new
+          api_clinet.pagination.each do |response|
+            # Do something.
+          end
+
+          p = api_clinet.pagination
+          p.next # => 1st page result
+          p.next # => 2nd page result
+          p.next # => 3rd page result
+          ```
 
 ## v0.14.0 (Mar 14, 2020)
 
