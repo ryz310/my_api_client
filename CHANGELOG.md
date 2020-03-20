@@ -1,5 +1,14 @@
 # Change log
 
+## v0.15.0 (Mar 21, 2020)
+
+### Feature
+### Bugfix
+### Breaking Change
+### Misc
+
+* [#220](https://github.com/ryz310/my_api_client/pull/220) Pageable HTTP request ([@ryz310](https://github.com/ryz310))
+
 ## v0.14.0 (Mar 14, 2020)
 
 ### Feature
