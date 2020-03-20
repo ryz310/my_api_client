@@ -24,3 +24,7 @@ end
 RSpec.configure do |c|
   c.include Helpers
 end
+
+Jets.application.configure do
+  config.helpers.host = 'https://example.com'
+end
