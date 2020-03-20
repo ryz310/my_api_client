@@ -19,12 +19,10 @@ module MyApiClient
           #   Query string.
           # @param body [Hash, nil]
           #   Request body. You should not specify it when use GET method.
-          # @return [Sawyer::Resouce]
+          # @return [Sawyer::Resource]
           #   Response body instance.
           def #{http_method}(pathname, headers: nil, query: nil, body: nil)
-            query_strings = query.present? ? '?' + query&.to_query : ''
-            uri = URI.join(File.join(endpoint, pathname), query_strings)
-            response = call(:_request, :#{http_method}, uri, headers, body)
+            response = call(:_request_with_relative_uri, :#{http_method}, pathname, headers, query, body)
             response.data
           end
         METHOD

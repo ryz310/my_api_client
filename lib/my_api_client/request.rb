@@ -7,7 +7,28 @@ module MyApiClient
 
     private
 
-    # Executes HTTP request.
+    # Executes HTTP request with relative URI.
+    #
+    # @param http_method [Symbol]
+    #   HTTP method. e.g. `:get`, `:post`, `:patch` and `:delete`.
+    # @param pathname [String]
+    #   Pathname of the request target URL.
+    #   It's joined with the defined by `endpoint`.
+    # @param headers [Hash, nil]
+    #   Request headers.
+    # @param query [Hash, nil]
+    #   Query string.
+    # @param body [Hash, nil]
+    #   Request body.
+    # @return [Sawyer::Response]
+    #   Response instance.
+    def _request_with_relative_uri(http_method, pathname, headers, query, body)
+      query_strings = query.present? ? '?' + query&.to_query : ''
+      uri = URI.join(File.join(endpoint, pathname), query_strings)
+      _request_with_absolute_uri(http_method, uri, headers, body)
+    end
+
+    # Executes HTTP request with absolute URI.
     #
     # @param http_method [Symbol]
     #   HTTP method. e.g. `:get`, `:post`, `:patch` and `:delete`.
@@ -19,13 +40,11 @@ module MyApiClient
     #   Request body.
     # @return [Sawyer::Response]
     #   Response instance.
-    def _request(http_method, uri, headers, body)
-      request_params = Params::Request.new(http_method, uri, headers, body)
-      request_logger = Logger.new(logger, http_method, uri)
+    def _request_with_absolute_uri(http_method, uri, headers, body)
       Executor.call(
         instance: self,
-        request_params: request_params,
-        request_logger: request_logger,
+        request_params: Params::Request.new(http_method, uri, headers, body),
+        request_logger: Logger.new(logger, http_method, uri),
         faraday_options: faraday_options
       )
     end

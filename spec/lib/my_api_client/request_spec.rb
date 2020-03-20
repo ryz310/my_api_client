@@ -1,26 +1,82 @@
 # frozen_string_literal: true
 
 RSpec.describe MyApiClient::Request do
-  describe '#_request' do
-    subject(:request) { instance.send(:_request, http_method, uri, headers, body) }
+  let(:mock_class) do
+    Class.new do
+      include MyApiClient::Request
+      include MyApiClient::Config
 
-    let(:mock_class) do
-      Class.new do
-        include MyApiClient::Request
-        include MyApiClient::Config
+      endpoint 'https://example.com/v1'
 
-        http_open_timeout 2.seconds
-        http_read_timeout 3.seconds
+      http_open_timeout 2.seconds
+      http_read_timeout 3.seconds
 
-        attr_reader :logger
+      attr_reader :logger
 
-        def initialize
-          @logger = ::Logger.new(STDOUT)
-        end
+      def initialize
+        @logger = ::Logger.new(STDOUT)
+      end
+    end
+  end
+
+  let(:instance) { mock_class.new }
+
+  describe '#_request_with_relative_uri' do
+    subject(:request) do
+      instance.send(:_request_with_relative_uri, http_method, pathname, headers, query, body)
+    end
+
+    let(:pathname) { 'path/to/resource' }
+    let(:headers) { { 'Content-Type': 'application/json;charset=UTF-8' } }
+    let(:response) { instance_double(Sawyer::Response) }
+
+    before { allow(instance).to receive(:_request_with_absolute_uri).and_return(response) }
+
+    context 'with GET method' do
+      let(:http_method) { :get }
+      let(:query) { { key: 'value' } }
+      let(:body) { nil }
+
+      it 'calls the request method with absolute URL' do
+        request
+        expect(instance).to have_received(:_request_with_absolute_uri).with(
+          :get,
+          URI.parse('https://example.com/v1/path/to/resource?key=value'),
+          headers,
+          body
+        )
+      end
+
+      it 'returns a return value of the request method' do
+        expect(request).to eq response
       end
     end
 
-    let(:instance) { mock_class.new }
+    context 'with POST method' do
+      let(:http_method) { :post }
+      let(:query) { nil }
+      let(:body) { { name: 'John', birth: Date.today } }
+
+      it 'calls the request method with absolute URL' do
+        request
+        expect(instance).to have_received(:_request_with_absolute_uri).with(
+          :post,
+          URI.parse('https://example.com/v1/path/to/resource'),
+          headers,
+          body
+        )
+      end
+
+      it 'returns a return value of the request method' do
+        expect(request).to eq response
+      end
+    end
+  end
+
+  describe '#_request_with_absolute_uri' do
+    subject(:request) do
+      instance.send(:_request_with_absolute_uri, http_method, uri, headers, body)
+    end
 
     let(:http_method) { :get }
     let(:uri) { URI.parse('https://example.com/v1/path/to/resource?key=value') }
