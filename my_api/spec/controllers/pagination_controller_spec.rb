@@ -5,7 +5,7 @@ describe PaginationController, type: :controller do
     let(:first_page) do
       {
         links: {
-          next: 'https://example.com/pagination?page=2',
+          next: 'https://example.com/test/pagination?page=2',
         },
         page: 1,
       }.to_json
@@ -14,8 +14,8 @@ describe PaginationController, type: :controller do
     let(:second_page) do
       {
         links: {
-          next: 'https://example.com/pagination?page=3',
-          previous: 'https://example.com/pagination?page=1',
+          next: 'https://example.com/test/pagination?page=3',
+          previous: 'https://example.com/test/pagination?page=1',
         },
         page: 2,
       }.to_json
@@ -24,7 +24,7 @@ describe PaginationController, type: :controller do
     let(:third_page) do
       {
         links: {
-          previous: 'https://example.com/pagination?page=2',
+          previous: 'https://example.com/test/pagination?page=2',
         },
         page: 3,
       }.to_json

@@ -2,6 +2,7 @@
 
 ENV['JETS_TEST'] = '1'
 ENV['JETS_ENV'] ||= 'test'
+ENV['JETS_STAGE'] ||= 'test'
 # Ensures aws api never called. Fixture home folder does not contain ~/.aws/credentails
 ENV['HOME'] = 'spec/fixtures/home'
 
