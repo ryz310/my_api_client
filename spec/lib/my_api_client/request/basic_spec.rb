@@ -32,13 +32,13 @@ RSpec.describe MyApiClient::Request::Basic do
 
       before { allow(instance).to receive(:_request_with_relative_uri).and_return(response) }
 
-      it 'calls the request executor class with builded instances' do
+      it 'calls the request method with relative URL' do
         execute
         expect(instance).to have_received(:_request_with_relative_uri)
           .with(http_method, pathname, headers, query, body)
       end
 
-      it 'returns a return value of the request executor class' do
+      it 'returns a response body object' do
         expect(execute).to eq resource
       end
     end
