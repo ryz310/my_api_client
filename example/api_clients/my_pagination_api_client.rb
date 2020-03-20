@@ -7,7 +7,7 @@ require_relative 'application_api_client'
 class MyPaginationApiClient < ApplicationApiClient
   # GET pagination?page=1
   def pagination
-    pget 'pagination', paging: '$.links.next', headers: headers
+    pget 'pagination', paging: '$.links.next', headers: headers, query: { page: 1 }
   end
 
   private
