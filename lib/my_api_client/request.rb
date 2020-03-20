@@ -4,6 +4,7 @@ module MyApiClient
   # Provides HTTP request method.
   module Request
     include Basic
+    include Pagination
 
     private
 
