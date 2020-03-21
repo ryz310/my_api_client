@@ -147,30 +147,31 @@ end
 
 ### Error handling
 
-上記のコードにエラーハンドリングを追加してみます。
+`my_api_client` ではレスポンスの内容によって例外を発生させるエラーハンドリングを定義できます。ここでは例として前述のコードにエラーハンドリングを定義しています。
 
 ```ruby
 class ExampleApiClient < MyApiClient::Base
   endpoint 'https://example.com'
 
-  error_handling status_code: 400..499, raise: MyApiClient::ClientError
+  error_handling status_code: 400..499,
+                 raise: MyApiClient::ClientError
 
-  error_handling status_code: 500..599 do |params, logger|
+  error_handling status_code: 500..599, raise: MyApiClient::ServerError do |_params, logger|
     logger.warn 'Server error occurred.'
-    raise MyApiClient::ServerError, params
   end
 
-  error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
+  error_handling json: { '$.errors.code': 10..19 },
+                 raise: MyApiClient::ClientError,
+                 with: :my_error_handling
 
   # Omission...
 
   private
 
-  # @param params [MyApiClient::Params::Params] HTTP req and res params
+  # @param params [MyApiClient::Params::Params] HTTP reqest and response params
   # @param logger [MyApiClient::Request::Logger] Logger for a request processing
   def my_error_handling(params, logger)
     logger.warn "Response Body: #{params.response.body.inspect}"
-    raise MyApiClient::ClientError, params
   end
 end
 ```
@@ -183,28 +184,25 @@ error_handling status_code: 400..499, raise: MyApiClient::ClientError
 
 これは `ExampleApiClient` からのリクエスト全てにおいて、レスポンスのステータスコードが `400..499` であった場合に `MyApiClient::ClientError` が例外として発生するようになります。 `ExampleApiClient` を継承したクラスにもエラーハンドリングは適用されます。ステータスコードのエラーハンドリングは親クラスで定義すると良いと思います。
 
-なお、 `status_code` には `Integer` `Range` `Regexp` が指定可能です。`raise` には `MyApiClient::Error` を継承したクラスが指定可能です。`my_api_client` で標準で定義しているエラークラスについては以下のソースコードをご確認下さい。
+なお、 `status_code` には `Integer` `Range` `Regexp` が指定可能です。
+
+`raise` には `MyApiClient::Error` を継承したクラスが指定可能です。`my_api_client` で標準で定義しているエラークラスについては以下のソースコードをご確認下さい。 `raise` を省略した場合は `MyApiClient::Error` を発生するようになります。
 
 https://github.com/ryz310/my_api_client/blob/master/lib/my_api_client/errors.rb
 
-次に、 `raise` の代わりに `block` を指定する場合について。
+次に、 `block` を指定する場合について。
 
 ```ruby
-error_handling status_code: 500..599 do |params, logger|
+error_handling status_code: 500..599, raise: MyApiClient::ServerError do |_params, logger|
   logger.warn 'Server error occurred.'
-  raise MyApiClient::ServerError, params
 end
 ```
 
-上記の例であれば、ステータスコードが `500..599` の場合に `block` の内容が実行れます。引数の `params` にはリクエスト情報とレスポンス情報が含まれています。`logger` はログ出力用インスタンスですが、このインスタンスを使ってログ出力すると、以下のようにリクエスト情報がログ出力に含まれるようになり、デバッグの際に便利です。
+上記の例であれば、ステータスコードが `500..599` の場合に `MyApiClient::ServerError`  を発生させる前に `block` の内容が実行れます。引数の `params` にはリクエスト情報とレスポンス情報が含まれています。`logger` はログ出力用インスタンスですが、このインスタンスを使ってログ出力すると、以下のようにリクエスト情報がログ出力に含まれるようになり、デバッグの際に便利です。
 
 ```text
 API request `GET https://example.com/path/to/resouce`: "Server error occurred."
 ```
-
-リクエストに失敗した場合は例外処理を実行する、という設計が一般的だと思われるので、基本的にブロックの最後に `raise` を実行する事になると思います。
-
-最後に `json` と `with` を利用する場合について。
 
 ```ruby
 error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
@@ -221,7 +219,7 @@ error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
 }
 ```
 
-`with` にはインスタンスメソッド名を指定することで、エラーを検出した際に任意のメソッドを実行させることができます。メソッドに渡される引数は `block` 定義の場合と同じく `params` と `logger` です。
+`with` にはインスタンスメソッド名を指定することで、エラーを検出した際、例外を発生させる前に任意のメソッドを実行させることができます。メソッドに渡される引数は `block` 定義の場合と同じく `params` と `logger` です。なお、 `block` と `with` は同時には利用できません。
 
 ```ruby
 # @param params [MyApiClient::Params::Params] HTTP req and res params
