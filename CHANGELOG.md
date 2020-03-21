@@ -46,6 +46,7 @@
           p.next # => 2nd page result
           p.next # => 3rd page result
           ```
+* [#223](https://github.com/ryz310/my_api_client/pull/223) Use Enumerator::Lazy instead of Enumerator ([@ryz310](https://github.com/ryz310))
 
 ## v0.14.0 (Mar 14, 2020)
 
