@@ -83,6 +83,68 @@ api_clinet.get_users #=> #<Sawyer::Response>
 
 続いて、 `#get_users` や `#post_user` を定義します。メソッド名には API のタイトルを付けると良いと思います。メソッド内部で `#get` や `#post` を呼び出していますが、これがリクエスト時の HTTP Method になります。他にも `#patch` `#put` `#delete` が利用可能です。
 
+### Pagination
+
+API の中にはレスポンスに結果の続きを取得するための URL を含んでいるものがあります。
+
+MyApiClient では、このような API を enumerable に扱うための `#pageable_get` というメソッドを用意しています。以下に例を示します。
+
+```ruby
+class MyPaginationApiClient < ApplicationApiClient
+  endpoint 'https://example.com/v1'
+
+  # GET pagination?page=1
+  def pagination
+    pageable_get 'pagination', paging: '$.links.next', headers: headers, query: { page: 1 }
+  end
+
+  private
+
+  def headers
+    { 'Content-Type': 'application/json;charset=UTF-8' }
+  end
+end
+```
+
+上記の例の場合、最初に `GET https://example.com/v1/pagination?page=1` に対してリクエストが実行され、続けてレスポンス JSON の `$.link.next` に含まれる URL に対して enumerable にリクエストを実行します。
+
+例えば以下のようなレスポンスであれば、`$.link.next` は `"https://example.com/pagination?page=3"` を示します。
+
+```json
+{
+  "links": {
+    "next": "https://example.com/pagination?page=3",
+    "previous": "https://example.com/pagination?page=1",
+  },
+  "page": 2
+}
+```
+
+そして `#pageable_get` は [Enumerator::Lazy](https://docs.ruby-lang.org/ja/latest/class/Enumerator=3a=3aLazy.html) を返すので、 `#each` や `#next` を実行することで次の結果を取得できます。
+
+```ruby
+api_clinet = MyPaginationApiClient.new
+api_clinet.pagination.each do |response|
+  # Do something.
+end
+
+p = api_clinet.pagination
+p.next # => 1st page result
+p.next # => 2nd page result
+p.next # => 3rd page result
+```
+
+なお、`#each` はレスポンスに含まれる `paging` の値が nil になるまで繰り返されるのでご注意ください。例えば `#take` と組み合わせることでページネーションの上限を設定できます。
+
+`#pageable_get` の alias として `#pget` も利用可能です。
+
+```ruby
+# GET pagination?page=1
+def pagination
+  pget 'pagination', paging: '$.links.next', headers: headers, query: { page: 1 }
+end
+```
+
 ### Error handling
 
 上記のコードにエラーハンドリングを追加してみます。
