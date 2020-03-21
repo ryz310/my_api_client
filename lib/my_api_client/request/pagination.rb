@@ -17,7 +17,7 @@ module MyApiClient
       #   Query string.
       # @param body [Hash, nil]
       #   Request body. You should not specify it when use GET method.
-      # @return [Enumerator]
+      # @return [Enumerator::Lazy]
       #   Yields the pagination API response.
       def pageable_get(pathname, paging:, headers: nil, query: nil)
         Enumerator.new do |y|
@@ -30,7 +30,7 @@ module MyApiClient
 
             response = call(:_request_with_absolute_uri, :get, next_uri, headers, nil)
           end
-        end
+        end.lazy
       end
 
       alias pget pageable_get

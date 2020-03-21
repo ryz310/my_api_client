@@ -120,7 +120,7 @@ end
 }
 ```
 
-そして `#pageable_get` は [Enumerator](https://docs.ruby-lang.org/ja/latest/class/Enumerator.html) を返すので、 `#each` や `#next` を実行することで次の結果を取得できます。
+そして `#pageable_get` は [Enumerator::Lazy](https://docs.ruby-lang.org/ja/latest/class/Enumerator=3a=3aLazy.html) を返すので、 `#each` や `#next` を実行することで次の結果を取得できます。
 
 ```ruby
 api_clinet = MyPaginationApiClient.new
