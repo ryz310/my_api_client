@@ -23,8 +23,8 @@ module MyApiClient
       #   Raises specified error when error detected. default: MyApiClient::Error
       # @option block [Proc]
       #   Executes the block when error detected
-      # @return [Proc]
-      #   Returns value as `Proc`.
+      # @return [Proc, nil]
+      #   Returns the error handler as "Proc". If no error occurs, return `nil`.
       def initialize(**options)
         options[:raise] ||= MyApiClient::Error
         verify_and_set_arguments(**options)
@@ -43,12 +43,30 @@ module MyApiClient
 
       def generate_error_handler
         if _block
-          ->(params, logger) { _block.call(params, logger) }
+          block_caller
         elsif _with
-          ->(params, logger) { _instance.send(_with, params, logger) }
+          method_caller
         else
-          ->(params, _) { raise _raise, params }
+          error_raiser
         end
+      end
+
+      def block_caller
+        lambda { |params, logger|
+          _block.call(params, logger)
+          error_raiser.call(params, logger)
+        }
+      end
+
+      def method_caller
+        lambda { |params, logger|
+          _instance.send(_with, params, logger)
+          error_raiser.call(params, logger)
+        }
+      end
+
+      def error_raiser
+        ->(params, _) { raise _raise, params }
       end
 
       # Verify given options and raise error if they are incorrect.

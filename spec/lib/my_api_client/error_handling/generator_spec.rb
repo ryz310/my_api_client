@@ -7,6 +7,14 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
 
   subject(:execute) { described_class.call(**options) }
 
+  let(:safe_execution) do
+    begin
+      execute.call(params, logger)
+    rescue MyApiClient::Error
+      nil
+    end
+  end
+
   let(:options) do
     required_params.merge matcher_options.merge error_handling_options
   end
@@ -22,38 +30,81 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
       let(:params) { instance_double(MyApiClient::Params::Params, metadata: {}) }
       let(:logger) { instance_double(MyApiClient::Request::Logger) }
 
+      shared_examples 'returns a Proc instance' do |error_class|
+        it "raises #{error_class.name} when executed" do
+          expect { execute.call(params, logger) }.to raise_error(error_class)
+        end
+      end
+
       context 'with `raise` option' do
         let(:error_handling_options) do
           { raise: MyApiClient::ClientError }
         end
 
-        it 'returns a Proc instance that raises specified exception when executed' do
-          expect { execute.call(params, logger) }
-            .to raise_error(MyApiClient::ClientError)
+        it_behaves_like 'returns a Proc instance', MyApiClient::ClientError
+
+        context 'with `block` option' do
+          let(:error_handling_options) do
+            { raise: MyApiClient::ClientError, block: block }
+          end
+
+          let(:block) { instance_double(Proc, call: nil) }
+
+          it_behaves_like 'returns a Proc instance', MyApiClient::ClientError do
+            it 'calls the block when executed' do
+              safe_execution
+              expect(block).to have_received(:call).with(params, logger)
+            end
+          end
+        end
+
+        context 'with `with` option' do
+          let(:error_handling_options) do
+            { raise: MyApiClient::ClientError, with: :my_error_handling }
+          end
+
+          it_behaves_like 'returns a Proc instance', MyApiClient::ClientError do
+            it 'calls the instance method when executed' do
+              safe_execution
+              expect(instance).to have_received(:my_error_handling).with(params, logger)
+            end
+          end
         end
       end
 
-      context 'with `blcok` option' do
+      context 'without `raise` option' do
         let(:error_handling_options) do
-          { block: block }
+          {}
         end
 
-        let(:block) { instance_double(Proc, call: nil) }
+        it_behaves_like 'returns a Proc instance', MyApiClient::Error
 
-        it 'returns a Proc instance that specified as the block' do
-          execute.call(params, logger)
-          expect(block).to have_received(:call).with(params, logger)
+        context 'with `block` option' do
+          let(:error_handling_options) do
+            { block: block }
+          end
+
+          let(:block) { instance_double(Proc, call: nil) }
+
+          it_behaves_like 'returns a Proc instance', MyApiClient::Error do
+            it 'calls the block when executed' do
+              safe_execution
+              expect(block).to have_received(:call).with(params, logger)
+            end
+          end
         end
-      end
 
-      context 'with `with` option' do
-        let(:error_handling_options) do
-          { with: :my_error_handling }
-        end
+        context 'with `with` option' do
+          let(:error_handling_options) do
+            { with: :my_error_handling }
+          end
 
-        it 'returns a Proc instance that calls the instance method when executed' do
-          execute.call(params, logger)
-          expect(instance).to have_received(:my_error_handling).with(params, logger)
+          it_behaves_like 'returns a Proc instance', MyApiClient::Error do
+            it 'calls the instance method when executed' do
+              safe_execution
+              expect(instance).to have_received(:my_error_handling).with(params, logger)
+            end
+          end
         end
       end
     end
@@ -69,7 +120,7 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
         it { is_expected.to be_nil }
       end
 
-      context 'with `blcok` option' do
+      context 'with `block` option' do
         let(:error_handling_options) do
           { block: -> {} }
         end
