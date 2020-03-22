@@ -33,5 +33,19 @@ RSpec.describe 'Integration test with My Status API', type: :integration do
           .to raise_error(MyErrors::Forbidden)
       end
     end
+
+    context 'with status code: 404' do
+      it do
+        expect { api_client.get_status(status: 404) }
+          .to raise_error(MyApiClient::ClientError::NotFound)
+      end
+    end
+
+    context 'with status code: 500' do
+      it do
+        expect { api_client.get_status(status: 500) }
+          .to raise_error(MyApiClient::ServerError::InternalServerError)
+      end
+    end
   end
 end

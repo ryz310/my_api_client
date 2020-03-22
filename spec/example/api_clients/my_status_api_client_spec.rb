@@ -47,7 +47,7 @@ RSpec.describe MyStatusApiClient, type: :api_client do
 
         it do
           expect { api_request! }
-            .to be_handled_as_an_error(MyApiClient::ClientError)
+            .to be_handled_as_an_error(MyApiClient::ClientError::NotFound)
             .when_receive(status_code: 404)
         end
       end
@@ -57,7 +57,7 @@ RSpec.describe MyStatusApiClient, type: :api_client do
 
         it do
           expect { api_request! }
-            .to be_handled_as_an_error(MyApiClient::ServerError)
+            .to be_handled_as_an_error(MyApiClient::ServerError::InternalServerError)
             .when_receive(status_code: 500)
         end
       end
