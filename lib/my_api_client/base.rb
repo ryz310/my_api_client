@@ -7,6 +7,7 @@ module MyApiClient
     include MyApiClient::ErrorHandling
     include MyApiClient::Exceptions
     include MyApiClient::Request
+    include MyApiClient::DefaultErrorHandlers
 
     if ActiveSupport::VERSION::STRING >= '5.2.0'
       class_attribute :logger, instance_writer: false, default: ::Logger.new(STDOUT)
