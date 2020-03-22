@@ -7,7 +7,6 @@ module MyApiClient
     include MyApiClient::ErrorHandling
     include MyApiClient::Exceptions
     include MyApiClient::Request
-    include MyApiClient::DefaultErrorHandlers
 
     if ActiveSupport::VERSION::STRING >= '5.2.0'
       class_attribute :logger, instance_writer: false, default: ::Logger.new(STDOUT)
@@ -18,6 +17,8 @@ module MyApiClient
       self.logger = ::Logger.new(STDOUT)
       self.error_handlers = []
     end
+
+    include MyApiClient::DefaultErrorHandlers
 
     # NOTE: This class **MUST NOT** implement #initialize method. Because it
     #       will become constraint that need call #super in the #initialize at
