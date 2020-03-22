@@ -226,7 +226,6 @@ error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
 # @param logger [MyApiClient::Request::Logger] Logger for a request processing
 def my_error_handling(params, logger)
   logger.warn "Response Body: #{params.response.body.inspect}"
-  raise MyApiClient::ClientError, params
 end
 ```
 
