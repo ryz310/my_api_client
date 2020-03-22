@@ -25,8 +25,4 @@ module MyApiClient
       { error: super, params: params }.inspect
     end
   end
-
-  # NOTE: The built-in error classes are following. Although they are prepared
-  #       to save the trouble of defining, but you can create any error classes
-  #       which inherit the ancestor error class.
 end

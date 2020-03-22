@@ -7,6 +7,9 @@ module MyApiClient
 
     # rubocop:disable Metrics/BlockLength
     included do
+      # NOTE: The built-in error handlers are following. Although they are prepared
+      #       to save the trouble of defining, but you can override any error handlers
+      #       in your API client class.
       error_handling status_code: 400..499, raise: ClientError
       error_handling status_code: 400, raise: ClientError::BadRequest
       error_handling status_code: 401, raise: ClientError::Unauthorized
