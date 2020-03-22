@@ -20,9 +20,4 @@ class ApplicationApiClient < MyApiClient::Base
   # seconds.
   #
   # http_read_timeout 3.seconds
-
-  # Catch the exception and re-execution after any seconds, like as ActiveJob.
-  # Please note that it is executed as a synchronous process unlike ActiveJob.
-  #
-  # retry_on MyApiClient::NetworkError, wait: 5.seconds, attempts: 3
 end

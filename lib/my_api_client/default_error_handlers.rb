@@ -54,6 +54,10 @@ module MyApiClient
       error_handling status_code: 509, raise: ServerError::BandwidthLimitExceeded
       error_handling status_code: 510, raise: ServerError::NotExtended
       error_handling status_code: 511, raise: ServerError::NetworkAuthenticationRequired
+
+      # Catch the exception and re-execution after any seconds, like as ActiveJob.
+      # Please note that it is executed as a synchronous process unlike ActiveJob.
+      retry_on NetworkError, wait: 0.3.seconds, attempts: 3
     end
     # rubocop:enable Metrics/BlockLength
   end
