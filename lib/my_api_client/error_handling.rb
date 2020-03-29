@@ -9,9 +9,8 @@ module MyApiClient
   # @example
   #   error_handling status_code: 200, json: :forbid_nil
   #   error_handling status_code: 400..499, raise: MyApiClient::ClientError
-  #   error_handling status_code: 500..599 do |params, logger|
+  #   error_handling status_code: 500..599, raise: MyApiClient::ServerError do |params, logger|
   #     logger.warn 'Server error occurred.'
-  #     raise MyApiClient::ServerError, params
   #   end
   #
   #   error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
@@ -33,7 +32,7 @@ module MyApiClient
       #   as JsonPath expression.
       #   If specified `:forbid_nil`, it forbid `nil` at the response body.
       # @option with [Symbol]
-      #   Calls specified method when error detected
+      #   Calls specified method before raising exception when error detected.
       # @option raise [MyApiClient::Error]
       #   Raises specified error when an invalid response detected.
       #   Should be inherited `MyApiClient::Error` class.
@@ -42,7 +41,7 @@ module MyApiClient
       #   If the error detected, retries the API request. Requires `raise` option.
       #   You can set `true` or `retry_on` options (`wait` and `attempts`).
       # @yield [MyApiClient::Params::Params, MyApiClient::Request::Logger]
-      #   Executes the block when error detected.
+      #   Executes the block before raising exception when error detected.
       #   Forbid to be used with the` retry` option.
       def error_handling(**options, &block)
         options[:block] = block

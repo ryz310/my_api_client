@@ -18,6 +18,8 @@ module MyApiClient
       self.error_handlers = []
     end
 
+    include MyApiClient::DefaultErrorHandlers
+
     # NOTE: This class **MUST NOT** implement #initialize method. Because it
     #       will become constraint that need call #super in the #initialize at
     #       definition of the child classes.
