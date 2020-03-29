@@ -2,16 +2,63 @@
 
 ## v0.16.0 (Mar 29, 2020)
 
-### Feature
-### Bugfix
 ### Breaking Change
-### Misc
 
-* [#225](https://github.com/ryz310/my_api_client/pull/225) Raise an exception whenever an error is detected ([@ryz310](https://github.com/ryz310))
+#### [#225](https://github.com/ryz310/my_api_client/pull/225) Raise an exception whenever an error is detected ([@ryz310](https://github.com/ryz310))
+
+Until now, using `with` or `block` in `error_handling` did not automatically raise an exception, but will now always raise an exception when an error is detected.
+You can specify raising error class with `raise` option.
+
+**Before**
+
+```rb
+error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
+
+def my_error_handling
+  # Executes this method when an error is detected.
+  # No exception is raised. You can raise an error if necessary.
+end
+```
+```rb
+error_handling status_code: 500..599 do |_params, logger|
+  # Executes this block when an error is detected.
+  # No exception is raised. You can raise an error if necessary.
+end
+```
+
+**After**
+
+```rb
+error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
+
+def my_error_handling
+  # Executes this method when an error is detected.
+  # And then raise `MyApiClient::Error`.
+end
+```
+```rb
+error_handling status_code: 500..599 do |params, logger|
+  # Executes this block when an error is detected.
+  # And then raise `MyApiClient::Error`.
+end
+```
+
+#### [#226](https://github.com/ryz310/my_api_client/pull/226) Default error handlers ([@ryz310](https://github.com/ryz310))
+
+Until now, you needed define all `error_handling` or `retry_on` yourself. But will now some `error_handling` and `retry_on` are prepared as default.
+
+You can check default `error_handling` or `retry_on` here.
+
+See: https://github.com/ryz310/my_api_client/blob/master/lib/my_api_client/default_error_handlers.rb
+
+### Dependabot
+
 * [#227](https://github.com/ryz310/my_api_client/pull/227) ryz310/dependabot/bundler/pry-byebug-3.9.0 ([@ryz310](https://github.com/ryz310))
 * [#228](https://github.com/ryz310/my_api_client/pull/228) ryz310/dependabot/bundler/my_api/jets-2.3.15 ([@ryz310](https://github.com/ryz310))
+
+### Misc
+
 * [#229](https://github.com/ryz310/my_api_client/pull/229) Edit dependabot configuration ([@ryz310](https://github.com/ryz310))
-* [#226](https://github.com/ryz310/my_api_client/pull/226) Default error handlers ([@ryz310](https://github.com/ryz310))
 
 ## v0.15.0 (Mar 21, 2020)
 
