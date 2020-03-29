@@ -9,9 +9,8 @@ module MyApiClient
   # @example
   #   error_handling status_code: 200, json: :forbid_nil
   #   error_handling status_code: 400..499, raise: MyApiClient::ClientError
-  #   error_handling status_code: 500..599 do |params, logger|
+  #   error_handling status_code: 500..599, raise: MyApiClient::ServerError do |params, logger|
   #     logger.warn 'Server error occurred.'
-  #     raise MyApiClient::ServerError, params
   #   end
   #
   #   error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling

@@ -6,7 +6,9 @@ MyApiClient は API リクエストクラスを作成するための汎用的な
 
 ただし、 Sawyer はダミーデータの作成が難しかったり、他の gem で競合することがよくあるので、将来的には依存しないように変更していくかもしれません。
 
-また、 Ruby on Rails で利用することを想定してますが、それ以外の環境でも動作するように作っているつもりです。不具合などあれば Issue ページからご報告下さい。
+また、 Ruby on Rails で利用することを想定してますが、それ以外の環境でも動作するように作っています。不具合などあれば Issue ページからご報告下さい。
+
+[toc]
 
 ## Supported Versions
 
@@ -188,7 +190,7 @@ error_handling status_code: 400..499, raise: MyApiClient::ClientError
 
 `raise` には `MyApiClient::Error` を継承したクラスが指定可能です。`my_api_client` で標準で定義しているエラークラスについては以下のソースコードをご確認下さい。 `raise` を省略した場合は `MyApiClient::Error` を発生するようになります。
 
-https://github.com/ryz310/my_api_client/blob/master/lib/my_api_client/errors.rb
+https://github.com/ryz310/my_api_client/blob/master/lib/my_api_client/errors
 
 次に、 `block` を指定する場合について。
 
@@ -226,9 +228,20 @@ error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
 # @param logger [MyApiClient::Request::Logger] Logger for a request processing
 def my_error_handling(params, logger)
   logger.warn "Response Body: #{params.response.body.inspect}"
-  raise MyApiClient::ClientError, params
 end
 ```
+
+#### Default error handling
+
+`my_api_client` では、標準でステータスコード 400 ~ 500 番台のレスポンスを例外として処理するようにしています。ステータスコードが 400 番台場合は `MyApiClient::ClientError`、 500 番台の場合は `MyApiClient::ServerError` を継承した例外クラスが raise されます。
+
+また、 `MyApiClient::NetworkError` に対しても標準で `retry_on` が定義されています。
+
+いずれも override 可能ですので、必要に応じて `error_handling` を定義して下さい。
+
+以下のファイルで定義しています。
+
+https://github.com/ryz310/my_api_client/blob/master/lib/my_api_client/default_error_handlers.rb
 
 #### Symbol を利用する
 
@@ -298,7 +311,9 @@ end
 
 API リクエストを何度も実行していると回線の不調などによりネットワークエラーが発生する事があります。長時間ネットワークが使えなくなるケースもありますが、瞬間的なエラーであるケースも多々あります。 `MyApiClient` ではネットワーク系の例外はまとめて `MyApiClient::NetworkError` として `raise` されます。この例外の詳細は後述しますが、 `retry_on` を利用する事で、 `ActiveJob` のように任意の例外処理を補足して、一定回数、一定の期間を空けて API リクエストをリトライさせる事ができます。
 
-ただし、 `ActiveJob` とは異なり同期処理でリトライするため、ネットワークの瞬断に備えたリトライ以外ではあまり使う機会はないのではないかと思います。上記の例のように API Limit に備えてリトライするケースもあるかと思いますが、こちらは `ActiveJob` で対応した方が良いと思います。
+なお、 `retry_on MyApiClient::NetworkError` は標準実装されているため、特別に定義せずとも自動的に適用されます。 `wait` や `attempts` に任意の値を設定したい場合のみ定義してご利用ください。
+
+ただし、 `ActiveJob` とは異なり同期処理でリトライするため、ネットワークの瞬断に備えたリトライ以外ではあまり使う機会はないのではないかと思います。上記の例のように API Rate Limit に備えてリトライするケースもあるかと思いますが、こちらは `ActiveJob` で対応した方が良いかもしれません。
 
 ちなみに一応 `discard_on` も実装していますが、作者自身が有効な用途を見出せていないので、詳細は割愛します。良い利用方法があれば教えてください。
 
