@@ -1,5 +1,18 @@
 # Change log
 
+## v0.16.0 (Mar 29, 2020)
+
+### Feature
+### Bugfix
+### Breaking Change
+### Misc
+
+* [#225](https://github.com/ryz310/my_api_client/pull/225) Raise an exception whenever an error is detected ([@ryz310](https://github.com/ryz310))
+* [#227](https://github.com/ryz310/my_api_client/pull/227) ryz310/dependabot/bundler/pry-byebug-3.9.0 ([@ryz310](https://github.com/ryz310))
+* [#228](https://github.com/ryz310/my_api_client/pull/228) ryz310/dependabot/bundler/my_api/jets-2.3.15 ([@ryz310](https://github.com/ryz310))
+* [#229](https://github.com/ryz310/my_api_client/pull/229) Edit dependabot configuration ([@ryz310](https://github.com/ryz310))
+* [#226](https://github.com/ryz310/my_api_client/pull/226) Default error handlers ([@ryz310](https://github.com/ryz310))
+
 ## v0.15.0 (Mar 21, 2020)
 
 ### Feature
