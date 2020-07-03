@@ -8,6 +8,6 @@ class ApplicationApiClient < MyApiClient::Base
 
   self.logger = ::Logger.new(nil)
 
-  http_open_timeout 2.seconds
-  http_read_timeout 3.seconds
+  http_open_timeout 5.seconds
+  http_read_timeout 5.seconds
 end
