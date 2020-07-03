@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'my_api_client/rspec'
-require './example/api_clients/my_pagination_api_client.rb'
+require './example/api_clients/my_pagination_api_client'
 
 RSpec.describe MyPaginationApiClient, type: :api_client do
   let(:api_client) { described_class.new }
