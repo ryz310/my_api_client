@@ -3,6 +3,10 @@
 
 require 'bundler/setup'
 require 'my_api_client'
+require './example/api_clients/my_error_api_client'
+require './example/api_clients/my_rest_api_client'
+require './example/api_clients/my_pagination_api_client'
+require './example/api_clients/my_status_api_client'
 
 # You can add fixtures and/or initialization code here to make experimenting
 # with your gem easier. You can also use a different console, if you like.
