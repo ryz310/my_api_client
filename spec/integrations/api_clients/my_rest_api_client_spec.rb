@@ -35,15 +35,23 @@ RSpec.describe 'Integration test with My REST API', type: :integration do
 
   describe 'POST rest' do
     it 'returns a created post' do
-      response = api_client.create_post(title: 'New title')
+      response = api_client.post_post(title: 'New title')
       expect(response.id).to eq 4
       expect(response.title).to eq 'New title'
     end
   end
 
-  describe 'POST/PUT/PATCH rest/:id' do
+  describe 'PUT rest/:id' do
     it 'returns a updated post' do
-      response = api_client.update_post(id: 3, title: 'Modified title')
+      response = api_client.put_post(id: 3, title: 'Modified title')
+      expect(response.id).to eq 3
+      expect(response.title).to eq 'Modified title'
+    end
+  end
+
+  describe 'PATCH rest/:id' do
+    it 'returns a updated post' do
+      response = api_client.patch_post(id: 3, title: 'Modified title')
       expect(response.id).to eq 3
       expect(response.title).to eq 'Modified title'
     end

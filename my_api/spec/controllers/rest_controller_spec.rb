@@ -60,14 +60,32 @@ describe RestController, type: :controller do
   end
 
   describe '#update' do
-    let(:post) do
+    let(:the_post) do
       { id: 1, title: 'Modified title' }.to_json
     end
 
-    it 'returns a updated post' do
-      patch '/rest/:id', id: 1, title: 'Modified title'
-      expect(response.status).to eq 200
-      expect(response.body).to eq post
+    context 'with POST method' do
+      it 'returns a updated post' do
+        post '/rest/:id', id: 1, title: 'Modified title'
+        expect(response.status).to eq 200
+        expect(response.body).to eq the_post
+      end
+    end
+
+    context 'with PUT method' do
+      it 'returns a updated post' do
+        put '/rest/:id', id: 1, title: 'Modified title'
+        expect(response.status).to eq 200
+        expect(response.body).to eq the_post
+      end
+    end
+
+    context 'with PATCH method' do
+      it 'returns a updated post' do
+        patch '/rest/:id', id: 1, title: 'Modified title'
+        expect(response.status).to eq 200
+        expect(response.body).to eq the_post
+      end
     end
   end
 
