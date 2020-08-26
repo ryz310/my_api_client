@@ -74,8 +74,8 @@ RSpec.describe MyRestApiClient, type: :api_client do
     end
   end
 
-  describe '#create_post' do
-    subject(:api_request!) { api_client.create_post(title: 'New title') }
+  describe '#post_post' do
+    subject(:api_request!) { api_client.post_post(title: 'New title') }
 
     it 'requests to "POST rest"' do
       expect { api_request! }
@@ -92,8 +92,26 @@ RSpec.describe MyRestApiClient, type: :api_client do
     end
   end
 
-  describe '#update_post' do
-    subject(:api_request!) { api_client.update_post(id: 1, title: 'Modified title') }
+  describe '#put_post' do
+    subject(:api_request!) { api_client.put_post(id: 1, title: 'Modified title') }
+
+    it 'requests to "PATCH rest/:id"' do
+      expect { api_request! }
+        .to request_to(:put, URI.join(endpoint, 'rest/1'))
+        .with(headers: headers, body: { title: 'Modified title' })
+    end
+
+    it_behaves_like 'to handle errors' do
+      it do
+        expect { api_request! }
+          .not_to be_handled_as_an_error
+          .when_receive(status_code: 201, body: nil)
+      end
+    end
+  end
+
+  describe '#patch_post' do
+    subject(:api_request!) { api_client.patch_post(id: 1, title: 'Modified title') }
 
     it 'requests to "PATCH rest/:id"' do
       expect { api_request! }

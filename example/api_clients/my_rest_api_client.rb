@@ -18,13 +18,19 @@ class MyRestApiClient < ApplicationApiClient
   end
 
   # POST rest
-  def create_post(title:)
+  def post_post(title:)
     body = { title: title }
     post 'rest', body: body, headers: headers
   end
 
-  # POST/PUT/PATCH rest/:id
-  def update_post(id:, title:)
+  # PUT rest/:id
+  def put_post(id:, title:)
+    body = { title: title }
+    put "rest/#{id}", body: body, headers: headers
+  end
+
+  # PATCH rest/:id
+  def patch_post(id:, title:)
     body = { title: title }
     patch "rest/#{id}", body: body, headers: headers
   end

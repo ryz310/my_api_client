@@ -11,7 +11,7 @@ module MyApiClient
     # Executes HTTP request with relative URI.
     #
     # @param http_method [Symbol]
-    #   HTTP method. e.g. `:get`, `:post`, `:patch` and `:delete`.
+    #   HTTP method. e.g. `:get`, `:post`, `:put`, `:patch` and `:delete`.
     # @param pathname [String]
     #   Pathname of the request target URL.
     #   It's joined with the defined by `endpoint`.
@@ -32,7 +32,7 @@ module MyApiClient
     # Executes HTTP request with absolute URI.
     #
     # @param http_method [Symbol]
-    #   HTTP method. e.g. `:get`, `:post`, `:patch` and `:delete`.
+    #   HTTP method. e.g. `:get`, `:post`, `:put`, `:patch` and `:delete`.
     # @param uri [URI]
     #   Request target URI including query strings.
     # @param headers [Hash, nil]

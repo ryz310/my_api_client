@@ -4,7 +4,7 @@ module MyApiClient
   module Request
     # Provides basic HTTP request method.
     module Basic
-      HTTP_METHODS = %i[get post patch delete].freeze
+      HTTP_METHODS = %i[get post put patch delete].freeze
 
       HTTP_METHODS.each do |http_method|
         class_eval <<~METHOD, __FILE__, __LINE__ + 1
@@ -27,8 +27,6 @@ module MyApiClient
           end
         METHOD
       end
-
-      alias put patch
     end
   end
 end

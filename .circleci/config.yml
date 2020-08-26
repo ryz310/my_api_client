@@ -165,6 +165,16 @@ commands:
       - rake_build
 
 jobs:
+  test_api:
+    parameters:
+      <<: *ruby_version
+    executor:
+      name: executor_for_api
+      ruby_version: << parameters.ruby_version >>
+    steps:
+      - setup:
+          ruby_version: << parameters.ruby_version >>
+      - run_rspec_for_api
   deploy_api:
     parameters:
       <<: *ruby_version
@@ -303,6 +313,7 @@ workflows:
           ruby_version:  '2.7'
           rails_version: '6.0'
           bundler_options: '--without integrations'
+      - test_api
       - rubocop
       - yardoc
       - upload-coverage:
