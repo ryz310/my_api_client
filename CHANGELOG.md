@@ -1,5 +1,39 @@
 # Change log
 
+## v0.16.1 (Aug 27, 2020)
+
+### Feature
+
+* [#296](https://github.com/ryz310/my_api_client/pull/296) Support HTTP PUT method ([@ryz310](https://github.com/ryz310))
+
+### Rubocop Challenge
+
+* [#256](https://github.com/ryz310/my_api_client/pull/256) Performance/StartWith-20200523233027 ([@ryz310](https://github.com/ryz310))
+* [#268](https://github.com/ryz310/my_api_client/pull/268) Lint/RedundantCopDisableDirective-20200622233019 ([@ryz310](https://github.com/ryz310))
+* [#289](https://github.com/ryz310/my_api_client/pull/289) Re-generate .rubocop_todo.yml with RuboCop v0.89.1 ([@ryz310](https://github.com/ryz310))
+* [#293](https://github.com/ryz310/my_api_client/pull/293) RSpec/LeadingSubject-20200817233022 ([@ryz310](https://github.com/ryz310))
+
+### Dependabot
+
+* [#232](https://github.com/ryz310/my_api_client/pull/232) ryz310/dependabot/bundler/faraday-1.0.1 ([@ryz310](https://github.com/ryz310))
+* [#241](https://github.com/ryz310/my_api_client/pull/241) ryz310/dependabot/bundler/my_api/byebug-11.1.3 ([@ryz310](https://github.com/ryz310))
+* [#243](https://github.com/ryz310/my_api_client/pull/243) ryz310/dependabot/bundler/yard-0.9.25 ([@ryz310](https://github.com/ryz310))
+* [#248](https://github.com/ryz310/my_api_client/pull/248) ryz310/dependabot/bundler/activesupport-5.2.4.3 ([@ryz310](https://github.com/ryz310))
+* [#251](https://github.com/ryz310/my_api_client/pull/251) ryz310/dependabot/bundler/my_api/puma-4.3.5 ([@ryz310](https://github.com/ryz310))
+* [#257](https://github.com/ryz310/my_api_client/pull/257) ryz310/dependabot/bundler/my_api/dynomite-1.2.6 ([@ryz310](https://github.com/ryz310))
+* [#264](https://github.com/ryz310/my_api_client/pull/264) ryz310/dependabot/bundler/my_api/rack-2.2.3 ([@ryz310](https://github.com/ryz310))
+* [#265](https://github.com/ryz310/my_api_client/pull/265) ryz310/dependabot/bundler/my_api/actionpack-6.0.3.2 ([@ryz310](https://github.com/ryz310))
+* [#266](https://github.com/ryz310/my_api_client/pull/266) ryz310/dependabot/bundler/my_api/capybara-3.33.0 ([@ryz310](https://github.com/ryz310))
+* [#281](https://github.com/ryz310/my_api_client/pull/281) ryz310/dependabot/bundler/rubocop-performance-1.7.1 ([@ryz310](https://github.com/ryz310))
+* [#287](https://github.com/ryz310/my_api_client/pull/287) ryz310/dependabot/bundler/my_api/kramdown-2.3.0 ([@ryz310](https://github.com/ryz310))
+* [#290](https://github.com/ryz310/my_api_client/pull/290) ryz310/dependabot/bundler/bugsnag-6.16.0 ([@ryz310](https://github.com/ryz310))
+* [#294](https://github.com/ryz310/my_api_client/pull/294) ryz310/dependabot/bundler/my_api/jets-2.3.17 ([@ryz310](https://github.com/ryz310))
+* [#295](https://github.com/ryz310/my_api_client/pull/295) ryz310/dependabot/bundler/rubocop-rspec-1.43.2 ([@ryz310](https://github.com/ryz310))
+
+### Misc
+
+* [#271](https://github.com/ryz310/my_api_client/pull/271) Minor fixes ([@ryz310](https://github.com/ryz310))
+
 ## v0.16.0 (Mar 29, 2020)
 
 ### Breaking Change
