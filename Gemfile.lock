@@ -37,7 +37,7 @@ GEM
       multi_json
       to_regexp (~> 0.2.1)
     method_source (1.0.0)
-    minitest (5.14.1)
+    minitest (5.14.2)
     multi_json (1.15.0)
     multipart-post (2.1.1)
     parallel (1.19.2)
