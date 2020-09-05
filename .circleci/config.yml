@@ -25,13 +25,13 @@ references:
       default: ''
 
 executors:
-  executor_for_api:
+  api_executor:
     parameters:
       <<: *ruby_version
     docker:
       - image: circleci/ruby:<< parameters.ruby_version >>-node-browsers
     working_directory: ~/repo/my_api
-  executor_for_gem:
+  gem_executor:
     parameters:
       <<: *ruby_version
     docker:
@@ -169,7 +169,7 @@ jobs:
     parameters:
       <<: *ruby_version
     executor:
-      name: executor_for_api
+      name: api_executor
       ruby_version: << parameters.ruby_version >>
     steps:
       - setup:
@@ -179,7 +179,7 @@ jobs:
     parameters:
       <<: *ruby_version
     executor:
-      name: executor_for_api
+      name: api_executor
       ruby_version: << parameters.ruby_version >>
     steps:
       - setup:
@@ -191,7 +191,7 @@ jobs:
       <<: *rails_version
       <<: *bundler_options
     executor:
-      name: executor_for_gem
+      name: gem_executor
       ruby_version: << parameters.ruby_version >>
     steps:
       - setup:
@@ -200,7 +200,7 @@ jobs:
       - test_and_build_for_gem:
           rails_version: << parameters.rails_version >>
   upload-coverage:
-    executor: executor_for_gem
+    executor: gem_executor
     steps:
       - attach_workspace:
           at: ~/repo
@@ -210,22 +210,22 @@ jobs:
           parts: 19
       - code-climate/upload-coverage
   rubocop:
-    executor: executor_for_gem
+    executor: gem_executor
     steps:
       - setup
       - rubocop
   yardoc:
-    executor: executor_for_gem
+    executor: gem_executor
     steps:
       - setup
       - yardoc
   rubocop_challenge:
-    executor: executor_for_gem
+    executor: gem_executor
     steps:
       - checkout
       - rubocop_challenge
   release:
-    executor: executor_for_gem
+    executor: gem_executor
     steps:
       - setup
       - release
