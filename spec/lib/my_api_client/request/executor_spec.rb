@@ -93,7 +93,7 @@ RSpec.describe MyApiClient::Request::Executor do
       it 'logs the API request flow as successful' do
         execute
         expect(request_logger).to have_received(:info).with('Start').ordered
-        expect(request_logger).to have_received(:info).with('Duration 0.1 sec').ordered
+        expect(request_logger).to have_received(:info).with('Duration 100.0 msec').ordered
         expect(request_logger).to have_received(:info).with('Success (200)').ordered
       end
 
@@ -116,7 +116,7 @@ RSpec.describe MyApiClient::Request::Executor do
       it 'logs the API request flow as failure' do
         safe_execution
         expect(request_logger).to have_received(:info).with('Start').ordered
-        expect(request_logger).to have_received(:info).with('Duration 0.1 sec').ordered
+        expect(request_logger).to have_received(:info).with('Duration 100.0 msec').ordered
         expect(request_logger).to have_received(:warn).with('Failure (MyApiClient::Error)').ordered
       end
 
