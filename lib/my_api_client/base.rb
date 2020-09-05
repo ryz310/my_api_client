@@ -9,12 +9,12 @@ module MyApiClient
     include MyApiClient::Request
 
     if ActiveSupport::VERSION::STRING >= '5.2.0'
-      class_attribute :logger, instance_writer: false, default: ::Logger.new(STDOUT)
+      class_attribute :logger, instance_writer: false, default: ::Logger.new($stdout)
       class_attribute :error_handlers, instance_writer: false, default: []
     else
       class_attribute :logger
       class_attribute :error_handlers
-      self.logger = ::Logger.new(STDOUT)
+      self.logger = ::Logger.new($stdout)
       self.error_handlers = []
     end
 
