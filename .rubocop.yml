@@ -6,6 +6,10 @@ inherit_from: .rubocop_todo.yml
 
 AllCops:
   TargetRubyVersion: 2.4
+  NewCops: enable
+  Exclude:
+    - rails_app/**/*
+    - vendor/bundle/**/*
 
 Layout/LineLength:
   Max: 100

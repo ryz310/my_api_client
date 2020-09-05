@@ -25,18 +25,25 @@ references:
       default: ''
 
 executors:
-  executor_for_api:
+  api_executor:
     parameters:
       <<: *ruby_version
     docker:
-      - image: circleci/ruby:<< parameters.ruby_version >>-node-browsers
+      - image: circleci/ruby:<< parameters.ruby_version >>
     working_directory: ~/repo/my_api
-  executor_for_gem:
+  gem_executor:
     parameters:
       <<: *ruby_version
     docker:
-       - image: circleci/ruby:<< parameters.ruby_version >>-node-browsers
+       - image: circleci/ruby:<< parameters.ruby_version >>
     working_directory: ~/repo
+  rails_executor:
+    parameters:
+      <<: *ruby_version
+      <<: *rails_version
+    docker:
+       - image: circleci/ruby:<< parameters.ruby_version >>
+    working_directory: ~/repo/rails_app/rails_<< parameters.rails_version >>
 
 commands:
   modify_active_support_version:
@@ -144,18 +151,18 @@ commands:
           path: ~/repo
       - run:
           name: Install Bundler 2.x
-          command: gem install bundler:2.1.2
+          command: gem install bundler -v '~> 2.0'
       - ruby-orbs/bundle-install:
           cache_key_prefix: v1-dependencies-<< parameters.ruby_version >>
           bundle_extra_args: << parameters.bundler_options >>
           restore_bundled_with: false
   test_and_deploy_for_api:
-    description: Build the API
+    description: Test and build the API
     steps:
       - run_rspec_for_api
       - deploy_api_server
   test_and_build_for_gem:
-    description: Build the RubyGem
+    description: Test and build the RubyGem
     parameters:
       <<: *rails_version
     steps:
@@ -163,13 +170,33 @@ commands:
           rails_version: << parameters.rails_version >>
       - run_rspec_for_gem
       - rake_build
+  verify_api_client_generator:
+    description: Verify the API client generator
+    parameters:
+      <<: *rails_version
+    steps:
+      - run:
+          name: Generate new API client files
+          command: |
+            bin/rails g api_client path/to/resource \
+              get:path/to/resource \
+              post:path/to/resource
+      - run:
+          name: Check the API client files exists
+          command: |
+            test -e "app/api_clients/application_api_client.rb" & \
+            test -e "app/api_clients/path/to/resource_api_client.rb" & \
+            test -e "spec/api_clients/path/to/resource_api_client_spec.rb"
+      - run:
+          name: Run rspec with the generated spec file
+          command: bundle exec rspec -f d spec/api_clients/path/to
 
 jobs:
   test_api:
     parameters:
       <<: *ruby_version
     executor:
-      name: executor_for_api
+      name: api_executor
       ruby_version: << parameters.ruby_version >>
     steps:
       - setup:
@@ -179,7 +206,7 @@ jobs:
     parameters:
       <<: *ruby_version
     executor:
-      name: executor_for_api
+      name: api_executor
       ruby_version: << parameters.ruby_version >>
     steps:
       - setup:
@@ -191,7 +218,7 @@ jobs:
       <<: *rails_version
       <<: *bundler_options
     executor:
-      name: executor_for_gem
+      name: gem_executor
       ruby_version: << parameters.ruby_version >>
     steps:
       - setup:
@@ -199,8 +226,21 @@ jobs:
           bundler_options: << parameters.bundler_options >>
       - test_and_build_for_gem:
           rails_version: << parameters.rails_version >>
+  verify_generator:
+    parameters:
+      <<: *ruby_version
+      <<: *rails_version
+    executor:
+      name: rails_executor
+      ruby_version: << parameters.ruby_version >>
+      rails_version: << parameters.rails_version >>
+    steps:
+      - setup:
+          ruby_version: << parameters.ruby_version >>
+      - verify_api_client_generator:
+          rails_version: << parameters.rails_version >>
   upload-coverage:
-    executor: executor_for_gem
+    executor: gem_executor
     steps:
       - attach_workspace:
           at: ~/repo
@@ -210,22 +250,22 @@ jobs:
           parts: 19
       - code-climate/upload-coverage
   rubocop:
-    executor: executor_for_gem
+    executor: gem_executor
     steps:
       - setup
       - rubocop
   yardoc:
-    executor: executor_for_gem
+    executor: gem_executor
     steps:
       - setup
       - yardoc
   rubocop_challenge:
-    executor: executor_for_gem
+    executor: gem_executor
     steps:
       - checkout
       - rubocop_challenge
   release:
-    executor: executor_for_gem
+    executor: gem_executor
     steps:
       - setup
       - release
@@ -313,6 +353,78 @@ workflows:
           ruby_version:  '2.7'
           rails_version: '6.0'
           bundler_options: '--without integrations'
+      - verify_generator:
+          name: verify_generator_on_ruby_2.4_and_rails_4.2
+          ruby_version:  '2.4'
+          rails_version: '4.2'
+      - verify_generator:
+          name: verify_generator_on_ruby_2.4_and_rails_5.0
+          ruby_version:  '2.4'
+          rails_version: '5.0'
+      - verify_generator:
+          name: verify_generator_on_ruby_2.4_and_rails_5.1
+          ruby_version:  '2.4'
+          rails_version: '5.1'
+      - verify_generator:
+          name: verify_generator_on_ruby_2.4_and_rails_5.2
+          ruby_version:  '2.4'
+          rails_version: '5.2'
+      - verify_generator:
+          name: verify_generator_on_ruby_2.5_and_rails_4.2
+          ruby_version:  '2.5'
+          rails_version: '4.2'
+      - verify_generator:
+          name: verify_generator_on_ruby_2.5_and_rails_5.0
+          ruby_version:  '2.5'
+          rails_version: '5.0'
+      - verify_generator:
+          name: verify_generator_on_ruby_2.5_and_rails_5.1
+          ruby_version:  '2.5'
+          rails_version: '5.1'
+      - verify_generator:
+          name: verify_generator_on_ruby_2.5_and_rails_5.2
+          ruby_version:  '2.5'
+          rails_version: '5.2'
+      - verify_generator:
+          name: verify_generator_on_ruby_2.5_and_rails_6.0
+          ruby_version:  '2.5'
+          rails_version: '6.0'
+      - verify_generator:
+          name: verify_generator_on_ruby_2.6_and_rails_4.2
+          ruby_version:  '2.6'
+          rails_version: '4.2'
+      - verify_generator:
+          name: verify_generator_on_ruby_2.6_and_rails_5.0
+          ruby_version:  '2.6'
+          rails_version: '5.0'
+      - verify_generator:
+          name: verify_generator_on_ruby_2.6_and_rails_5.1
+          ruby_version:  '2.6'
+          rails_version: '5.1'
+      - verify_generator:
+          name: verify_generator_on_ruby_2.6_and_rails_5.2
+          ruby_version:  '2.6'
+          rails_version: '5.2'
+      - verify_generator:
+          name: verify_generator_on_ruby_2.6_and_rails_6.0
+          ruby_version:  '2.6'
+          rails_version: '6.0'
+      - verify_generator:
+          name: verify_generator_on_ruby_2.7_and_rails_5.0
+          ruby_version:  '2.7'
+          rails_version: '5.0'
+      - verify_generator:
+          name: verify_generator_on_ruby_2.7_and_rails_5.1
+          ruby_version:  '2.7'
+          rails_version: '5.1'
+      - verify_generator:
+          name: verify_generator_on_ruby_2.7_and_rails_5.2
+          ruby_version:  '2.7'
+          rails_version: '5.2'
+      - verify_generator:
+          name: verify_generator_on_ruby_2.7_and_rails_6.0
+          ruby_version:  '2.7'
+          rails_version: '6.0'
       - test_api
       - rubocop
       - yardoc
@@ -359,6 +471,24 @@ workflows:
             - build_on_ruby_2.7_and_rails_5.2
             - build_on_ruby_2.7_and_rails_6.0_with_integrations
             - build_on_ruby_2.7_and_rails_6.0_without_integrations
+            - verify_generator_on_ruby_2.4_and_rails_4.2
+            - verify_generator_on_ruby_2.4_and_rails_5.0
+            - verify_generator_on_ruby_2.4_and_rails_5.1
+            - verify_generator_on_ruby_2.4_and_rails_5.2
+            - verify_generator_on_ruby_2.5_and_rails_4.2
+            - verify_generator_on_ruby_2.5_and_rails_5.0
+            - verify_generator_on_ruby_2.5_and_rails_5.1
+            - verify_generator_on_ruby_2.5_and_rails_5.2
+            - verify_generator_on_ruby_2.5_and_rails_6.0
+            - verify_generator_on_ruby_2.6_and_rails_4.2
+            - verify_generator_on_ruby_2.6_and_rails_5.0
+            - verify_generator_on_ruby_2.6_and_rails_5.1
+            - verify_generator_on_ruby_2.6_and_rails_5.2
+            - verify_generator_on_ruby_2.6_and_rails_6.0
+            - verify_generator_on_ruby_2.7_and_rails_5.0
+            - verify_generator_on_ruby_2.7_and_rails_5.1
+            - verify_generator_on_ruby_2.7_and_rails_5.2
+            - verify_generator_on_ruby_2.7_and_rails_6.0
             - rubocop
           filters:
             branches:
