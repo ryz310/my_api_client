@@ -9,6 +9,7 @@ AllCops:
   NewCops: enable
   Exclude:
     - rails_app/**/*
+    - vendor/bundle/**/*
 
 Layout/LineLength:
   Max: 100
