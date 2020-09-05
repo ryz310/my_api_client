@@ -9,7 +9,7 @@ gem 'my_api_client', path: '../..'
 gem 'rails', '~> 5.1.7'
 
 group :development, :test do
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'rspec-rails'
 end
 
