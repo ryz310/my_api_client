@@ -28,13 +28,6 @@ Lint/MissingSuper:
 RSpec/MultipleMemoizedHelpers:
   Max: 15
 
-# Offense count: 4
-# Cop supports --auto-correct.
-Style/GlobalStdStream:
-  Exclude:
-    - 'lib/my_api_client/base.rb'
-    - 'spec/lib/my_api_client/base_spec.rb'
-    - 'spec/lib/my_api_client/request_spec.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.

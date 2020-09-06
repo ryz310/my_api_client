@@ -4,7 +4,7 @@ RSpec.describe MyApiClient::Base do
   let(:my_logger_class) do
     Class.new(::Logger) do
       def initialize
-        super(STDOUT)
+        super($stdout)
       end
     end
   end
