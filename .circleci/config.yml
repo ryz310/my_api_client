@@ -354,33 +354,9 @@ workflows:
           rails_version: '6.0'
           bundler_options: '--without integrations'
       - verify_generator:
-          name: verify_generator_on_ruby_2.4_and_rails_4.2
-          ruby_version:  '2.4'
-          rails_version: '4.2'
-      - verify_generator:
-          name: verify_generator_on_ruby_2.4_and_rails_5.0
-          ruby_version:  '2.4'
-          rails_version: '5.0'
-      - verify_generator:
-          name: verify_generator_on_ruby_2.4_and_rails_5.1
-          ruby_version:  '2.4'
-          rails_version: '5.1'
-      - verify_generator:
           name: verify_generator_on_ruby_2.4_and_rails_5.2
           ruby_version:  '2.4'
           rails_version: '5.2'
-      - verify_generator:
-          name: verify_generator_on_ruby_2.5_and_rails_4.2
-          ruby_version:  '2.5'
-          rails_version: '4.2'
-      - verify_generator:
-          name: verify_generator_on_ruby_2.5_and_rails_5.0
-          ruby_version:  '2.5'
-          rails_version: '5.0'
-      - verify_generator:
-          name: verify_generator_on_ruby_2.5_and_rails_5.1
-          ruby_version:  '2.5'
-          rails_version: '5.1'
       - verify_generator:
           name: verify_generator_on_ruby_2.5_and_rails_5.2
           ruby_version:  '2.5'
@@ -390,18 +366,6 @@ workflows:
           ruby_version:  '2.5'
           rails_version: '6.0'
       - verify_generator:
-          name: verify_generator_on_ruby_2.6_and_rails_4.2
-          ruby_version:  '2.6'
-          rails_version: '4.2'
-      - verify_generator:
-          name: verify_generator_on_ruby_2.6_and_rails_5.0
-          ruby_version:  '2.6'
-          rails_version: '5.0'
-      - verify_generator:
-          name: verify_generator_on_ruby_2.6_and_rails_5.1
-          ruby_version:  '2.6'
-          rails_version: '5.1'
-      - verify_generator:
           name: verify_generator_on_ruby_2.6_and_rails_5.2
           ruby_version:  '2.6'
           rails_version: '5.2'
@@ -409,14 +373,6 @@ workflows:
           name: verify_generator_on_ruby_2.6_and_rails_6.0
           ruby_version:  '2.6'
           rails_version: '6.0'
-      - verify_generator:
-          name: verify_generator_on_ruby_2.7_and_rails_5.0
-          ruby_version:  '2.7'
-          rails_version: '5.0'
-      - verify_generator:
-          name: verify_generator_on_ruby_2.7_and_rails_5.1
-          ruby_version:  '2.7'
-          rails_version: '5.1'
       - verify_generator:
           name: verify_generator_on_ruby_2.7_and_rails_5.2
           ruby_version:  '2.7'
@@ -471,22 +427,11 @@ workflows:
             - build_on_ruby_2.7_and_rails_5.2
             - build_on_ruby_2.7_and_rails_6.0_with_integrations
             - build_on_ruby_2.7_and_rails_6.0_without_integrations
-            - verify_generator_on_ruby_2.4_and_rails_4.2
-            - verify_generator_on_ruby_2.4_and_rails_5.0
-            - verify_generator_on_ruby_2.4_and_rails_5.1
             - verify_generator_on_ruby_2.4_and_rails_5.2
-            - verify_generator_on_ruby_2.5_and_rails_4.2
-            - verify_generator_on_ruby_2.5_and_rails_5.0
-            - verify_generator_on_ruby_2.5_and_rails_5.1
             - verify_generator_on_ruby_2.5_and_rails_5.2
             - verify_generator_on_ruby_2.5_and_rails_6.0
-            - verify_generator_on_ruby_2.6_and_rails_4.2
-            - verify_generator_on_ruby_2.6_and_rails_5.0
-            - verify_generator_on_ruby_2.6_and_rails_5.1
             - verify_generator_on_ruby_2.6_and_rails_5.2
             - verify_generator_on_ruby_2.6_and_rails_6.0
-            - verify_generator_on_ruby_2.7_and_rails_5.0
-            - verify_generator_on_ruby_2.7_and_rails_5.1
             - verify_generator_on_ruby_2.7_and_rails_5.2
             - verify_generator_on_ruby_2.7_and_rails_6.0
             - rubocop
