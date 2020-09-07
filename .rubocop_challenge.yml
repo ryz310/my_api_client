@@ -1,3 +1,4 @@
 ---
 Ignore:
 - Performance/StartWith
+- Style/StringConcatenation
