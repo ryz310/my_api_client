@@ -28,11 +28,6 @@ Lint/MissingSuper:
 RSpec/MultipleMemoizedHelpers:
   Max: 15
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/HashTransformValues:
-  Exclude:
-    - 'lib/my_api_client/integrations/bugsnag.rb'
 
 # Offense count: 3
 # Cop supports --auto-correct.
