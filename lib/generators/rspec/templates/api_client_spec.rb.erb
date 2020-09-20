@@ -11,22 +11,36 @@ RSpec.describe <%= "#{class_name}ApiClient" %>, <%= type_metatag(:api_client) %>
   end
 
   shared_examples 'to handle errors' do
-    it do
-      expect { api_request }
-        .to be_handled_as_an_error(MyApiClient::ClientError)
-        .when_receive(status_code: 400)
+    context 'when the API returns 200 OK' do
+      it do
+        expect { api_request }
+          .not_to be_handled_as_an_error
+          .when_receive(status_code: 200)
+      end
     end
 
-    it do
-      expect { api_request }
-        .to be_handled_as_an_error(MyApiClient::ServerError)
-        .when_receive(status_code: 500)
+    context 'when the API returns 400 Bad Request' do
+      it do
+        expect { api_request }
+          .to be_handled_as_an_error(MyApiClient::ClientError::BadRequest)
+          .when_receive(status_code: 400)
+      end
+    end
+
+    context 'when the API returns 500 Internal Server Error' do
+      it do
+        expect { api_request }
+          .to be_handled_as_an_error(MyApiClient::ServerError::InternalServerError)
+          .when_receive(status_code: 500)
+      end
     end
   end
 <% yeild_request_arguments do |action, http_method, pathname| -%>
 
   describe '#<%= action %>' do
     subject(:api_request) { api_client.<%= action %> }
+
+    it_behaves_like 'to handle errors'
 
     it do
       expect { api_request }
@@ -36,13 +50,6 @@ RSpec.describe <%= "#{class_name}ApiClient" %>, <%= type_metatag(:api_client) %>
 <% else -%>
         .with(headers: headers, body: {})
 <% end -%>
-    end
-
-    it_behaves_like 'to handle errors' do
-      it do
-        expect { api_request }.not_to be_handled_as_an_error
-          .when_receive(status_code: 200, body: nil, headers: nil)
-      end
     end
   end
 <% end -%>

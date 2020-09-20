@@ -642,6 +642,66 @@ rescue MyApiClient::Error => e
 end
 ```
 
+## Deployment
+
+この gem のリリースには [gem_comet](https://github.com/ryz310/gem_comet) を利用しています。
+`gem_comet` の README.md にも使い方が載っていますが、備忘録のため、こちらにもリリースフローを記載しておきます。
+
+### Preparement
+
+以下のコマンドで `.envrc` を作成し、 `GITHUB_ACCESS_TOKEN` を設定します。
+
+```sh
+$ cp .envrc.skeleton .envrc
+```
+
+以下のコマンドで `gem_comet` をインストールします。
+
+```sh
+$ gem install gem_comet
+```
+
+### USAGE
+
+以下のコマンドで、最後のリリースから現在までに merge した PR の一覧を確認できます。
+
+```sh
+$ gem_comet changelog
+```
+
+以下のコマンドで gem のリリースを実行します。
+`{VERSION}` には新しく付与するバージョン番号を指定します。
+
+```sh
+$ gem_comet release {VERSION}
+```
+
+実行すると、 https://github.com/ryz310/my_api_client/pulls に以下のような PR が作成されます。
+
+* [Update v0\.16\.1](https://github.com/ryz310/my_api_client/pull/297)
+* [Release v0\.16\.1](https://github.com/ryz310/my_api_client/pull/298)
+
+まず、 `Update v{VERSION}`  という PR から merge に取り掛かります。
+
+PR のコメントにも TODO が記載されていますが、まず、バージョン番号が正しく採番されているかを確認します。
+
+See: [314a4c0](https://github.com/ryz310/my_api_client/pull/297/commits/314a4c06f66324ce77b640b1ee8db5c84ee038a2)
+
+次に `CHANGELOG.md` を編集して、 CHANGELOG を見やすく整理します。
+
+See: [33a2d17](https://github.com/ryz310/my_api_client/pull/297/commits/33a2d1703c773813c837e74ee3181906b2f2e502)
+
+これらが整ったら、 `Update v{VERSION}`  を merge します。
+
+これでリリース準備が整ったので、`Release v{VERSION}`  の merge に取り掛かります。
+
+この PR にこれからリリースする gem に対する変更が全て載っています。
+変更内容の最終確認をして、 CI も通ったことを確認したら `Release v{VERSION}`  を merge します。
+
+あとは Circle CI 側で gem のリリースが自動実行されるので、暫く待ちましょう。
+
+お疲れさまでした :tea:
+
 ## Contributing
 
 不具合の報告や Pull Request を歓迎しています。OSS という事で自分はなるべく頑張って英語を使うようにしていますが、日本語での報告でも大丈夫です :+1:

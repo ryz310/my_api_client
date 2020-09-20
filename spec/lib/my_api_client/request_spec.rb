@@ -14,7 +14,7 @@ RSpec.describe MyApiClient::Request do
       attr_reader :logger
 
       def initialize
-        @logger = ::Logger.new(STDOUT)
+        @logger = ::Logger.new($stdout)
       end
     end
   end
