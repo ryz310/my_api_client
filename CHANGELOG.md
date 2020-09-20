@@ -1,5 +1,30 @@
 # Change log
 
+## v0.17.0 (Sep 20, 2020)
+
+### Feature
+
+* [#303](https://github.com/ryz310/my_api_client/pull/303) Change the duration format to milliseconds ([@ryz310](https://github.com/ryz310))
+* [#308](https://github.com/ryz310/my_api_client/pull/308) Add testing for api client generators ([@ryz310](https://github.com/ryz310))
+
+### Rubocop Challenge
+
+* [#311](https://github.com/ryz310/my_api_client/pull/311) Style/GlobalStdStream-20200906233350 ([@ryz310](https://github.com/ryz310))
+* [#312](https://github.com/ryz310/my_api_client/pull/312) Style/StringConcatenation-20200907233020 ([@ryz310](https://github.com/ryz310))
+* [#313](https://github.com/ryz310/my_api_client/pull/313) Style/HashTransformValues-20200908233016 ([@ryz310](https://github.com/ryz310))
+* [#316](https://github.com/ryz310/my_api_client/pull/316) Layout/EmptyLinesAroundAttributeAccessor-20200909233021 ([@ryz310](https://github.com/ryz310))
+* [#320](https://github.com/ryz310/my_api_client/pull/320) Re-generate .rubocop_todo.yml with RuboCop v0.91.0 ([@ryz310](https://github.com/ryz310))
+
+### Dependabot
+
+* [#299](https://github.com/ryz310/my_api_client/pull/299) ryz310/dependabot/bundler/bugsnag-6.17.0 ([@ryz310](https://github.com/ryz310))
+* [#310](https://github.com/ryz310/my_api_client/pull/310) ryz310/dependabot/bundler/rubocop-performance-1.8.0 ([@ryz310](https://github.com/ryz310))
+* [#314](https://github.com/ryz310/my_api_client/pull/314) ryz310/dependabot/bundler/activesupport-5.2.4.4 ([@ryz310](https://github.com/ryz310))
+* [#315](https://github.com/ryz310/my_api_client/pull/315) ryz310/dependabot/bundler/my_api/actionview-6.0.3.3 ([@ryz310](https://github.com/ryz310))
+* [#318](https://github.com/ryz310/my_api_client/pull/318) ryz310/dependabot/bundler/webmock-3.9.1 ([@ryz310](https://github.com/ryz310))
+* [#319](https://github.com/ryz310/my_api_client/pull/319) ryz310/dependabot/bundler/rubocop-0.91.0 ([@ryz310](https://github.com/ryz310))
+* [#321](https://github.com/ryz310/my_api_client/pull/321) ryz310/dependabot/bundler/my_api/puma-5.0.0 ([@ryz310](https://github.com/ryz310))
+
 ## v0.16.1 (Aug 27, 2020)
 
 ### Feature
