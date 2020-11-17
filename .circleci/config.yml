@@ -247,7 +247,7 @@ jobs:
       - code-climate/install
       - code-climate/sum-coverage:
           input: codeclimate.*.json
-          parts: 19
+          parts: 13
       - code-climate/upload-coverage
   rubocop:
     executor: gem_executor
