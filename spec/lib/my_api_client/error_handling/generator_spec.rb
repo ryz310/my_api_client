@@ -8,11 +8,9 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
   subject(:execute) { described_class.call(**options) }
 
   let(:safe_execution) do
-    begin
-      execute.call(params, logger)
-    rescue MyApiClient::Error
-      nil
-    end
+    execute.call(params, logger)
+  rescue MyApiClient::Error
+    nil
   end
 
   let(:options) do

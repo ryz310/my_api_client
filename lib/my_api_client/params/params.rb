@@ -40,9 +40,7 @@ module MyApiClient
       # @return [Hash] Metadata for bugsnag
       def request_metadata
         if request.present?
-          request.metadata.each_with_object({}) do |(key, value), memo|
-            memo[:"request_#{key}"] = value
-          end
+          request.metadata.transform_keys { |key| :"request_#{key}" }
         else
           {}
         end
