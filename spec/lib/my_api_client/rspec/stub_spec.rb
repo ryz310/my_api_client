@@ -167,25 +167,21 @@ RSpec.describe MyApiClient::Stub do
         end
 
         it 'stubs ApiClient to return params set in `response`' do
-          begin
-            api_client.request(user_id: 1)
-          rescue error => e
-            response_body = e.params.response.data.to_h
-            expect(response_body).to eq(message: 'error 1')
-          end
+          api_client.request(user_id: 1)
+        rescue error => e
+          response_body = e.params.response.data.to_h
+          expect(response_body).to eq(message: 'error 1')
         end
 
         it 'stubs ApiClient to return params with metadata' do
-          begin
-            api_client.request_all
-          rescue error => e
-            expect(e.params.metadata).to eq(
-              duration: 0.123,
-              response_body: { message: 'error 2' },
-              response_headers: {},
-              response_status: 400
-            )
-          end
+          api_client.request_all
+        rescue error => e
+          expect(e.params.metadata).to eq(
+            duration: 0.123,
+            response_body: { message: 'error 2' },
+            response_headers: {},
+            response_status: 400
+          )
         end
       end
 
