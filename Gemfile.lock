@@ -34,9 +34,8 @@ GEM
     i18n (1.8.5)
       concurrent-ruby (~> 1.0)
     json (2.3.1)
-    jsonpath (1.0.5)
+    jsonpath (1.0.6)
       multi_json
-      to_regexp (~> 0.2.1)
     method_source (1.0.0)
     minitest (5.14.2)
     multi_json (1.15.0)
@@ -98,7 +97,6 @@ GEM
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
     thread_safe (0.3.6)
-    to_regexp (0.2.1)
     tzinfo (1.2.8)
       thread_safe (~> 0.1)
     unicode-display_width (1.7.0)
