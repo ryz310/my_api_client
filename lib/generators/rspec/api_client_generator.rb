@@ -16,6 +16,12 @@ module Rspec
                default: %w[get:path/to/resource post:path/to/resource],
                banner: '{method}:{path} {method}:{path}'
 
+      class_option :endpoint,
+                   type: :string,
+                   default: 'https://example.com',
+                   banner: 'https://example.com',
+                   desc: 'Common part of the target API endpoint'
+
       class_option :api_client_specs, type: :boolean, default: true
 
       def generate_api_client_spec

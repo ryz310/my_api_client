@@ -44,7 +44,7 @@ RSpec.describe <%= "#{class_name}ApiClient" %>, <%= type_metatag(:api_client) %>
 
     it do
       expect { api_request }
-        .to request_to(:<%= http_method %>, 'https://example.com/<%= pathname %>')
+        .to request_to(:<%= http_method %>, '<%= options[:endpoint] %>/<%= pathname %>')
 <% if http_method == 'get' -%>
         .with(headers: headers, query: {})
 <% else -%>
