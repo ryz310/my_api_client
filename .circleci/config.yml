@@ -180,7 +180,8 @@ commands:
           command: |
             bin/rails g api_client path/to/resource \
               get:path/to/resource \
-              post:path/to/resource
+              post:path/to/resource \
+              --endpoint https://example.com/myapi
       - run:
           name: Check the API client files exists
           command: |
