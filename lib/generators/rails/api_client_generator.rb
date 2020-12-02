@@ -15,6 +15,12 @@ module Rails
              default: %w[get:path/to/resource post:path/to/resource],
              banner: '{method}:{path} {method}:{path}'
 
+    class_option :endpoint,
+                 type: :string,
+                 default: 'https://example.com',
+                 banner: 'https://example.com',
+                 desc: 'Common part of the target API endpoint'
+
     def generate_root_class
       file_path = File.join('app/api_clients', 'application_api_client.rb')
       return if File.exist?(file_path)
