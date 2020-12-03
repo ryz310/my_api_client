@@ -1,5 +1,30 @@
 # Change log
 
+## v0.18.0 (Dec 04, 2020)
+
+### Feature
+
+* [#381](https://github.com/ryz310/my_api_client/pull/381) Add endpoint option to the generator ([@ryz310](https://github.com/ryz310))
+
+### Breaking Change
+
+* [#365](https://github.com/ryz310/my_api_client/pull/365) End of support for ruby 2.4 and rails 4.2 ([@ryz310](https://github.com/ryz310))
+
+### Rubocop Challenge
+
+* [#383](https://github.com/ryz310/my_api_client/pull/383) Re-generate .rubocop_todo.yml with RuboCop v1.5.1 ([@ryz310](https://github.com/ryz310))
+
+### Dependabot
+
+* [#338](https://github.com/ryz310/my_api_client/pull/338) ryz310/dependabot/bundler/faraday-1.1.0 ([@ryz310](https://github.com/ryz310))
+* [#344](https://github.com/ryz310/my_api_client/pull/344) ryz310/dependabot/bundler/bugsnag-6.18.0 ([@ryz310](https://github.com/ryz310))
+* [#345](https://github.com/ryz310/my_api_client/pull/345) ryz310/dependabot/bundler/rspec-3.10.0 ([@ryz310](https://github.com/ryz310))
+* [#356](https://github.com/ryz310/my_api_client/pull/356) ryz310/dependabot/bundler/webmock-3.10.0 ([@ryz310](https://github.com/ryz310))
+* [#369](https://github.com/ryz310/my_api_client/pull/369) ryz310/dependabot/bundler/jsonpath-1.0.6 ([@ryz310](https://github.com/ryz310))
+* [#376](https://github.com/ryz310/my_api_client/pull/376) ryz310/dependabot/bundler/rubocop-performance-1.9.1 ([@ryz310](https://github.com/ryz310))
+* [#380](https://github.com/ryz310/my_api_client/pull/380) ryz310/dependabot/bundler/rubocop-rspec-2.0.1 ([@ryz310](https://github.com/ryz310))
+* [#382](https://github.com/ryz310/my_api_client/pull/382) ryz310/dependabot/bundler/rubocop-1.5.1 ([@ryz310](https://github.com/ryz310))
+
 ## v0.17.0 (Sep 20, 2020)
 
 ### Feature
