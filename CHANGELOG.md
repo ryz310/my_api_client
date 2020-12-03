@@ -1,5 +1,57 @@
 # Change log
 
+## v0.18.0 (Dec 04, 2020)
+
+### Feature
+### Bugfix
+### Breaking Change
+### Misc
+
+* [#324](https://github.com/ryz310/my_api_client/pull/324) ryz310/dependabot/bundler/rubocop-0.91.1 ([@ryz310](https://github.com/ryz310))
+* [#325](https://github.com/ryz310/my_api_client/pull/325) Re-generate .rubocop_todo.yml with RuboCop v0.91.1 ([@ryz310](https://github.com/ryz310))
+* [#326](https://github.com/ryz310/my_api_client/pull/326) ryz310/dependabot/bundler/rubocop-0.92.0 ([@ryz310](https://github.com/ryz310))
+* [#328](https://github.com/ryz310/my_api_client/pull/328) Re-generate .rubocop_todo.yml with RuboCop v0.92.0 ([@ryz310](https://github.com/ryz310))
+* [#329](https://github.com/ryz310/my_api_client/pull/329) ryz310/dependabot/bundler/my_api/puma-5.0.1 ([@ryz310](https://github.com/ryz310))
+* [#331](https://github.com/ryz310/my_api_client/pull/331) ryz310/dependabot/bundler/my_api/actionpack-6.0.3.4 ([@ryz310](https://github.com/ryz310))
+* [#330](https://github.com/ryz310/my_api_client/pull/330) ryz310/dependabot/bundler/my_api/puma-5.0.2 ([@ryz310](https://github.com/ryz310))
+* [#332](https://github.com/ryz310/my_api_client/pull/332) ryz310/dependabot/bundler/rubocop-0.93.0 ([@ryz310](https://github.com/ryz310))
+* [#333](https://github.com/ryz310/my_api_client/pull/333) Re-generate .rubocop_todo.yml with RuboCop v0.93.0 ([@ryz310](https://github.com/ryz310))
+* [#334](https://github.com/ryz310/my_api_client/pull/334) ryz310/dependabot/bundler/rubocop-0.93.1 ([@ryz310](https://github.com/ryz310))
+* [#335](https://github.com/ryz310/my_api_client/pull/335) ryz310/dependabot/bundler/webmock-3.9.2 ([@ryz310](https://github.com/ryz310))
+* [#336](https://github.com/ryz310/my_api_client/pull/336) Re-generate .rubocop_todo.yml with RuboCop v0.93.1 ([@ryz310](https://github.com/ryz310))
+* [#337](https://github.com/ryz310/my_api_client/pull/337) ryz310/dependabot/bundler/webmock-3.9.3 ([@ryz310](https://github.com/ryz310))
+* [#339](https://github.com/ryz310/my_api_client/pull/339) ryz310/dependabot/bundler/rubocop-rspec-1.44.0 ([@ryz310](https://github.com/ryz310))
+* [#340](https://github.com/ryz310/my_api_client/pull/340) ryz310/dependabot/bundler/rubocop-rspec-1.44.1 ([@ryz310](https://github.com/ryz310))
+* [#341](https://github.com/ryz310/my_api_client/pull/341) ryz310/dependabot/bundler/my_api/puma-5.0.3 ([@ryz310](https://github.com/ryz310))
+* [#338](https://github.com/ryz310/my_api_client/pull/338) ryz310/dependabot/bundler/faraday-1.1.0 ([@ryz310](https://github.com/ryz310))
+* [#343](https://github.com/ryz310/my_api_client/pull/343) ryz310/dependabot/bundler/my_api/puma-5.0.4 ([@ryz310](https://github.com/ryz310))
+* [#344](https://github.com/ryz310/my_api_client/pull/344) ryz310/dependabot/bundler/bugsnag-6.18.0 ([@ryz310](https://github.com/ryz310))
+* [#346](https://github.com/ryz310/my_api_client/pull/346) ryz310/dependabot/bundler/my_api/rspec-3.10.0 ([@ryz310](https://github.com/ryz310))
+* [#345](https://github.com/ryz310/my_api_client/pull/345) ryz310/dependabot/bundler/rspec-3.10.0 ([@ryz310](https://github.com/ryz310))
+* [#347](https://github.com/ryz310/my_api_client/pull/347) ryz310/dependabot/bundler/webmock-3.9.4 ([@ryz310](https://github.com/ryz310))
+* [#351](https://github.com/ryz310/my_api_client/pull/351) ryz310/dependabot/bundler/webmock-3.9.5 ([@ryz310](https://github.com/ryz310))
+* [#356](https://github.com/ryz310/my_api_client/pull/356) ryz310/dependabot/bundler/webmock-3.10.0 ([@ryz310](https://github.com/ryz310))
+* [#348](https://github.com/ryz310/my_api_client/pull/348) Re-generate .rubocop_todo.yml with RuboCop v1.2.0 ([@ryz310](https://github.com/ryz310))
+* [#360](https://github.com/ryz310/my_api_client/pull/360) ryz310/dependabot/bundler/rubocop-1.3.0 ([@ryz310](https://github.com/ryz310))
+* [#362](https://github.com/ryz310/my_api_client/pull/362) ryz310/dependabot/bundler/rubocop-1.3.1 ([@ryz310](https://github.com/ryz310))
+* [#364](https://github.com/ryz310/my_api_client/pull/364) ryz310/dependabot/bundler/rubocop-performance-1.9.0 ([@ryz310](https://github.com/ryz310))
+* [#365](https://github.com/ryz310/my_api_client/pull/365) End of support for ruby 2.4 and rails 4.2 ([@ryz310](https://github.com/ryz310))
+* [#368](https://github.com/ryz310/my_api_client/pull/368) Re-generate .rubocop_todo.yml with RuboCop v1.3.1 ([@ryz310](https://github.com/ryz310))
+* [#369](https://github.com/ryz310/my_api_client/pull/369) ryz310/dependabot/bundler/jsonpath-1.0.6 ([@ryz310](https://github.com/ryz310))
+* [#370](https://github.com/ryz310/my_api_client/pull/370) ryz310/dependabot/bundler/rubocop-1.4.1 ([@ryz310](https://github.com/ryz310))
+* [#371](https://github.com/ryz310/my_api_client/pull/371) Re-generate .rubocop_todo.yml with RuboCop v1.4.1 ([@ryz310](https://github.com/ryz310))
+* [#372](https://github.com/ryz310/my_api_client/pull/372) ryz310/dependabot/bundler/rubocop-1.4.2 ([@ryz310](https://github.com/ryz310))
+* [#373](https://github.com/ryz310/my_api_client/pull/373) Re-generate .rubocop_todo.yml with RuboCop v1.4.2 ([@ryz310](https://github.com/ryz310))
+* [#374](https://github.com/ryz310/my_api_client/pull/374) ryz310/dependabot/bundler/my_api/capybara-3.34.0 ([@ryz310](https://github.com/ryz310))
+* [#376](https://github.com/ryz310/my_api_client/pull/376) ryz310/dependabot/bundler/rubocop-performance-1.9.1 ([@ryz310](https://github.com/ryz310))
+* [#377](https://github.com/ryz310/my_api_client/pull/377) ryz310/dependabot/bundler/my_api/puma-5.1.0 ([@ryz310](https://github.com/ryz310))
+* [#378](https://github.com/ryz310/my_api_client/pull/378) ryz310/dependabot/bundler/rubocop-1.5.0 ([@ryz310](https://github.com/ryz310))
+* [#379](https://github.com/ryz310/my_api_client/pull/379) Re-generate .rubocop_todo.yml with RuboCop v1.5.0 ([@ryz310](https://github.com/ryz310))
+* [#380](https://github.com/ryz310/my_api_client/pull/380) ryz310/dependabot/bundler/rubocop-rspec-2.0.1 ([@ryz310](https://github.com/ryz310))
+* [#381](https://github.com/ryz310/my_api_client/pull/381) Add endpoint option to the generator ([@ryz310](https://github.com/ryz310))
+* [#382](https://github.com/ryz310/my_api_client/pull/382) ryz310/dependabot/bundler/rubocop-1.5.1 ([@ryz310](https://github.com/ryz310))
+* [#383](https://github.com/ryz310/my_api_client/pull/383) Re-generate .rubocop_todo.yml with RuboCop v1.5.1 ([@ryz310](https://github.com/ryz310))
+
 ## v0.17.0 (Sep 20, 2020)
 
 ### Feature
