@@ -12,11 +12,9 @@ RSpec.describe MyApiClient::Request::Executor do
     end
 
     let(:safe_execution) do
-      begin
-        execute
-      rescue MyApiClient::Error
-        nil
-      end
+      execute
+    rescue MyApiClient::Error
+      nil
     end
 
     let(:instance) do

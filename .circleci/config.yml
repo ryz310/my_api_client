@@ -12,12 +12,12 @@ references:
   - &ruby_version
     ruby_version:
       type: enum
-      enum: ['2.4', '2.5', '2.6', '2.7']
+      enum: ['2.5', '2.6', '2.7']
       default: '2.7'
   - &rails_version
     rails_version:
       type: enum
-      enum: ['4.2', '5.0', '5.1', '5.2', '6.0']
+      enum: ['5.0', '5.1', '5.2', '6.0']
       default: '6.0'
   - &bundler_options
     bundler_options:
@@ -180,7 +180,8 @@ commands:
           command: |
             bin/rails g api_client path/to/resource \
               get:path/to/resource \
-              post:path/to/resource
+              post:path/to/resource \
+              --endpoint https://example.com/myapi
       - run:
           name: Check the API client files exists
           command: |
@@ -247,7 +248,7 @@ jobs:
       - code-climate/install
       - code-climate/sum-coverage:
           input: codeclimate.*.json
-          parts: 19
+          parts: 13
       - code-climate/upload-coverage
   rubocop:
     executor: gem_executor
@@ -276,26 +277,6 @@ workflows:
   commit:
     jobs:
       - build_gem:
-          name: build_on_ruby_2.4_and_rails_4.2
-          ruby_version:  '2.4'
-          rails_version: '4.2'
-      - build_gem:
-          name: build_on_ruby_2.4_and_rails_5.0
-          ruby_version:  '2.4'
-          rails_version: '5.0'
-      - build_gem:
-          name: build_on_ruby_2.4_and_rails_5.1
-          ruby_version:  '2.4'
-          rails_version: '5.1'
-      - build_gem:
-          name: build_on_ruby_2.4_and_rails_5.2
-          ruby_version:  '2.4'
-          rails_version: '5.2'
-      - build_gem:
-          name: build_on_ruby_2.5_and_rails_4.2
-          ruby_version:  '2.5'
-          rails_version: '4.2'
-      - build_gem:
           name: build_on_ruby_2.5_and_rails_5.0
           ruby_version:  '2.5'
           rails_version: '5.0'
@@ -311,10 +292,6 @@ workflows:
           name: build_on_ruby_2.5_and_rails_6.0
           ruby_version:  '2.5'
           rails_version: '6.0'
-      - build_gem:
-          name: build_on_ruby_2.6_and_rails_4.2
-          ruby_version:  '2.6'
-          rails_version: '4.2'
       - build_gem:
           name: build_on_ruby_2.6_and_rails_5.0
           ruby_version:  '2.6'
@@ -354,10 +331,6 @@ workflows:
           rails_version: '6.0'
           bundler_options: '--without integrations'
       - verify_generator:
-          name: verify_generator_on_ruby_2.4_and_rails_5.2
-          ruby_version:  '2.4'
-          rails_version: '5.2'
-      - verify_generator:
           name: verify_generator_on_ruby_2.5_and_rails_5.2
           ruby_version:  '2.5'
           rails_version: '5.2'
@@ -386,16 +359,10 @@ workflows:
       - yardoc
       - upload-coverage:
           requires:
-            - build_on_ruby_2.4_and_rails_4.2
-            - build_on_ruby_2.4_and_rails_5.0
-            - build_on_ruby_2.4_and_rails_5.1
-            - build_on_ruby_2.4_and_rails_5.2
-            - build_on_ruby_2.5_and_rails_4.2
             - build_on_ruby_2.5_and_rails_5.0
             - build_on_ruby_2.5_and_rails_5.1
             - build_on_ruby_2.5_and_rails_5.2
             - build_on_ruby_2.5_and_rails_6.0
-            - build_on_ruby_2.6_and_rails_4.2
             - build_on_ruby_2.6_and_rails_5.0
             - build_on_ruby_2.6_and_rails_5.1
             - build_on_ruby_2.6_and_rails_5.2
@@ -408,16 +375,10 @@ workflows:
       - release:
           context: RubyGems API Key
           requires:
-            - build_on_ruby_2.4_and_rails_4.2
-            - build_on_ruby_2.4_and_rails_5.0
-            - build_on_ruby_2.4_and_rails_5.1
-            - build_on_ruby_2.4_and_rails_5.2
-            - build_on_ruby_2.5_and_rails_4.2
             - build_on_ruby_2.5_and_rails_5.0
             - build_on_ruby_2.5_and_rails_5.1
             - build_on_ruby_2.5_and_rails_5.2
             - build_on_ruby_2.5_and_rails_6.0
-            - build_on_ruby_2.6_and_rails_4.2
             - build_on_ruby_2.6_and_rails_5.0
             - build_on_ruby_2.6_and_rails_5.1
             - build_on_ruby_2.6_and_rails_5.2
@@ -427,7 +388,6 @@ workflows:
             - build_on_ruby_2.7_and_rails_5.2
             - build_on_ruby_2.7_and_rails_6.0_with_integrations
             - build_on_ruby_2.7_and_rails_6.0_without_integrations
-            - verify_generator_on_ruby_2.4_and_rails_5.2
             - verify_generator_on_ruby_2.5_and_rails_5.2
             - verify_generator_on_ruby_2.5_and_rails_6.0
             - verify_generator_on_ruby_2.6_and_rails_5.2

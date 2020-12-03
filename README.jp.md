@@ -12,8 +12,8 @@ MyApiClient は API リクエストクラスを作成するための汎用的な
 
 ## Supported Versions
 
-* Ruby 2.4, 2.5, 2.6, 2.7
-* Rails 4.2, 5.0, 5.1, 5.2, 6.0
+* Ruby 2.5, 2.6, 2.7
+* Rails 5.0, 5.1, 5.2, 6.0
 
 ## Installation
 
@@ -26,7 +26,7 @@ gem 'my_api_client'
 Ruby on Rails を利用している場合は `generator` 機能を利用できます。
 
 ```sh
-$ rails g api_client path/to/resource get:path/to/resource
+$ rails g api_client path/to/resource get:path/to/resource --endpoint https://example.com
 
 create  app/api_clients/application_api_client.rb
 create  app/api_clients/path/to/resource_api_client.rb
