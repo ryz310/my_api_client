@@ -4,7 +4,7 @@
 class PaginationController < ApplicationController
   # GET pagination
   def index
-    case params[:page]
+    case params[:page]&.to_s
     when '1', nil
       render status: :ok, json: first_page
     when '2'
