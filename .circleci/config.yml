@@ -384,7 +384,8 @@ workflows:
           name: verify_generator_on_ruby_3.0_and_rails_6.1
           ruby_version:  '3.0-rc'
           rails_version: '6.1'
-      - test_api
+      - test_api:
+          ruby_version:  '2.7'
       - rubocop
       - yardoc
       - upload-coverage:
