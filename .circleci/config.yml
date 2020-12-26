@@ -319,10 +319,6 @@ workflows:
           rails_version: '6.1'
           bundler_options: '--without integrations'
       - build_gem:
-          name: build_on_ruby_3.0_and_rails_5.2
-          ruby_version:  '3.0-rc'
-          rails_version: '5.2'
-      - build_gem:
           name: build_on_ruby_3.0_and_rails_6.0
           ruby_version:  '3.0-rc'
           rails_version: '6.0'
@@ -373,10 +369,6 @@ workflows:
           ruby_version:  '2.7'
           rails_version: '6.1'
       - verify_generator:
-          name: verify_generator_on_ruby_3.0_and_rails_5.2
-          ruby_version:  '3.0-rc'
-          rails_version: '5.2'
-      - verify_generator:
           name: verify_generator_on_ruby_3.0_and_rails_6.0
           ruby_version:  '3.0-rc'
           rails_version: '6.0'
@@ -400,7 +392,6 @@ workflows:
             - build_on_ruby_2.7_and_rails_6.0
             - build_on_ruby_2.7_and_rails_6.1_with_integrations
             - build_on_ruby_2.7_and_rails_6.1_without_integrations
-            - build_on_ruby_3.0_and_rails_5.2
             - build_on_ruby_3.0_and_rails_6.0
             - build_on_ruby_3.0_and_rails_6.1_with_integrations
             - build_on_ruby_3.0_and_rails_6.1_without_integrations
@@ -417,6 +408,9 @@ workflows:
             - build_on_ruby_2.7_and_rails_6.0
             - build_on_ruby_2.7_and_rails_6.1_with_integrations
             - build_on_ruby_2.7_and_rails_6.1_without_integrations
+            - build_on_ruby_3.0_and_rails_6.0
+            - build_on_ruby_3.0_and_rails_6.1_with_integrations
+            - build_on_ruby_3.0_and_rails_6.1_without_integrations
             - verify_generator_on_ruby_2.5_and_rails_5.2
             - verify_generator_on_ruby_2.5_and_rails_6.0
             - verify_generator_on_ruby_2.5_and_rails_6.1
@@ -426,7 +420,6 @@ workflows:
             - verify_generator_on_ruby_2.7_and_rails_5.2
             - verify_generator_on_ruby_2.7_and_rails_6.0
             - verify_generator_on_ruby_2.7_and_rails_6.1
-            - verify_generator_on_ruby_3.0_and_rails_5.2
             - verify_generator_on_ruby_3.0_and_rails_6.0
             - verify_generator_on_ruby_3.0_and_rails_6.1
             - rubocop
