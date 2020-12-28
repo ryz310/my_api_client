@@ -7,12 +7,7 @@ RSpec.describe MyApiClient::ErrorHandling do
         include MyApiClient::ErrorHandling
         include MyApiClient::Exceptions
 
-        if ActiveSupport::VERSION::STRING >= '5.2.0'
-          class_attribute :error_handlers, default: []
-        else
-          class_attribute :error_handlers
-          self.error_handlers = []
-        end
+        class_attribute :error_handlers, default: []
 
         error_handling status_code: 400..499, raise: MyApiClient::ClientError
         error_handling status_code: 500..599, raise: MyApiClient::ServerError
