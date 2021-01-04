@@ -7,7 +7,7 @@ require 'rspec/rails'
 require 'my_api_client/rspec'
 
 RSpec.configure do |config|
-  config.use_active_record = false
+  # config.use_active_record = false # [Workaround] See: https://github.com/rspec/rspec-rails/issues/2417
   config.infer_spec_type_from_file_location!
   config.filter_rails_from_backtrace!
 end
