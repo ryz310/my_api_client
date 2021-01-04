@@ -1,5 +1,32 @@
 # Change log
 
+## v0.19.0 (Jan 04, 2021)
+
+### Feature
+
+* [#402](https://github.com/ryz310/my_api_client/pull/402) Support ruby 3.0 and rails 6.1 ([@ryz310](https://github.com/ryz310))
+
+### Rubocop Challenge
+
+* [#400](https://github.com/ryz310/my_api_client/pull/400) Re-generate .rubocop_todo.yml with RuboCop v1.7.0 ([@ryz310](https://github.com/ryz310))
+
+### Dependabot
+
+* [#352](https://github.com/ryz310/my_api_client/pull/352) Bump jets from 2.3.17 to 2.3.18 in /my_api ([@ryz310](https://github.com/ryz310))
+* [#391](https://github.com/ryz310/my_api_client/pull/391) ryz310/dependabot/bundler/rubocop-1.6.1 ([@ryz310](https://github.com/ryz310))
+* [#392](https://github.com/ryz310/my_api_client/pull/392) ryz310/dependabot/bundler/my_api/puma-5.1.1 ([@ryz310](https://github.com/ryz310))
+* [#395](https://github.com/ryz310/my_api_client/pull/395) ryz310/dependabot/bundler/rubocop-rspec-2.1.0 ([@ryz310](https://github.com/ryz310))
+* [#396](https://github.com/ryz310/my_api_client/pull/396) ryz310/dependabot/bundler/webmock-3.11.0 ([@ryz310](https://github.com/ryz310))
+* [#398](https://github.com/ryz310/my_api_client/pull/398) ryz310/dependabot/bundler/rake-13.0.3 ([@ryz310](https://github.com/ryz310))
+* [#401](https://github.com/ryz310/my_api_client/pull/401) ryz310/dependabot/bundler/yard-0.9.26 ([@ryz310](https://github.com/ryz310))
+* [#403](https://github.com/ryz310/my_api_client/pull/403) ryz310/dependabot/bundler/jsonpath-1.1.0 ([@ryz310](https://github.com/ryz310))
+* [#404](https://github.com/ryz310/my_api_client/pull/404) Bump faraday from 1.2.0 to 1.3.0 ([@ryz310](https://github.com/ryz310))
+* [#406](https://github.com/ryz310/my_api_client/pull/406) ryz310/dependabot/bundler/rubocop-performance-1.9.2 ([@ryz310](https://github.com/ryz310))
+* [#407](https://github.com/ryz310/my_api_client/pull/407) Bump nokogiri from 1.10.10 to 1.11.0 in /my_api ([@ryz310](https://github.com/ryz310))
+* [#408](https://github.com/ryz310/my_api_client/pull/408) Bump nokogiri from 1.10.10 to 1.11.0 in /rails_app/rails_5.2 ([@ryz310](https://github.com/ryz310))
+* [#409](https://github.com/ryz310/my_api_client/pull/409) Bump nokogiri from 1.10.10 to 1.11.0 in /rails_app/rails_6.1 ([@ryz310](https://github.com/ryz310))
+* [#410](https://github.com/ryz310/my_api_client/pull/410) Bump nokogiri from 1.10.10 to 1.11.0 in /rails_app/rails_6.0 ([@ryz310](https://github.com/ryz310))
+
 ## v0.18.0 (Dec 04, 2020)
 
 ### Feature
