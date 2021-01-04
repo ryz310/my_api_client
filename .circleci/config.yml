@@ -12,13 +12,13 @@ references:
   - &ruby_version
     ruby_version:
       type: enum
-      enum: ['2.5', '2.6', '2.7']
-      default: '2.7'
+      enum: ['2.5', '2.6', '2.7', '3.0']
+      default: '3.0'
   - &rails_version
     rails_version:
       type: enum
-      enum: ['5.0', '5.1', '5.2', '6.0']
-      default: '6.0'
+      enum: ['5.2', '6.0', '6.1']
+      default: '6.1'
   - &bundler_options
     bundler_options:
       type: string
@@ -277,14 +277,6 @@ workflows:
   commit:
     jobs:
       - build_gem:
-          name: build_on_ruby_2.5_and_rails_5.0
-          ruby_version:  '2.5'
-          rails_version: '5.0'
-      - build_gem:
-          name: build_on_ruby_2.5_and_rails_5.1
-          ruby_version:  '2.5'
-          rails_version: '5.1'
-      - build_gem:
           name: build_on_ruby_2.5_and_rails_5.2
           ruby_version:  '2.5'
           rails_version: '5.2'
@@ -293,13 +285,9 @@ workflows:
           ruby_version:  '2.5'
           rails_version: '6.0'
       - build_gem:
-          name: build_on_ruby_2.6_and_rails_5.0
-          ruby_version:  '2.6'
-          rails_version: '5.0'
-      - build_gem:
-          name: build_on_ruby_2.6_and_rails_5.1
-          ruby_version:  '2.6'
-          rails_version: '5.1'
+          name: build_on_ruby_2.5_and_rails_6.1
+          ruby_version:  '2.5'
+          rails_version: '6.1'
       - build_gem:
           name: build_on_ruby_2.6_and_rails_5.2
           ruby_version:  '2.6'
@@ -309,26 +297,40 @@ workflows:
           ruby_version:  '2.6'
           rails_version: '6.0'
       - build_gem:
-          name: build_on_ruby_2.7_and_rails_5.0
-          ruby_version:  '2.7'
-          rails_version: '5.0'
-      - build_gem:
-          name: build_on_ruby_2.7_and_rails_5.1
-          ruby_version:  '2.7'
-          rails_version: '5.1'
+          name: build_on_ruby_2.6_and_rails_6.1
+          ruby_version:  '2.6'
+          rails_version: '6.1'
       - build_gem:
           name: build_on_ruby_2.7_and_rails_5.2
           ruby_version:  '2.7'
           rails_version: '5.2'
       - build_gem:
-          name: build_on_ruby_2.7_and_rails_6.0_with_integrations
+          name: build_on_ruby_2.7_and_rails_6.0
           ruby_version:  '2.7'
           rails_version: '6.0'
+      - build_gem:
+          name: build_on_ruby_2.7_and_rails_6.1_with_integrations
+          ruby_version:  '2.7'
+          rails_version: '6.1'
           bundler_options: '--with integrations'
       - build_gem:
-          name: build_on_ruby_2.7_and_rails_6.0_without_integrations
+          name: build_on_ruby_2.7_and_rails_6.1_without_integrations
           ruby_version:  '2.7'
+          rails_version: '6.1'
+          bundler_options: '--without integrations'
+      - build_gem:
+          name: build_on_ruby_3.0_and_rails_6.0
+          ruby_version:  '3.0'
           rails_version: '6.0'
+      - build_gem:
+          name: build_on_ruby_3.0_and_rails_6.1_with_integrations
+          ruby_version:  '3.0'
+          rails_version: '6.1'
+          bundler_options: '--with integrations'
+      - build_gem:
+          name: build_on_ruby_3.0_and_rails_6.1_without_integrations
+          ruby_version:  '3.0'
+          rails_version: '6.1'
           bundler_options: '--without integrations'
       - verify_generator:
           name: verify_generator_on_ruby_2.5_and_rails_5.2
@@ -339,6 +341,10 @@ workflows:
           ruby_version:  '2.5'
           rails_version: '6.0'
       - verify_generator:
+          name: verify_generator_on_ruby_2.5_and_rails_6.1
+          ruby_version:  '2.5'
+          rails_version: '6.1'
+      - verify_generator:
           name: verify_generator_on_ruby_2.6_and_rails_5.2
           ruby_version:  '2.6'
           rails_version: '5.2'
@@ -347,6 +353,10 @@ workflows:
           ruby_version:  '2.6'
           rails_version: '6.0'
       - verify_generator:
+          name: verify_generator_on_ruby_2.6_and_rails_6.1
+          ruby_version:  '2.6'
+          rails_version: '6.1'
+      - verify_generator:
           name: verify_generator_on_ruby_2.7_and_rails_5.2
           ruby_version:  '2.7'
           rails_version: '5.2'
@@ -354,46 +364,64 @@ workflows:
           name: verify_generator_on_ruby_2.7_and_rails_6.0
           ruby_version:  '2.7'
           rails_version: '6.0'
-      - test_api
+      - verify_generator:
+          name: verify_generator_on_ruby_2.7_and_rails_6.1
+          ruby_version:  '2.7'
+          rails_version: '6.1'
+      - verify_generator:
+          name: verify_generator_on_ruby_3.0_and_rails_6.0
+          ruby_version:  '3.0'
+          rails_version: '6.0'
+      - verify_generator:
+          name: verify_generator_on_ruby_3.0_and_rails_6.1
+          ruby_version:  '3.0'
+          rails_version: '6.1'
+      - test_api:
+          ruby_version:  '2.7' # Jets supports only Ruby 2.x
       - rubocop
       - yardoc
       - upload-coverage:
           requires:
-            - build_on_ruby_2.5_and_rails_5.0
-            - build_on_ruby_2.5_and_rails_5.1
             - build_on_ruby_2.5_and_rails_5.2
             - build_on_ruby_2.5_and_rails_6.0
-            - build_on_ruby_2.6_and_rails_5.0
-            - build_on_ruby_2.6_and_rails_5.1
+            - build_on_ruby_2.5_and_rails_6.1
             - build_on_ruby_2.6_and_rails_5.2
             - build_on_ruby_2.6_and_rails_6.0
-            - build_on_ruby_2.7_and_rails_5.0
-            - build_on_ruby_2.7_and_rails_5.1
+            - build_on_ruby_2.6_and_rails_6.1
             - build_on_ruby_2.7_and_rails_5.2
-            - build_on_ruby_2.7_and_rails_6.0_with_integrations
-            - build_on_ruby_2.7_and_rails_6.0_without_integrations
+            - build_on_ruby_2.7_and_rails_6.0
+            - build_on_ruby_2.7_and_rails_6.1_with_integrations
+            - build_on_ruby_2.7_and_rails_6.1_without_integrations
+            - build_on_ruby_3.0_and_rails_6.0
+            - build_on_ruby_3.0_and_rails_6.1_with_integrations
+            - build_on_ruby_3.0_and_rails_6.1_without_integrations
       - release:
           context: RubyGems API Key
           requires:
-            - build_on_ruby_2.5_and_rails_5.0
-            - build_on_ruby_2.5_and_rails_5.1
             - build_on_ruby_2.5_and_rails_5.2
             - build_on_ruby_2.5_and_rails_6.0
-            - build_on_ruby_2.6_and_rails_5.0
-            - build_on_ruby_2.6_and_rails_5.1
+            - build_on_ruby_2.5_and_rails_6.1
             - build_on_ruby_2.6_and_rails_5.2
             - build_on_ruby_2.6_and_rails_6.0
-            - build_on_ruby_2.7_and_rails_5.0
-            - build_on_ruby_2.7_and_rails_5.1
+            - build_on_ruby_2.6_and_rails_6.1
             - build_on_ruby_2.7_and_rails_5.2
-            - build_on_ruby_2.7_and_rails_6.0_with_integrations
-            - build_on_ruby_2.7_and_rails_6.0_without_integrations
+            - build_on_ruby_2.7_and_rails_6.0
+            - build_on_ruby_2.7_and_rails_6.1_with_integrations
+            - build_on_ruby_2.7_and_rails_6.1_without_integrations
+            - build_on_ruby_3.0_and_rails_6.0
+            - build_on_ruby_3.0_and_rails_6.1_with_integrations
+            - build_on_ruby_3.0_and_rails_6.1_without_integrations
             - verify_generator_on_ruby_2.5_and_rails_5.2
             - verify_generator_on_ruby_2.5_and_rails_6.0
+            - verify_generator_on_ruby_2.5_and_rails_6.1
             - verify_generator_on_ruby_2.6_and_rails_5.2
             - verify_generator_on_ruby_2.6_and_rails_6.0
+            - verify_generator_on_ruby_2.6_and_rails_6.1
             - verify_generator_on_ruby_2.7_and_rails_5.2
             - verify_generator_on_ruby_2.7_and_rails_6.0
+            - verify_generator_on_ruby_2.7_and_rails_6.1
+            - verify_generator_on_ruby_3.0_and_rails_6.0
+            - verify_generator_on_ruby_3.0_and_rails_6.1
             - rubocop
           filters:
             branches:
