@@ -1,5 +1,1 @@
 ---
-Ignore:
-- Performance/StartWith
-- Style/HashTransformValues
-- Style/StringConcatenation
