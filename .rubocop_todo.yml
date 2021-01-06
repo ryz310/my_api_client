@@ -43,9 +43,3 @@ Style/DocumentDynamicEvalDefinition:
     - 'lib/my_api_client/config.rb'
     - 'lib/my_api_client/request/basic.rb'
     - 'lib/my_api_client/request/logger.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/HashTransformValues:
-  Exclude:
-    - 'lib/my_api_client/integrations/bugsnag.rb'
