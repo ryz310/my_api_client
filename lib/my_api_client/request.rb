@@ -24,7 +24,7 @@ module MyApiClient
     # @return [Sawyer::Response]
     #   Response instance.
     def _request_with_relative_uri(http_method, pathname, headers, query, body)
-      query_strings = query.present? ? '?' + query&.to_query : ''
+      query_strings = query.present? ? "?#{query&.to_query}" : ''
       uri = URI.join(File.join(endpoint, pathname), query_strings)
       _request_with_absolute_uri(http_method, uri, headers, body)
     end

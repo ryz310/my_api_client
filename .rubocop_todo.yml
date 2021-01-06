@@ -49,11 +49,3 @@ Style/DocumentDynamicEvalDefinition:
 Style/HashTransformValues:
   Exclude:
     - 'lib/my_api_client/integrations/bugsnag.rb'
-
-# Offense count: 3
-# Cop supports --auto-correct.
-Style/StringConcatenation:
-  Exclude:
-    - 'lib/my_api_client/request.rb'
-    - 'lib/my_api_client/rspec/matchers/request_to.rb'
-    - 'my_api/app/controllers/pagination_controller.rb'
