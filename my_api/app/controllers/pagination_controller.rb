@@ -50,7 +50,7 @@ class PaginationController < ApplicationController
   #       but it should be `https://xxxxx.execute-api.ap-northeast-1.amazonaws.com/dev/pagination`.
   #       So this is workaround.
   def page_link(page)
-    query_strings = '?' + { page: page }.to_query
+    query_strings = "?#{{ page: page }.to_query}"
     uri = File.join(ENV['JETS_HOST'], ENV['JETS_STAGE'], pagination_path)
     uri.sub!('http://', 'https://')
     URI.join(uri, query_strings)
