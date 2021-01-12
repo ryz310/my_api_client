@@ -121,7 +121,7 @@ GEM
     hashie (4.1.0)
     i18n (1.8.7)
       concurrent-ruby (~> 1.0)
-    jets (3.0.1)
+    jets (3.0.2)
       actionmailer (~> 6.1.0)
       actionpack (~> 6.1.0)
       actionview (~> 6.1.0)
@@ -152,7 +152,7 @@ GEM
       railties (~> 6.1.0)
       rainbow
       recursive-open-struct
-      serverlessgems (~> 0.1.1)
+      serverlessgems (~> 0.1.2)
       shotgun
       text-table
       thor
@@ -215,7 +215,7 @@ GEM
     rspec-support (3.10.0)
     rspec_junit_formatter (0.4.1)
       rspec-core (>= 2, < 4, != 2.12.0)
-    serverlessgems (0.1.1)
+    serverlessgems (0.1.2)
       gems
       memoist
       zeitwerk
