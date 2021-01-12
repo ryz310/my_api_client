@@ -46,7 +46,7 @@ GEM
       rainbow
       thor
       zeitwerk
-    aws-partitions (1.415.0)
+    aws-partitions (1.416.0)
     aws-sdk-apigateway (1.58.0)
       aws-sdk-core (~> 3, >= 3.109.0)
       aws-sigv4 (~> 1.1)
@@ -56,7 +56,7 @@ GEM
     aws-sdk-cloudwatchlogs (1.38.0)
       aws-sdk-core (~> 3, >= 3.109.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-core (3.110.0)
+    aws-sdk-core (3.111.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.239.0)
       aws-sigv4 (~> 1.1)
@@ -67,7 +67,7 @@ GEM
     aws-sdk-kinesis (1.30.0)
       aws-sdk-core (~> 3, >= 3.109.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-kms (1.40.0)
+    aws-sdk-kms (1.41.0)
       aws-sdk-core (~> 3, >= 3.109.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-lambda (1.57.0)
@@ -121,7 +121,7 @@ GEM
     hashie (4.1.0)
     i18n (1.8.7)
       concurrent-ruby (~> 1.0)
-    jets (3.0.0)
+    jets (3.0.1)
       actionmailer (~> 6.1.0)
       actionpack (~> 6.1.0)
       actionview (~> 6.1.0)
@@ -152,7 +152,7 @@ GEM
       railties (~> 6.1.0)
       rainbow
       recursive-open-struct
-      serverlessgems
+      serverlessgems (~> 0.1.1)
       shotgun
       text-table
       thor
@@ -215,7 +215,7 @@ GEM
     rspec-support (3.10.0)
     rspec_junit_formatter (0.4.1)
       rspec-core (>= 2, < 4, != 2.12.0)
-    serverlessgems (0.1.0)
+    serverlessgems (0.1.1)
       gems
       memoist
       zeitwerk
