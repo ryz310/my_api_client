@@ -23,11 +23,6 @@ Lint/MissingSuper:
     - 'lib/my_api_client/request/executor.rb'
     - 'lib/my_api_client/sleeper.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Lint/SymbolConversion:
-  Exclude:
-    - 'spec/lib/my_api_client/rspec/matchers/be_handled_as_an_error_spec.rb'
 
 # Offense count: 6
 # Configuration parameters: EnforcedStyle, CheckMethodNames, CheckSymbols, AllowedIdentifiers.
