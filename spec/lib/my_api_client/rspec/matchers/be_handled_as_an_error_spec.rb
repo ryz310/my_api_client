@@ -26,7 +26,7 @@ RSpec.describe 'be_handled_as_an_error' do
       def headers
         {
           'Content-Type': 'application/json;charset=UTF-8',
-          'Authorization': "Bearer #{access_token}",
+          Authorization: "Bearer #{access_token}",
         }
       end
     end
