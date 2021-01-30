@@ -302,6 +302,7 @@ workflows:
       - upload-coverage:
           requires:
             - build_gem
+            - verify_generator # for GitHub requirements
       - release:
           context: RubyGems API Key
           requires:
