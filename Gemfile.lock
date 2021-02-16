@@ -34,7 +34,7 @@ GEM
       ruby2_keywords
     faraday-net_http (1.0.1)
     hashdiff (1.0.1)
-    i18n (1.8.8)
+    i18n (1.8.9)
       concurrent-ruby (~> 1.0)
     jsonpath (1.1.0)
       multi_json
