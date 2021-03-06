@@ -120,7 +120,7 @@ RSpec.describe MyApiClient::Stub do
       end
 
       context 'with not an MyApiClient::Error class or instance' do
-        let(:stubbing!) do
+        let(:api_client) do
           stub_api_client(
             example_api_client,
             request: { raise: 1 },
@@ -129,7 +129,10 @@ RSpec.describe MyApiClient::Stub do
         end
 
         it 'raises exception' do
-          expect { stubbing! }.to raise_error(/Unsupported error class was set/)
+          expect { api_client.request(user_id: 1) }
+            .to raise_error(/Unsupported error class was set/)
+          expect { api_client.request_all }
+            .to raise_error(/Unsupported error class was set/)
         end
       end
     end
@@ -213,7 +216,7 @@ RSpec.describe MyApiClient::Stub do
       end
 
       context 'with not an MyApiClient::Error class or instance' do
-        let(:stubbing!) do
+        let(:api_client) do
           stub_api_client(
             example_api_client,
             request: { raise: 1 },
@@ -222,7 +225,10 @@ RSpec.describe MyApiClient::Stub do
         end
 
         it 'raises exception' do
-          expect { stubbing! }.to raise_error(/Unsupported error class was set/)
+          expect { api_client.request(user_id: 1) }
+            .to raise_error(/Unsupported error class was set/)
+          expect { api_client.request_all }
+            .to raise_error(/Unsupported error class was set/)
         end
       end
     end

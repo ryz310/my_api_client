@@ -67,25 +67,24 @@ module MyApiClient
 
     private
 
-    # rubocop:disable Metrics/AbcSize
     def stubbing(instance, action, options)
-      case options
-      when Proc
-        allow(instance).to receive(action) { |*request| stub_as_resource(options.call(*request)) }
-      when Hash
-        if options[:raise].present?
-          exception = process_raise_option(options[:raise], options[:response])
-          allow(instance).to receive(action).and_raise(exception)
-        elsif options[:response]
-          allow(instance).to receive(action).and_return(stub_as_resource(options[:response]))
+      allow(instance).to receive(action) do |*request|
+        case options
+        when Proc
+          stub_as_resource(options.call(*request))
+        when Hash
+          if options[:raise].present?
+            raise process_raise_option(options[:raise], options[:response])
+          elsif options[:response]
+            stub_as_resource(options[:response])
+          else
+            stub_as_resource(options)
+          end
         else
-          allow(instance).to receive(action).and_return(stub_as_resource(options))
+          stub_as_resource(options)
         end
-      else
-        allow(instance).to receive(action).and_return(stub_as_resource(options))
       end
     end
-    # rubocop:enable Metrics/AbcSize
 
     # Provides a shorthand for `raise` option.
     # `MyApiClient::Error` requires `MyApiClient::Params::Params` instance on
