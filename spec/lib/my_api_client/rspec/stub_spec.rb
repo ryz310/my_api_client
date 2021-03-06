@@ -70,7 +70,7 @@ RSpec.describe MyApiClient::Stub do
 
       let(:number) { rand(100) }
 
-      it 'stubs the ApiClient to return params set in Proc' do
+      it 'stubs to return params set in Proc' do
         response1 = api_client.request(user_id: number)
         expect(response1.id).to eq number
         response2 = api_client.request_all
@@ -88,7 +88,7 @@ RSpec.describe MyApiClient::Stub do
           )
         end
 
-        it 'stubs ApiClient to raise error set in `raise`' do
+        it 'stubs to raise error set in `raise`' do
           expect { api_client.request(user_id: 1) }.to raise_error(error)
           expect { api_client.request_all }.to raise_error(error)
         end
@@ -113,7 +113,7 @@ RSpec.describe MyApiClient::Stub do
           )
         end
 
-        it 'stubs ApiClient to raise error set in `raise`' do
+        it 'stubs to raise error set in `raise`' do
           expect { api_client.request(user_id: 1) }.to raise_error(MyApiClient::ServerError)
           expect { api_client.request_all }.to raise_error(MyApiClient::ServerError)
         end
@@ -146,7 +146,7 @@ RSpec.describe MyApiClient::Stub do
         )
       end
 
-      it 'stubs the ApiClient to return params set in `response`' do
+      it 'stubs to return params set in `response`' do
         response1 = api_client.request(user_id: 1)
         expect(response1.id).to eq 12_345
         response2 = api_client.request_all
@@ -164,19 +164,19 @@ RSpec.describe MyApiClient::Stub do
           )
         end
 
-        it 'stubs ApiClient to raise error set in `raise`' do
+        it 'stubs to raise error set in `raise`' do
           expect { api_client.request(user_id: 1) }.to raise_error(error)
           expect { api_client.request_all }.to raise_error(error)
         end
 
-        it 'stubs ApiClient to return params set in `response`' do
+        it 'stubs to return params set in `response`' do
           api_client.request(user_id: 1)
         rescue error => e
           response_body = e.params.response.data.to_h
           expect(response_body).to eq(message: 'error 1')
         end
 
-        it 'stubs ApiClient to return params with metadata' do
+        it 'stubs to return params with metadata' do
           api_client.request_all
         rescue error => e
           expect(e.params.metadata).to eq(
@@ -207,7 +207,7 @@ RSpec.describe MyApiClient::Stub do
           )
         end
 
-        it 'stubs ApiClient to raise error set in `raise`' do
+        it 'stubs to raise error set in `raise`' do
           expect { api_client.request(user_id: 1) }
             .to raise_error(/the `response` option is ignored/)
           expect { api_client.request_all }
@@ -255,7 +255,7 @@ RSpec.describe MyApiClient::Stub do
         )
       end
 
-      it do
+      it 'stubs to pageable response' do # rubocop:disable RSpec/MultipleExpectations
         pageable_response = api_client.request(user_id: 1)
         response_1st_page = pageable_response.next
         expect(response_1st_page.page).to eq 1
@@ -270,7 +270,7 @@ RSpec.describe MyApiClient::Stub do
         expect { pageable_response.next }.to raise_error(MyApiClient::ClientError::IamTeapot)
       end
 
-      it do
+      it 'is able to be endless pageable response' do
         expect { |b| api_client.request_all.take(5).map(&:page).each(&b) }
           .to yield_successive_args(1, 2, 3, 4, 5)
       end
