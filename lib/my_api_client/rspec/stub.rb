@@ -69,20 +69,24 @@ module MyApiClient
 
     def stubbing(instance, action, options)
       allow(instance).to receive(action) do |*request|
-        case options
-        when Proc
-          stub_as_resource(options.call(*request))
-        when Hash
-          if options[:raise].present?
-            raise process_raise_option(options[:raise], options[:response])
-          elsif options[:response]
-            stub_as_resource(options[:response])
-          else
-            stub_as_resource(options)
-          end
+        generate_stubbed_response(options, *request)
+      end
+    end
+
+    def generate_stubbed_response(options, *request)
+      case options
+      when Proc
+        stub_as_resource(options.call(*request))
+      when Hash
+        if options[:raise].present?
+          raise process_raise_option(options[:raise], options[:response])
+        elsif options[:response].present?
+          stub_as_resource(options[:response])
         else
           stub_as_resource(options)
         end
+      else
+        stub_as_resource(options)
       end
     end
 
