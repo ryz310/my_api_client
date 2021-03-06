@@ -86,7 +86,7 @@ module MyApiClient
       when Hash
         if options[:raise].present?
           raise process_raise_option(options[:raise], options[:response])
-        elsif options[:response].present?
+        elsif options[:response]
           stub_as_resource(options[:response])
         elsif options[:pageable].present? && options[:pageable].is_a?(Enumerable)
           stub_as_pageable_resource(options[:pageable].each, *request)
