@@ -79,16 +79,16 @@ module MyApiClient
       end
     end
 
-    def generate_stubbed_response(options, *request)
+    def generate_stubbed_response(options, *request) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       case options
       when Proc
         stub_as_resource(options.call(*request))
       when Hash
-        if options[:raise].present?
+        if options[:raise] # rubocop:disable Style/GuardClause
           raise process_raise_option(options[:raise], options[:response])
         elsif options[:response]
           stub_as_resource(options[:response])
-        elsif options[:pageable].present? && options[:pageable].is_a?(Enumerable)
+        elsif options[:pageable].is_a?(Enumerable)
           stub_as_pageable_resource(options[:pageable].each, *request)
         else
           stub_as_resource(options)
