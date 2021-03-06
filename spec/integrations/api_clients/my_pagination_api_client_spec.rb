@@ -7,10 +7,9 @@ RSpec.describe 'Integration test with My Pagination API', type: :integration do
   describe 'GET pagination' do
     shared_examples 'the API client' do
       it 'returns an array of posts ordered by id' do
-        pageable_response = api_client.pagination
-        expect(pageable_response.next.page).to eq 1
-        expect(pageable_response.next.page).to eq 2
-        expect(pageable_response.next.page).to eq 3
+        api_client.pagination.each.with_index(1) do |response, idx|
+          expect(response.page).to eq idx
+        end
       end
     end
 
