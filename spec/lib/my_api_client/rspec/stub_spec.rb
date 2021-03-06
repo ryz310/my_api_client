@@ -233,6 +233,49 @@ RSpec.describe MyApiClient::Stub do
       end
     end
 
+    context 'when use `pageable` option' do
+      let(:api_client) do
+        stub_api_client(
+          example_api_client,
+          request: {
+            pageable: [
+              { response: { page: 1 } },
+              { page: 2 },
+              ->(params) { { page: 3, user_id: params[:user_id] } },
+              { raise: MyApiClient::ClientError::IamTeapot },
+            ],
+          },
+          request_all: {
+            pageable: Enumerator.new do |y|
+              loop.with_index(1) do |_, i|
+                y << { page: i }
+              end
+            end,
+          }
+        )
+      end
+
+      it do
+        pageable_response = api_client.request(user_id: 1)
+        response_1st_page = pageable_response.next
+        expect(response_1st_page.page).to eq 1
+
+        response_2nd_page = pageable_response.next
+        expect(response_2nd_page.page).to eq 2
+
+        response_3rd_page = pageable_response.next
+        expect(response_3rd_page.page).to eq 3
+        expect(response_3rd_page.user_id).to eq 1
+
+        expect { pageable_response.next }.to raise_error(MyApiClient::ClientError::IamTeapot)
+      end
+
+      it do
+        expect { |b| api_client.request_all.take(5).map(&:page).each(&b) }
+          .to yield_successive_args(1, 2, 3, 4, 5)
+      end
+    end
+
     context 'when use other values' do
       let(:api_client) do
         stub_api_client(

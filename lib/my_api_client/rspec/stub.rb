@@ -82,12 +82,24 @@ module MyApiClient
           raise process_raise_option(options[:raise], options[:response])
         elsif options[:response].present?
           stub_as_resource(options[:response])
+        elsif options[:pageable].present? && options[:pageable].is_a?(Enumerable)
+          stub_as_pageable_resource(options[:pageable].each, *request)
         else
           stub_as_resource(options)
         end
       else
         stub_as_resource(options)
       end
+    end
+
+    def stub_as_pageable_resource(pager, *request)
+      Enumerator.new do |y|
+        loop do
+          y << generate_stubbed_response(pager.next, *request)
+        rescue StopIteration
+          break
+        end
+      end.lazy
     end
 
     # Provides a shorthand for `raise` option.
