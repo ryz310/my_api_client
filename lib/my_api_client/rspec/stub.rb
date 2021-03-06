@@ -18,6 +18,9 @@ module MyApiClient
     # @example
     #   stub_api_client_all(
     #     ExampleApiClient,
+    #     get_users: {                                     # Returns an arbitrary pageable response
+    #       pageable: [ { id: 1 }, { id: 2 }]              # for `#pageable_get`.
+    #     },
     #     get_user: { response: { id: 1 } },               # Returns an arbitrary response.
     #     post_users: { id: 1 },                           # You can ommit `response` keyword.
     #     patch_user: ->(params) { { id: params[:id] } },  # Returns calculated result as response.
@@ -46,6 +49,9 @@ module MyApiClient
     # @example
     #   api_client = stub_api_client(
     #     ExampleApiClient,
+    #     get_users: {                                     # Returns an arbitrary pageable response
+    #       pageable: [ { id: 1 }, { id: 2 }]              # for `#pageable_get`.
+    #     },
     #     get_user: { response: { id: 1 } },               # Returns an arbitrary response.
     #     post_users: { id: 1 },                           # You can ommit `response` keyword.
     #     patch_user: ->(params) { { id: params[:id] } },  # Returns calculated result as response.
