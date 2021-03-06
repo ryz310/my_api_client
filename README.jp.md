@@ -551,6 +551,8 @@ end
 
 ### Stubbing
 
+#### `response` option
+
 以下のような `ApiClient` を定義しているとします。
 
 ```ruby
@@ -587,6 +589,7 @@ response = ExampleApiClient.new.request(user_id: 1)
 response.id # => 12345
 ```
 
+#### Proc
 
 リクスエストパラメータを使ったレスポンスを返すようにスタブ化したい場合は、 `Proc` を利用することで実現できます。
 
@@ -600,7 +603,9 @@ response = ExampleApiClient.new.request(user_id: 1)
 response.id # => 1
 ```
 
-`receive` や `have_received` を使ったテストを書きたい場合は、 `stub_api_client_all` や `stub_api_client` の戻り値を利用すると良いでしょう。
+#### Return value of `#stub_api_client_all` and `#stub_api_client`
+
+`#stub_api_client_all` や `#stub_api_client` の戻り値はスタブ化した API Client のスタブオブジェクトです。`receive` や `have_received` を使ったテストを書きたい場合は、これらの値を利用すると良いでしょう。
 
 ```ruby
 def execute_api_request
@@ -612,7 +617,9 @@ execute_api_request
 expect(api_client).to have_received(:request).with(user_id: 1)
 ```
 
-また、例外が発生する場合のテストを書きたい場合は、 `raise` オプションを利用することができます。
+#### `raise` option
+
+例外が発生する場合のテストを書きたい場合は、 `raise` オプションを利用することができます。
 
 ```ruby
 def execute_api_request
@@ -640,6 +647,60 @@ rescue MyApiClient::Error => e
   response_body = e.params.response.data.to_h
   expect(response_body).to eq(message: 'error')
 end
+```
+
+#### `pageable` option
+
+`#pageable_get`  (`#pget`) を使った実装用に `pageable` というオプションが利用できます。
+`pageable` に設定する値は `Enumerable` である必要があります。
+
+```ruby
+stub_api_client_all(
+  MyPaginationApiClient,
+  pagination: {
+    pageable: [
+      { page: 1 },
+      { page: 2 },
+      { page: 3 },
+    ],
+  }
+)
+
+MyPaginationApiClient.new.pagination.each do |response|
+  response.page #=> 1, 2, 3
+end
+```
+
+なお、 `Enumerable` の各値にはここまで紹介した `response`, `raise`, `Prox` など全てのオプションが利用可能です。
+
+```ruby
+stub_api_client_all(
+  MyPaginationApiClient,
+  pagination: {
+    pageable: [
+      { response: { page: 1 } },
+      { page: 2 },
+      ->(params) { { page: 3, user_id: params[:user_id] } },
+      { raise: MyApiClient::ClientError::IamTeapot },
+    ],
+  }
+)
+```
+
+また、 `Enumerator` を使えば無限に続くページネーションを定義することもできます。
+
+
+```ruby
+stub_api_client_all(
+  MyPaginationApiClient,
+  pagination: {
+    pageable: Enumerator.new do |y|
+      loop.with_index(1) do |_, i|
+        y << { page: i }
+      end
+    end,
+  }
+)
 ```
 
 ## Deployment
