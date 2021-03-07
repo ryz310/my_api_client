@@ -1,5 +1,54 @@
 # Change log
 
+## v0.20.0 (Mar 07, 2021)
+
+### Feature
+### Bugfix
+### Breaking Change
+### Misc
+
+* [#414](https://github.com/ryz310/my_api_client/pull/414) Style/StringConcatenation-20210106033935 ([@ryz310](https://github.com/ryz310))
+* [#415](https://github.com/ryz310/my_api_client/pull/415) ryz310/dependabot/bundler/bugsnag-6.19.0 ([@ryz310](https://github.com/ryz310))
+* [#416](https://github.com/ryz310/my_api_client/pull/416) Style/HashTransformValues-20210106233116 ([@ryz310](https://github.com/ryz310))
+* [#418](https://github.com/ryz310/my_api_client/pull/418) ryz310/dependabot/bundler/activesupport-6.1.1 ([@ryz310](https://github.com/ryz310))
+* [#419](https://github.com/ryz310/my_api_client/pull/419) ryz310/dependabot/bundler/rubocop-1.8.0 ([@ryz310](https://github.com/ryz310))
+* [#420](https://github.com/ryz310/my_api_client/pull/420) Re-generate .rubocop_todo.yml with RuboCop v1.8.0 ([@ryz310](https://github.com/ryz310))
+* [#421](https://github.com/ryz310/my_api_client/pull/421) Update simplecov requirement from = 0.17.1 to = 0.21.2 ([@ryz310](https://github.com/ryz310))
+* [#417](https://github.com/ryz310/my_api_client/pull/417) Bump jets from 2.3.18 to 3.0.0 in /my_api ([@ryz310](https://github.com/ryz310))
+* [#422](https://github.com/ryz310/my_api_client/pull/422) ryz310/dependabot/bundler/rubocop-1.8.1 ([@ryz310](https://github.com/ryz310))
+* [#424](https://github.com/ryz310/my_api_client/pull/424) Re-generate .rubocop_todo.yml with RuboCop v1.8.1 ([@ryz310](https://github.com/ryz310))
+* [#425](https://github.com/ryz310/my_api_client/pull/425) ryz310/dependabot/bundler/my_api/jets-3.0.1 ([@ryz310](https://github.com/ryz310))
+* [#427](https://github.com/ryz310/my_api_client/pull/427) ryz310/dependabot/bundler/my_api/jets-3.0.2 ([@ryz310](https://github.com/ryz310))
+* [#428](https://github.com/ryz310/my_api_client/pull/428) ryz310/dependabot/bundler/webmock-3.11.1 ([@ryz310](https://github.com/ryz310))
+* [#426](https://github.com/ryz310/my_api_client/pull/426) ryz310/dependabot/bundler/my_api/nokogiri-1.11.0 ([@ryz310](https://github.com/ryz310))
+* [#429](https://github.com/ryz310/my_api_client/pull/429) ryz310/dependabot/bundler/my_api/capybara-3.35.0 ([@ryz310](https://github.com/ryz310))
+* [#430](https://github.com/ryz310/my_api_client/pull/430) ryz310/dependabot/bundler/my_api/capybara-3.35.1 ([@ryz310](https://github.com/ryz310))
+* [#431](https://github.com/ryz310/my_api_client/pull/431) ryz310/dependabot/bundler/my_api/puma-5.2.0 ([@ryz310](https://github.com/ryz310))
+* [#433](https://github.com/ryz310/my_api_client/pull/433) Lint/SymbolConversion-20210128233108 ([@ryz310](https://github.com/ryz310))
+* [#434](https://github.com/ryz310/my_api_client/pull/434) ryz310/dependabot/bundler/my_api/capybara-3.35.2 ([@ryz310](https://github.com/ryz310))
+* [#435](https://github.com/ryz310/my_api_client/pull/435) ryz310/dependabot/bundler/my_api/capybara-3.35.3 ([@ryz310](https://github.com/ryz310))
+* [#436](https://github.com/ryz310/my_api_client/pull/436) Use Circle CI matrix ([@ryz310](https://github.com/ryz310))
+* [#437](https://github.com/ryz310/my_api_client/pull/437) ryz310/dependabot/bundler/webmock-3.11.2 ([@ryz310](https://github.com/ryz310))
+* [#438](https://github.com/ryz310/my_api_client/pull/438) ryz310/dependabot/bundler/rubocop-1.9.1 ([@ryz310](https://github.com/ryz310))
+* [#439](https://github.com/ryz310/my_api_client/pull/439) Re-generate .rubocop_todo.yml with RuboCop v1.9.1 ([@ryz310](https://github.com/ryz310))
+* [#440](https://github.com/ryz310/my_api_client/pull/440) ryz310/dependabot/bundler/rubocop-rspec-2.2.0 ([@ryz310](https://github.com/ryz310))
+* [#441](https://github.com/ryz310/my_api_client/pull/441) ryz310/dependabot/bundler/my_api/puma-5.2.1 ([@ryz310](https://github.com/ryz310))
+* [#442](https://github.com/ryz310/my_api_client/pull/442) ryz310/dependabot/bundler/activesupport-6.1.2 ([@ryz310](https://github.com/ryz310))
+* [#443](https://github.com/ryz310/my_api_client/pull/443) ryz310/dependabot/bundler/activesupport-6.1.2.1 ([@ryz310](https://github.com/ryz310))
+* [#444](https://github.com/ryz310/my_api_client/pull/444) ryz310/dependabot/bundler/my_api/actionpack-6.1.2.1 ([@ryz310](https://github.com/ryz310))
+* [#445](https://github.com/ryz310/my_api_client/pull/445) ryz310/dependabot/bundler/rubocop-1.10.0 ([@ryz310](https://github.com/ryz310))
+* [#446](https://github.com/ryz310/my_api_client/pull/446) Re-generate .rubocop_todo.yml with RuboCop v1.10.0 ([@ryz310](https://github.com/ryz310))
+* [#447](https://github.com/ryz310/my_api_client/pull/447) ryz310/dependabot/bundler/activesupport-6.1.3 ([@ryz310](https://github.com/ryz310))
+* [#448](https://github.com/ryz310/my_api_client/pull/448) ryz310/dependabot/bundler/webmock-3.11.3 ([@ryz310](https://github.com/ryz310))
+* [#449](https://github.com/ryz310/my_api_client/pull/449) ryz310/dependabot/bundler/webmock-3.12.0 ([@ryz310](https://github.com/ryz310))
+* [#450](https://github.com/ryz310/my_api_client/pull/450) ryz310/dependabot/bundler/rubocop-performance-1.10.0 ([@ryz310](https://github.com/ryz310))
+* [#451](https://github.com/ryz310/my_api_client/pull/451) ryz310/dependabot/bundler/rubocop-1.11.0 ([@ryz310](https://github.com/ryz310))
+* [#453](https://github.com/ryz310/my_api_client/pull/453) ryz310/dependabot/bundler/rubocop-performance-1.10.1 ([@ryz310](https://github.com/ryz310))
+* [#452](https://github.com/ryz310/my_api_client/pull/452) Re-generate .rubocop_todo.yml with RuboCop v1.11.0 ([@ryz310](https://github.com/ryz310))
+* [#454](https://github.com/ryz310/my_api_client/pull/454) ryz310/dependabot/bundler/my_api/puma-5.2.2 ([@ryz310](https://github.com/ryz310))
+* [#455](https://github.com/ryz310/my_api_client/pull/455) ryz310/dependabot/bundler/webmock-3.12.1 ([@ryz310](https://github.com/ryz310))
+* [#456](https://github.com/ryz310/my_api_client/pull/456) Stubbed pagination ([@ryz310](https://github.com/ryz310))
+
 ## v0.19.0 (Jan 04, 2021)
 
 ### Feature
