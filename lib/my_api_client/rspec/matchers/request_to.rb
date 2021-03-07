@@ -50,7 +50,7 @@ RSpec::Matchers.define :request_to do |expected_method, expected_url|
   end
 
   def request_line(method, url, query = nil)
-    url += '?' + query.to_query if query.present?
+    url += "?#{query.to_query}" if query.present?
     "#{method.upcase} #{url}"
   end
 

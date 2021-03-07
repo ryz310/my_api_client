@@ -70,7 +70,7 @@ RSpec.describe MyApiClient::Stub do
 
       let(:number) { rand(100) }
 
-      it 'stubs the ApiClient to return params set in Proc' do
+      it 'stubs to return params set in Proc' do
         response1 = api_client.request(user_id: number)
         expect(response1.id).to eq number
         response2 = api_client.request_all
@@ -88,7 +88,7 @@ RSpec.describe MyApiClient::Stub do
           )
         end
 
-        it 'stubs ApiClient to raise error set in `raise`' do
+        it 'stubs to raise error set in `raise`' do
           expect { api_client.request(user_id: 1) }.to raise_error(error)
           expect { api_client.request_all }.to raise_error(error)
         end
@@ -113,14 +113,14 @@ RSpec.describe MyApiClient::Stub do
           )
         end
 
-        it 'stubs ApiClient to raise error set in `raise`' do
+        it 'stubs to raise error set in `raise`' do
           expect { api_client.request(user_id: 1) }.to raise_error(MyApiClient::ServerError)
           expect { api_client.request_all }.to raise_error(MyApiClient::ServerError)
         end
       end
 
       context 'with not an MyApiClient::Error class or instance' do
-        let(:stubbing!) do
+        let(:api_client) do
           stub_api_client(
             example_api_client,
             request: { raise: 1 },
@@ -129,7 +129,10 @@ RSpec.describe MyApiClient::Stub do
         end
 
         it 'raises exception' do
-          expect { stubbing! }.to raise_error(/Unsupported error class was set/)
+          expect { api_client.request(user_id: 1) }
+            .to raise_error(/Unsupported error class was set/)
+          expect { api_client.request_all }
+            .to raise_error(/Unsupported error class was set/)
         end
       end
     end
@@ -139,15 +142,15 @@ RSpec.describe MyApiClient::Stub do
         stub_api_client(
           example_api_client,
           request: { response: { id: 12_345 } },
-          request_all: { response: [10, 20, 30] }
+          request_all: { response: '' }
         )
       end
 
-      it 'stubs the ApiClient to return params set in `response`' do
+      it 'stubs to return params set in `response`' do
         response1 = api_client.request(user_id: 1)
         expect(response1.id).to eq 12_345
         response2 = api_client.request_all
-        expect(response2).to eq [10, 20, 30]
+        expect(response2).to eq ''
       end
     end
 
@@ -161,19 +164,19 @@ RSpec.describe MyApiClient::Stub do
           )
         end
 
-        it 'stubs ApiClient to raise error set in `raise`' do
+        it 'stubs to raise error set in `raise`' do
           expect { api_client.request(user_id: 1) }.to raise_error(error)
           expect { api_client.request_all }.to raise_error(error)
         end
 
-        it 'stubs ApiClient to return params set in `response`' do
+        it 'stubs to return params set in `response`' do
           api_client.request(user_id: 1)
         rescue error => e
           response_body = e.params.response.data.to_h
           expect(response_body).to eq(message: 'error 1')
         end
 
-        it 'stubs ApiClient to return params with metadata' do
+        it 'stubs to return params with metadata' do
           api_client.request_all
         rescue error => e
           expect(e.params.metadata).to eq(
@@ -204,7 +207,7 @@ RSpec.describe MyApiClient::Stub do
           )
         end
 
-        it 'stubs ApiClient to raise error set in `raise`' do
+        it 'stubs to raise error set in `raise`' do
           expect { api_client.request(user_id: 1) }
             .to raise_error(/the `response` option is ignored/)
           expect { api_client.request_all }
@@ -213,7 +216,7 @@ RSpec.describe MyApiClient::Stub do
       end
 
       context 'with not an MyApiClient::Error class or instance' do
-        let(:stubbing!) do
+        let(:api_client) do
           stub_api_client(
             example_api_client,
             request: { raise: 1 },
@@ -222,8 +225,54 @@ RSpec.describe MyApiClient::Stub do
         end
 
         it 'raises exception' do
-          expect { stubbing! }.to raise_error(/Unsupported error class was set/)
+          expect { api_client.request(user_id: 1) }
+            .to raise_error(/Unsupported error class was set/)
+          expect { api_client.request_all }
+            .to raise_error(/Unsupported error class was set/)
         end
+      end
+    end
+
+    context 'when use `pageable` option' do
+      let(:api_client) do
+        stub_api_client(
+          example_api_client,
+          request: {
+            pageable: [
+              { response: { page: 1 } },
+              { page: 2 },
+              ->(params) { { page: 3, user_id: params[:user_id] } },
+              { raise: MyApiClient::ClientError::IamTeapot },
+            ],
+          },
+          request_all: {
+            pageable: Enumerator.new do |y|
+              loop.with_index(1) do |_, i|
+                y << { page: i }
+              end
+            end,
+          }
+        )
+      end
+
+      it 'stubs to pageable response' do # rubocop:disable RSpec/MultipleExpectations
+        pageable_response = api_client.request(user_id: 1)
+        response_1st_page = pageable_response.next
+        expect(response_1st_page.page).to eq 1
+
+        response_2nd_page = pageable_response.next
+        expect(response_2nd_page.page).to eq 2
+
+        response_3rd_page = pageable_response.next
+        expect(response_3rd_page.page).to eq 3
+        expect(response_3rd_page.user_id).to eq 1
+
+        expect { pageable_response.next }.to raise_error(MyApiClient::ClientError::IamTeapot)
+      end
+
+      it 'is able to be endless pageable response' do
+        expect { |b| api_client.request_all.take(5).map(&:page).each(&b) }
+          .to yield_successive_args(1, 2, 3, 4, 5)
       end
     end
 

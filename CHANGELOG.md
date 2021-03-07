@@ -1,5 +1,36 @@
 # Change log
 
+## v0.20.0 (Mar 07, 2021)
+
+### Feature
+
+* [#456](https://github.com/ryz310/my_api_client/pull/456) Stubbed pagination ([@ryz310](https://github.com/ryz310))
+
+### Rubocop Challenge
+
+* [#414](https://github.com/ryz310/my_api_client/pull/414) Style/StringConcatenation-20210106033935 ([@ryz310](https://github.com/ryz310))
+* [#416](https://github.com/ryz310/my_api_client/pull/416) Style/HashTransformValues-20210106233116 ([@ryz310](https://github.com/ryz310))
+* [#433](https://github.com/ryz310/my_api_client/pull/433) Lint/SymbolConversion-20210128233108 ([@ryz310](https://github.com/ryz310))
+* [#452](https://github.com/ryz310/my_api_client/pull/452) Re-generate .rubocop_todo.yml with RuboCop v1.11.0 ([@ryz310](https://github.com/ryz310))
+
+### Dependabot
+
+* [#415](https://github.com/ryz310/my_api_client/pull/415) ryz310/dependabot/bundler/bugsnag-6.19.0 ([@ryz310](https://github.com/ryz310))
+* [#421](https://github.com/ryz310/my_api_client/pull/421) Update simplecov requirement from = 0.17.1 to = 0.21.2 ([@ryz310](https://github.com/ryz310))
+* [#427](https://github.com/ryz310/my_api_client/pull/427) ryz310/dependabot/bundler/my_api/jets-3.0.2 ([@ryz310](https://github.com/ryz310))
+* [#426](https://github.com/ryz310/my_api_client/pull/426) ryz310/dependabot/bundler/my_api/nokogiri-1.11.0 ([@ryz310](https://github.com/ryz310))
+* [#435](https://github.com/ryz310/my_api_client/pull/435) ryz310/dependabot/bundler/my_api/capybara-3.35.3 ([@ryz310](https://github.com/ryz310))
+* [#440](https://github.com/ryz310/my_api_client/pull/440) ryz310/dependabot/bundler/rubocop-rspec-2.2.0 ([@ryz310](https://github.com/ryz310))
+* [#444](https://github.com/ryz310/my_api_client/pull/444) ryz310/dependabot/bundler/my_api/actionpack-6.1.2.1 ([@ryz310](https://github.com/ryz310))
+* [#447](https://github.com/ryz310/my_api_client/pull/447) ryz310/dependabot/bundler/activesupport-6.1.3 ([@ryz310](https://github.com/ryz310))
+* [#453](https://github.com/ryz310/my_api_client/pull/453) ryz310/dependabot/bundler/rubocop-performance-1.10.1 ([@ryz310](https://github.com/ryz310))
+* [#454](https://github.com/ryz310/my_api_client/pull/454) ryz310/dependabot/bundler/my_api/puma-5.2.2 ([@ryz310](https://github.com/ryz310))
+* [#455](https://github.com/ryz310/my_api_client/pull/455) ryz310/dependabot/bundler/webmock-3.12.1 ([@ryz310](https://github.com/ryz310))
+
+### Misc
+
+* [#436](https://github.com/ryz310/my_api_client/pull/436) Use Circle CI matrix ([@ryz310](https://github.com/ryz310))
+
 ## v0.19.0 (Jan 04, 2021)
 
 ### Feature

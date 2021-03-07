@@ -18,6 +18,9 @@ module MyApiClient
     # @example
     #   stub_api_client_all(
     #     ExampleApiClient,
+    #     get_users: {                                     # Returns an arbitrary pageable response
+    #       pageable: [ { id: 1 }, { id: 2 }]              # for `#pageable_get`.
+    #     },
     #     get_user: { response: { id: 1 } },               # Returns an arbitrary response.
     #     post_users: { id: 1 },                           # You can ommit `response` keyword.
     #     patch_user: ->(params) { { id: params[:id] } },  # Returns calculated result as response.
@@ -46,6 +49,9 @@ module MyApiClient
     # @example
     #   api_client = stub_api_client(
     #     ExampleApiClient,
+    #     get_users: {                                     # Returns an arbitrary pageable response
+    #       pageable: [ { id: 1 }, { id: 2 }]              # for `#pageable_get`.
+    #     },
     #     get_user: { response: { id: 1 } },               # Returns an arbitrary response.
     #     post_users: { id: 1 },                           # You can ommit `response` keyword.
     #     patch_user: ->(params) { { id: params[:id] } },  # Returns calculated result as response.
@@ -67,25 +73,40 @@ module MyApiClient
 
     private
 
-    # rubocop:disable Metrics/AbcSize
     def stubbing(instance, action, options)
-      case options
-      when Proc
-        allow(instance).to receive(action) { |*request| stub_as_resource(options.call(*request)) }
-      when Hash
-        if options[:raise].present?
-          exception = process_raise_option(options[:raise], options[:response])
-          allow(instance).to receive(action).and_raise(exception)
-        elsif options[:response]
-          allow(instance).to receive(action).and_return(stub_as_resource(options[:response]))
-        else
-          allow(instance).to receive(action).and_return(stub_as_resource(options))
-        end
-      else
-        allow(instance).to receive(action).and_return(stub_as_resource(options))
+      allow(instance).to receive(action) do |*request|
+        generate_stubbed_response(options, *request)
       end
     end
-    # rubocop:enable Metrics/AbcSize
+
+    def generate_stubbed_response(options, *request) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+      case options
+      when Proc
+        stub_as_resource(options.call(*request))
+      when Hash
+        if options[:raise] # rubocop:disable Style/GuardClause
+          raise process_raise_option(options[:raise], options[:response])
+        elsif options[:response]
+          stub_as_resource(options[:response])
+        elsif options[:pageable].is_a?(Enumerable)
+          stub_as_pageable_resource(options[:pageable].each, *request)
+        else
+          stub_as_resource(options)
+        end
+      else
+        stub_as_resource(options)
+      end
+    end
+
+    def stub_as_pageable_resource(pager, *request)
+      Enumerator.new do |y|
+        loop do
+          y << generate_stubbed_response(pager.next, *request)
+        rescue StopIteration
+          break
+        end
+      end.lazy
+    end
 
     # Provides a shorthand for `raise` option.
     # `MyApiClient::Error` requires `MyApiClient::Params::Params` instance on
