@@ -671,7 +671,7 @@ MyPaginationApiClient.new.pagination.each do |response|
 end
 ```
 
-なお、 `Enumerable` の各値にはここまで紹介した `response`, `raise`, `Prox` など全てのオプションが利用可能です。
+なお、 `Enumerable` の各値にはここまで紹介した `response`, `raise`, `Proc` など全てのオプションが利用可能です。
 
 ```ruby
 stub_api_client_all(
