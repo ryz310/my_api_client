@@ -46,7 +46,7 @@ GEM
       rainbow
       thor
       zeitwerk
-    aws-partitions (1.465.0)
+    aws-partitions (1.467.0)
     aws-sdk-apigateway (1.62.0)
       aws-sdk-core (~> 3, >= 3.112.0)
       aws-sigv4 (~> 1.1)
@@ -56,7 +56,7 @@ GEM
     aws-sdk-cloudwatchlogs (1.41.0)
       aws-sdk-core (~> 3, >= 3.112.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-core (3.114.1)
+    aws-sdk-core (3.114.2)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.239.0)
       aws-sigv4 (~> 1.1)
@@ -73,7 +73,7 @@ GEM
     aws-sdk-lambda (1.62.0)
       aws-sdk-core (~> 3, >= 3.112.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.96.0)
+    aws-sdk-s3 (1.96.1)
       aws-sdk-core (~> 3, >= 3.112.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.1)
@@ -121,7 +121,7 @@ GEM
     hashie (4.1.0)
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
-    jets (3.0.8)
+    jets (3.0.9)
       actionmailer (~> 6.1.0)
       actionpack (~> 6.1.0)
       actionview (~> 6.1.0)
