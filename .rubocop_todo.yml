@@ -6,13 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, IndentationWidth.
-# SupportedStyles: aligned, indented
-Layout/LineEndStringConcatenationIndentation:
-  Exclude:
-    - 'lib/my_api_client/rspec/matchers/be_handled_as_an_error.rb'
 
 # Offense count: 5
 # Configuration parameters: AllowComments, AllowEmptyLambdas.
