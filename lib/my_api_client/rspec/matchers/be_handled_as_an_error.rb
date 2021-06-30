@@ -30,17 +30,17 @@ RSpec::Matchers.define :be_handled_as_an_error do |expected_error_class|
     actual_error = handle_error(api_request)
     if actual_error.nil?
       "expected to be handled as #{expected_error_class.name}, " \
-      'but not to be handled'
+        'but not to be handled'
     else
       "expected to be handled as #{expected_error_class.name}, " \
-      "but it was handled as #{actual_error.class.name}"
+        "but it was handled as #{actual_error.class.name}"
     end
   end
 
   failure_message_when_negated do |api_request|
     actual_error = handle_error(api_request)
     'expected not to be handled as an error, ' \
-    "but it was handled as #{actual_error.class.name}"
+      "but it was handled as #{actual_error.class.name}"
   end
 
   attr_reader :sawyer
