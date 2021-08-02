@@ -172,11 +172,11 @@ GEM
     memoist (0.16.2)
     method_source (1.0.0)
     mini_mime (1.1.0)
-    mini_portile2 (2.5.3)
+    mini_portile2 (2.6.1)
     minitest (5.14.4)
     nio4r (2.5.7)
-    nokogiri (1.11.7)
-      mini_portile2 (~> 2.5.0)
+    nokogiri (1.12.0)
+      mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
     public_suffix (4.0.6)
     puma (5.4.0)
@@ -239,7 +239,7 @@ DEPENDENCIES
   dynomite
   jets
   launchy
-  nokogiri (~> 1.11.7)
+  nokogiri (~> 1.12.0)
   puma
   rack
   rspec
