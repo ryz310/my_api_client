@@ -70,7 +70,7 @@ RSpec.describe MyApiClient::Stub do
 
       let(:number) { rand(100) }
 
-      it 'stubs to return params set in Proc' do
+      it 'executes the procedure and returns the result' do
         response1 = api_client.request(user_id: number)
         expect(response1.id).to eq number
         response2 = api_client.request_all
@@ -88,7 +88,7 @@ RSpec.describe MyApiClient::Stub do
           )
         end
 
-        it 'stubs to raise error set in `raise`' do
+        it 'raises an arbitrary error set in the  `raise` option' do
           expect { api_client.request(user_id: 1) }.to raise_error(error)
           expect { api_client.request_all }.to raise_error(error)
         end
@@ -113,7 +113,7 @@ RSpec.describe MyApiClient::Stub do
           )
         end
 
-        it 'stubs to raise error set in `raise`' do
+        it 'raises an arbitrary error set in the  `raise` option' do
           expect { api_client.request(user_id: 1) }.to raise_error(MyApiClient::ServerError)
           expect { api_client.request_all }.to raise_error(MyApiClient::ServerError)
         end
@@ -128,7 +128,7 @@ RSpec.describe MyApiClient::Stub do
           )
         end
 
-        it 'raises exception' do
+        it 'raises a runtime error' do
           expect { api_client.request(user_id: 1) }
             .to raise_error(/Unsupported error class was set/)
           expect { api_client.request_all }
@@ -146,7 +146,7 @@ RSpec.describe MyApiClient::Stub do
         )
       end
 
-      it 'stubs to return params set in `response`' do
+      it 'returns stub response body set in the  `response` option' do
         response1 = api_client.request(user_id: 1)
         expect(response1.id).to eq 12_345
         response2 = api_client.request_all
@@ -154,36 +154,50 @@ RSpec.describe MyApiClient::Stub do
       end
     end
 
-    context 'when use `raise` and `respones` options' do
+    context 'when use `raise`, `respones` and `status_code` options' do
       shared_examples 'a stub to raise an error' do |error|
         let(:api_client) do
           stub_api_client(
             example_api_client,
-            request: { raise: error, response: { message: 'error 1' } },
+            request: { raise: error, response: { message: 'error 1' }, status_code: 404 },
             request_all: { raise: error, response: { message: 'error 2' } }
           )
         end
 
-        it 'stubs to raise error set in `raise`' do
+        it 'raises an arbitrary error set in the  `raise` option' do
           expect { api_client.request(user_id: 1) }.to raise_error(error)
           expect { api_client.request_all }.to raise_error(error)
         end
 
-        it 'stubs to return params set in `response`' do
+        it 'returns stub response body set in the  `response` option' do
           api_client.request(user_id: 1)
         rescue error => e
           response_body = e.params.response.data.to_h
           expect(response_body).to eq(message: 'error 1')
         end
 
-        it 'stubs to return params with metadata' do
+        it 'returns stub status code set in the `status_code` option' do
+          api_client.request(user_id: 1)
+        rescue error => e
+          status_code = e.params.response.status
+          expect(status_code).to eq(404)
+        end
+
+        it 'returns status code 400 if you omit the `status_code` option' do
           api_client.request_all
+        rescue error => e
+          status_code = e.params.response.status
+          expect(status_code).to eq(400)
+        end
+
+        it 'returns stub metadata set in the options' do
+          api_client.request(user_id: 1)
         rescue error => e
           expect(e.params.metadata).to eq(
             duration: 0.123,
-            response_body: { message: 'error 2' },
+            response_body: { message: 'error 1' },
             response_headers: {},
-            response_status: 400
+            response_status: 404
           )
         end
       end

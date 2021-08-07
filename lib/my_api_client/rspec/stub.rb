@@ -27,7 +27,8 @@ module MyApiClient
     #     put_user: { raise: MyApiClient::ClientError }    # Raises an arbitrary error.
     #     delete_user: {
     #       raise: MyApiClient::ClientError,
-    #       response: { errors: [{ code: 10 }] },          # You can stub response with exception.
+    #       response: { errors: [{ code: 10 }] },          # You can stub response and statu code
+    #       status_code: 429,                              # with an arbitrary error.
     #     }
     #   )
     #   response = ExampleApiClient.new.get_user(id: 123)
@@ -58,7 +59,8 @@ module MyApiClient
     #     put_user: { raise: MyApiClient::ClientError }    # Raises an arbitrary error.
     #     delete_user: {
     #       raise: MyApiClient::ClientError,
-    #       response: { errors: [{ code: 10 }] },          # You can stub response with exception.
+    #       response: { errors: [{ code: 10 }] },          # You can stub response and status code
+    #       status_code: 403,                              # with exception.
     #     }
     #   )
     #   response = api_client.get_user(id: 123)
@@ -85,7 +87,7 @@ module MyApiClient
         stub_as_resource(options.call(*request))
       when Hash
         if options[:raise] # rubocop:disable Style/GuardClause
-          raise process_raise_option(options[:raise], options[:response])
+          raise process_raise_option(options[:raise], options[:response], options[:status_code])
         elsif options[:response]
           stub_as_resource(options[:response])
         elsif options[:pageable].is_a?(Enumerable)
@@ -114,12 +116,14 @@ module MyApiClient
     # If given a error instance, it will return raw value without processing.
     #
     # @param exception [Clsas, MyApiClient::Error] Processing target.
+    # @param response [Hash] describe_response_here
+    # @param status_code [Integer] describe_status_code_here
     # @return [MyApiClient::Error] Processed exception.
     # @raise [RuntimeError] Unsupported error class was set.
-    def process_raise_option(exception, response = {})
+    def process_raise_option(exception, response, status_code)
       case exception
       when Class
-        params = MyApiClient::Params::Params.new(nil, stub_as_response(response))
+        params = MyApiClient::Params::Params.new(nil, stub_as_response(response, status_code))
         if exception == MyApiClient::NetworkError
           exception.new(params, Net::OpenTimeout.new)
         else
@@ -134,10 +138,10 @@ module MyApiClient
       end
     end
 
-    def stub_as_response(params)
+    def stub_as_response(params, status_code)
       instance_double(
         Sawyer::Response,
-        status: 400,
+        status: status_code.presence || 400,
         headers: {},
         data: stub_as_resource(params),
         timing: 0.123
