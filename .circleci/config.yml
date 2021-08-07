@@ -12,7 +12,7 @@ references:
   - &ruby_version
     ruby_version:
       type: enum
-      enum: &ruby_version_enum ['2.5', '2.6', '2.7', '3.0']
+      enum: &ruby_version_enum ['2.6', '2.7', '3.0']
       default: '3.0'
   - &rails_version
     rails_version:
@@ -248,7 +248,7 @@ jobs:
       - code-climate/install
       - code-climate/sum-coverage:
           input: codeclimate.*.json
-          parts: 24
+          parts: 18
       - code-climate/upload-coverage
   rubocop:
     executor: gem_executor
@@ -333,7 +333,7 @@ workflows:
   #             only: [master]
   #   jobs:
   #     - deploy_api:
-  #         ruby_version: '2.5'
+  #         ruby_version: '3.0'
   #     - build_gem:
   #         requires: [deploy_api]
 

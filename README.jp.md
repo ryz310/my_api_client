@@ -12,7 +12,7 @@ MyApiClient は API リクエストクラスを作成するための汎用的な
 
 ## Supported Versions
 
-* Ruby 2.5, 2.6, 2.7, 3.0
+* Ruby 2.6, 2.7, 3.0
 * Rails 5.2, 6.0, 6.1
 
 ## Installation
@@ -630,14 +630,15 @@ stub_api_client_all(ExampleApiClient, request: { raise: MyApiClient::Error })
 expect { execute_api_request }.to raise_error(MyApiClient::Error)
 ```
 
-なお、発生した例外に含まれるレスポンスパラメータもスタブ化したい場合は、 `response` オプションと同時に指定することが可能です。
+なお、発生した例外に含まれるレスポンスパラメータやステータスコードもスタブ化したい場合は、 `response` オプションと同時に指定することが可能です。
 
 ```ruby
 stub_api_client_all(
   ExampleApiClient,
   request: {
     raise: MyApiClient::Error,
-    response: { message: 'error' }
+    response: { message: 'error' },
+    status_code: 429
   }
 )
 
@@ -646,6 +647,8 @@ begin
 rescue MyApiClient::Error => e
   response_body = e.params.response.data.to_h
   expect(response_body).to eq(message: 'error')
+  status_code = e.params.response.status
+  expect(status_code).to eq(429)
 end
 ```
 
@@ -671,7 +674,7 @@ MyPaginationApiClient.new.pagination.each do |response|
 end
 ```
 
-なお、 `Enumerable` の各値にはここまで紹介した `response`, `raise`, `Prox` など全てのオプションが利用可能です。
+なお、 `Enumerable` の各値にはここまで紹介した `response`, `raise`, `Proc` など全てのオプションが利用可能です。
 
 ```ruby
 stub_api_client_all(
