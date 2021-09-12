@@ -176,6 +176,10 @@ commands:
       <<: *rails_version
     steps:
       - run:
+          name: "[Workaround] See: https://obel.hatenablog.jp/entry/20210831/1630350000"
+          command: |
+            sudo ln -s /usr/lib/x86_64-linux-gnu/libffi.so.7.1.0 /usr/lib/x86_64-linux-gnu/libffi.so.6
+      - run:
           name: Generate new API client files
           command: |
             bin/rails g api_client path/to/resource \
