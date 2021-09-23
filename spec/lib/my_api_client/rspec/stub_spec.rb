@@ -88,7 +88,7 @@ RSpec.describe MyApiClient::Stub do
           )
         end
 
-        it 'raises an arbitrary error set in the  `raise` option' do
+        it 'raises an arbitrary error set in the `raise` option' do
           expect { api_client.request(user_id: 1) }.to raise_error(error)
           expect { api_client.request_all }.to raise_error(error)
         end
@@ -113,7 +113,7 @@ RSpec.describe MyApiClient::Stub do
           )
         end
 
-        it 'raises an arbitrary error set in the  `raise` option' do
+        it 'raises an arbitrary error set in the `raise` option' do
           expect { api_client.request(user_id: 1) }.to raise_error(MyApiClient::ServerError)
           expect { api_client.request_all }.to raise_error(MyApiClient::ServerError)
         end
@@ -146,7 +146,7 @@ RSpec.describe MyApiClient::Stub do
         )
       end
 
-      it 'returns stub response body set in the  `response` option' do
+      it 'returns stub response body set in the `response` option' do
         response1 = api_client.request(user_id: 1)
         expect(response1.id).to eq 12_345
         response2 = api_client.request_all
@@ -164,12 +164,12 @@ RSpec.describe MyApiClient::Stub do
           )
         end
 
-        it 'raises an arbitrary error set in the  `raise` option' do
+        it 'raises an arbitrary error set in the `raise` option' do
           expect { api_client.request(user_id: 1) }.to raise_error(error)
           expect { api_client.request_all }.to raise_error(error)
         end
 
-        it 'returns stub response body set in the  `response` option' do
+        it 'returns stub response body set in the `response` option' do
           api_client.request(user_id: 1)
         rescue error => e
           response_body = e.params.response.data.to_h
