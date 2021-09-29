@@ -37,11 +37,6 @@ Naming/VariableNumber:
 RSpec/MultipleMemoizedHelpers:
   Max: 15
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Security/IoMethods:
-  Exclude:
-    - 'my_api/spec/spec_helper.rb'
 
 # Offense count: 3
 Style/DocumentDynamicEvalDefinition:

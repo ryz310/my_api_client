@@ -18,7 +18,7 @@ require 'jets/spec_helpers'
 # Rspec helper module
 module Helpers
   def payload(name)
-    JSON.parse(IO.read("spec/fixtures/payloads/#{name}.json"))
+    JSON.parse(File.read("spec/fixtures/payloads/#{name}.json"))
   end
 end
 
