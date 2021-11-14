@@ -125,7 +125,7 @@ commands:
       - run:
           name: Rubocop Challenge
           command: |
-            gem install rubocop_challenger --pre
+            gem install rubocop_challenger
             rubocop_challenger go --email=ryz310@gmail.com --name=ryz310
   release:
     description: Release to RubyGems.org
