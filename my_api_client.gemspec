@@ -40,4 +40,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov', '0.21.2'
   spec.add_development_dependency 'webmock'
   spec.add_development_dependency 'yard'
+  spec.metadata = {
+    'rubygems_mfa_required' => 'true',
+  }
 end
