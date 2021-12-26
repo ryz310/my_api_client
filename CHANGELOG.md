@@ -1,5 +1,30 @@
 # Change log
 
+## v0.22.0 (Dec 26, 2021)
+
+### Feature
+
+* [#648](https://github.com/ryz310/my_api_client/pull/648) Support Rails 7.0 ([@ryz310](https://github.com/ryz310))
+
+### Rubocop Challenge
+
+* [#617](https://github.com/ryz310/my_api_client/pull/617) RSpec/ExcessiveDocstringSpacing-20210922233114 ([@ryz310](https://github.com/ryz310))
+* [#623](https://github.com/ryz310/my_api_client/pull/623) Security/IoMethods-20210930233112 ([@ryz310](https://github.com/ryz310))
+* [#624](https://github.com/ryz310/my_api_client/pull/624) ryz310/rubocop-challenge/20211004233152 ([@ryz310](https://github.com/ryz310))
+* [#638](https://github.com/ryz310/my_api_client/pull/638) Gemspec/RequireMFA-20211115233105 ([@ryz310](https://github.com/ryz310))
+
+### Dependabot
+
+* [#576](https://github.com/ryz310/my_api_client/pull/576) Bump bugsnag from 6.21.0 to 6.22.1 ([@ryz310](https://github.com/ryz310))
+* [#612](https://github.com/ryz310/my_api_client/pull/612) ryz310/dependabot/bundler/faraday-1.8.0 ([@ryz310](https://github.com/ryz310))
+* [#625](https://github.com/ryz310/my_api_client/pull/625) ryz310/dependabot/bundler/bugsnag-6.24.0 ([@ryz310](https://github.com/ryz310))
+* [#635](https://github.com/ryz310/my_api_client/pull/635) Bump rubocop-performance from 1.11.5 to 1.12.0 ([@ryz310](https://github.com/ryz310))
+* [#636](https://github.com/ryz310/my_api_client/pull/636) ryz310/dependabot/bundler/rubocop-rspec-2.6.0 ([@ryz310](https://github.com/ryz310))
+* [#639](https://github.com/ryz310/my_api_client/pull/639) Bump yard from 0.9.26 to 0.9.27 ([@ryz310](https://github.com/ryz310))
+* [#640](https://github.com/ryz310/my_api_client/pull/640) Bump bugsnag from 6.24.0 to 6.24.1 ([@ryz310](https://github.com/ryz310))
+* [#641](https://github.com/ryz310/my_api_client/pull/641) Bump activesupport from 6.1.4.1 to 6.1.4.2 ([@ryz310](https://github.com/ryz310))
+* [#644](https://github.com/ryz310/my_api_client/pull/644) ryz310/dependabot/bundler/activesupport-6.1.4.4 ([@ryz310](https://github.com/ryz310))
+
 ## v0.21.0 (Aug 07, 2021)
 
 ### Feature
@@ -41,7 +66,7 @@
 
 ### Feature
 
-* [#402](https://github.com/ryz310/my_api_client/pull/402) Support ruby 3.0 and rails 6.1 ([@ryz310](https://github.com/ryz310))
+* [#402](https://github.com/ryz310/my_api_client/pull/402) Support Ruby 3.0 and Rails 6.1 ([@ryz310](https://github.com/ryz310))
 
 ### Rubocop Challenge
 
@@ -55,7 +80,7 @@
 
 ### Breaking Change
 
-* [#365](https://github.com/ryz310/my_api_client/pull/365) End of support for ruby 2.4 and rails 4.2 ([@ryz310](https://github.com/ryz310))
+* [#365](https://github.com/ryz310/my_api_client/pull/365) End of support for Ruby 2.4 and Rails 4.2 ([@ryz310](https://github.com/ryz310))
 
 ### Rubocop Challenge
 
