@@ -17,8 +17,8 @@ references:
   - &rails_version
     rails_version:
       type: enum
-      enum: &rails_version_enum ['5.2', '6.0', '6.1']
-      default: '6.1'
+      enum: &rails_version_enum ['5.2', '6.0', '6.1', '7.0']
+      default: '7.0'
   - &bundler_options
     bundler_options:
       type: string
@@ -29,20 +29,20 @@ executors:
     parameters:
       <<: *ruby_version
     docker:
-      - image: circleci/ruby:<< parameters.ruby_version >>
+      - image: cimg/ruby:<< parameters.ruby_version >>
     working_directory: ~/repo/my_api
   gem_executor:
     parameters:
       <<: *ruby_version
     docker:
-       - image: circleci/ruby:<< parameters.ruby_version >>
+       - image: cimg/ruby:<< parameters.ruby_version >>
     working_directory: ~/repo
   rails_executor:
     parameters:
       <<: *ruby_version
       <<: *rails_version
     docker:
-       - image: circleci/ruby:<< parameters.ruby_version >>
+       - image: cimg/ruby:<< parameters.ruby_version >>
     working_directory: ~/repo/rails_app/rails_<< parameters.rails_version >>
 
 commands:
@@ -252,7 +252,7 @@ jobs:
       - code-climate/install
       - code-climate/sum-coverage:
           input: codeclimate.*.json
-          parts: 18
+          parts: 20
       - code-climate/upload-coverage
   rubocop:
     executor: gem_executor
@@ -290,6 +290,16 @@ workflows:
             exclude:
               - ruby_version: '3.0'
                 rails_version: '5.2'
+                bundler_options: '--with integrations'
+              - ruby_version: '3.0'
+                rails_version: '5.2'
+                bundler_options: '--without integrations'
+              - ruby_version: '2.6'
+                rails_version: '7.0'
+                bundler_options: '--with integrations'
+              - ruby_version: '2.6'
+                rails_version: '7.0'
+                bundler_options: '--without integrations'
       - verify_generator:
           name: verify_generator_on_ruby_<< matrix.ruby_version >>_and_rails_<< matrix.rails_version >>
           matrix:
@@ -299,6 +309,8 @@ workflows:
             exclude:
               - ruby_version: '3.0'
                 rails_version: '5.2'
+              - ruby_version: '2.6'
+                rails_version: '7.0'
       - test_api:
           ruby_version:  '2.7' # Jets supports only Ruby 2.x
       - rubocop
