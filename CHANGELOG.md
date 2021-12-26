@@ -3,53 +3,27 @@
 ## v0.22.0 (Dec 26, 2021)
 
 ### Feature
-### Bugfix
-### Security
-### Breaking Change
-### Rubocop Challenge
-### Dependabot
-### Misc
 
-* [#574](https://github.com/ryz310/my_api_client/pull/574) ryz310/dependabot/bundler/faraday-1.7.0 ([@ryz310](https://github.com/ryz310))
-* [#573](https://github.com/ryz310/my_api_client/pull/573) ryz310/dependabot/bundler/my_api/jets-3.0.12 ([@ryz310](https://github.com/ryz310))
-* [#575](https://github.com/ryz310/my_api_client/pull/575) ryz310/dependabot/bundler/my_api/nokogiri-1.12.3 ([@ryz310](https://github.com/ryz310))
-* [#576](https://github.com/ryz310/my_api_client/pull/576) Bump bugsnag from 6.21.0 to 6.22.1 ([@ryz310](https://github.com/ryz310))
-* [#578](https://github.com/ryz310/my_api_client/pull/578) Re-generate .rubocop_todo.yml with RuboCop v1.19.0 ([@ryz310](https://github.com/ryz310))
-* [#579](https://github.com/ryz310/my_api_client/pull/579) Bump jets from 3.0.12 to 3.0.13 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#580](https://github.com/ryz310/my_api_client/pull/580) Bump rubocop-performance from 1.11.4 to 1.11.5 ([@ryz310](https://github.com/ryz310))
-* [#583](https://github.com/ryz310/my_api_client/pull/583) Re-generate .rubocop_todo.yml with RuboCop v1.19.1 ([@ryz310](https://github.com/ryz310))
-* [#606](https://github.com/ryz310/my_api_client/pull/606) Re-generate .rubocop_todo.yml with RuboCop v1.20.0 ([@ryz310](https://github.com/ryz310))
-* [#584](https://github.com/ryz310/my_api_client/pull/584) Bump actionpack from 6.1.4 to 6.1.4.1 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#589](https://github.com/ryz310/my_api_client/pull/589) Bump nokogiri from 1.12.3 to 1.12.4 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#607](https://github.com/ryz310/my_api_client/pull/607) ryz310/dependabot/bundler/my_api/jets-3.0.16 ([@ryz310](https://github.com/ryz310))
-* [#610](https://github.com/ryz310/my_api_client/pull/610) Re-generate .rubocop_todo.yml with RuboCop v1.21.0 ([@ryz310](https://github.com/ryz310))
-* [#612](https://github.com/ryz310/my_api_client/pull/612) ryz310/dependabot/bundler/faraday-1.8.0 ([@ryz310](https://github.com/ryz310))
+* [#648](https://github.com/ryz310/my_api_client/pull/648) Support Rails 7.0 ([@ryz310](https://github.com/ryz310))
+
+### Rubocop Challenge
+
 * [#617](https://github.com/ryz310/my_api_client/pull/617) RSpec/ExcessiveDocstringSpacing-20210922233114 ([@ryz310](https://github.com/ryz310))
-* [#613](https://github.com/ryz310/my_api_client/pull/613) Bump puma from 5.4.0 to 5.5.0 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#611](https://github.com/ryz310/my_api_client/pull/611) Bump jets from 3.0.16 to 3.0.17 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#619](https://github.com/ryz310/my_api_client/pull/619) Bump nokogiri from 1.11.7 to 1.12.5 in /rails_app/rails_5.2 ([@ryz310](https://github.com/ryz310))
-* [#618](https://github.com/ryz310/my_api_client/pull/618) Bump nokogiri from 1.12.4 to 1.12.5 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#620](https://github.com/ryz310/my_api_client/pull/620) Bump nokogiri from 1.11.7 to 1.12.5 in /rails_app/rails_6.0 ([@ryz310](https://github.com/ryz310))
-* [#621](https://github.com/ryz310/my_api_client/pull/621) ryz310/dependabot/bundler/rails_app/rails_6.1/nokogiri-1.12.5 ([@ryz310](https://github.com/ryz310))
 * [#623](https://github.com/ryz310/my_api_client/pull/623) Security/IoMethods-20210930233112 ([@ryz310](https://github.com/ryz310))
 * [#624](https://github.com/ryz310/my_api_client/pull/624) ryz310/rubocop-challenge/20211004233152 ([@ryz310](https://github.com/ryz310))
-* [#625](https://github.com/ryz310/my_api_client/pull/625) ryz310/dependabot/bundler/bugsnag-6.24.0 ([@ryz310](https://github.com/ryz310))
-* [#626](https://github.com/ryz310/my_api_client/pull/626) ryz310/dependabot/bundler/my_api/puma-5.5.1 ([@ryz310](https://github.com/ryz310))
-* [#627](https://github.com/ryz310/my_api_client/pull/627) Bump puma from 5.5.1 to 5.5.2 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#632](https://github.com/ryz310/my_api_client/pull/632) Re-generate .rubocop_todo.yml with RuboCop v1.22.2 ([@ryz310](https://github.com/ryz310))
-* [#629](https://github.com/ryz310/my_api_client/pull/629) Bump jets from 3.0.17 to 3.0.21 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#633](https://github.com/ryz310/my_api_client/pull/633) Bump capybara from 3.35.3 to 3.36.0 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#634](https://github.com/ryz310/my_api_client/pull/634) Bump jets from 3.0.21 to 3.0.22 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#636](https://github.com/ryz310/my_api_client/pull/636) ryz310/dependabot/bundler/rubocop-rspec-2.6.0 ([@ryz310](https://github.com/ryz310))
-* [#635](https://github.com/ryz310/my_api_client/pull/635) Bump rubocop-performance from 1.11.5 to 1.12.0 ([@ryz310](https://github.com/ryz310))
-* [#637](https://github.com/ryz310/my_api_client/pull/637) Re-generate .rubocop_todo.yml with RuboCop v1.22.3 ([@ryz310](https://github.com/ryz310))
 * [#638](https://github.com/ryz310/my_api_client/pull/638) Gemspec/RequireMFA-20211115233105 ([@ryz310](https://github.com/ryz310))
+
+### Dependabot
+
+* [#576](https://github.com/ryz310/my_api_client/pull/576) Bump bugsnag from 6.21.0 to 6.22.1 ([@ryz310](https://github.com/ryz310))
+* [#612](https://github.com/ryz310/my_api_client/pull/612) ryz310/dependabot/bundler/faraday-1.8.0 ([@ryz310](https://github.com/ryz310))
+* [#625](https://github.com/ryz310/my_api_client/pull/625) ryz310/dependabot/bundler/bugsnag-6.24.0 ([@ryz310](https://github.com/ryz310))
+* [#635](https://github.com/ryz310/my_api_client/pull/635) Bump rubocop-performance from 1.11.5 to 1.12.0 ([@ryz310](https://github.com/ryz310))
+* [#636](https://github.com/ryz310/my_api_client/pull/636) ryz310/dependabot/bundler/rubocop-rspec-2.6.0 ([@ryz310](https://github.com/ryz310))
 * [#639](https://github.com/ryz310/my_api_client/pull/639) Bump yard from 0.9.26 to 0.9.27 ([@ryz310](https://github.com/ryz310))
 * [#640](https://github.com/ryz310/my_api_client/pull/640) Bump bugsnag from 6.24.0 to 6.24.1 ([@ryz310](https://github.com/ryz310))
 * [#641](https://github.com/ryz310/my_api_client/pull/641) Bump activesupport from 6.1.4.1 to 6.1.4.2 ([@ryz310](https://github.com/ryz310))
-* [#642](https://github.com/ryz310/my_api_client/pull/642) Bump jets from 3.0.22 to 3.0.23 in /my_api ([@ryz310](https://github.com/ryz310))
 * [#644](https://github.com/ryz310/my_api_client/pull/644) ryz310/dependabot/bundler/activesupport-6.1.4.4 ([@ryz310](https://github.com/ryz310))
-* [#648](https://github.com/ryz310/my_api_client/pull/648) Support Rails 7.0 ([@ryz310](https://github.com/ryz310))
 
 ## v0.21.0 (Aug 07, 2021)
 
@@ -92,7 +66,7 @@
 
 ### Feature
 
-* [#402](https://github.com/ryz310/my_api_client/pull/402) Support ruby 3.0 and rails 6.1 ([@ryz310](https://github.com/ryz310))
+* [#402](https://github.com/ryz310/my_api_client/pull/402) Support Ruby 3.0 and Rails 6.1 ([@ryz310](https://github.com/ryz310))
 
 ### Rubocop Challenge
 
@@ -106,7 +80,7 @@
 
 ### Breaking Change
 
-* [#365](https://github.com/ryz310/my_api_client/pull/365) End of support for ruby 2.4 and rails 4.2 ([@ryz310](https://github.com/ryz310))
+* [#365](https://github.com/ryz310/my_api_client/pull/365) End of support for Ruby 2.4 and Rails 4.2 ([@ryz310](https://github.com/ryz310))
 
 ### Rubocop Challenge
 
