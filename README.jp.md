@@ -2,7 +2,7 @@
 
 # MyApiClient
 
-MyApiClient は API リクエストクラスを作成するための汎用的な機能を提供します。Sawyer や Faraday をベースにエラーハンドリングの機能を強化した構造になっています。
+MyApiClient は API リクエストクラスを作成するための汎用的な機能を提供します。[Sawyer](https://github.com/lostisland/sawyer) や [Faraday](https://github.com/lostisland/faraday) をベースにエラーハンドリングの機能を強化した構造になっています。
 
 ただし、 Sawyer はダミーデータの作成が難しかったり、他の gem で競合することがよくあるので、将来的には依存しないように変更していくかもしれません。
 
@@ -13,11 +13,11 @@ MyApiClient は API リクエストクラスを作成するための汎用的な
 ## Supported Versions
 
 * Ruby 2.6, 2.7, 3.0
-* Rails 5.2, 6.0, 6.1
+* Rails 5.2, 6.0, 6.1, 7.0
 
 ## Installation
 
-この gem は macOS と Linux で作動します。まずは `my_api_client` を Gemfile に追加します:
+`my_api_client` を Gemfile に追加して下さい:
 
 ```ruby
 gem 'my_api_client'
@@ -130,13 +130,13 @@ api_clinet.pagination.each do |response|
   # Do something.
 end
 
-p = api_clinet.pagination
-p.next # => 1st page result
-p.next # => 2nd page result
-p.next # => 3rd page result
+result = api_clinet.pagination
+result.next # => 1st page result
+result.next # => 2nd page result
+result.next # => 3rd page result
 ```
 
-なお、`#each` はレスポンスに含まれる `paging` の値が nil になるまで繰り返されるのでご注意ください。例えば `#take` と組み合わせることでページネーションの上限を設定できます。
+なお、`#each` はレスポンスに含まれる `paging` の値が `nil` になるまで繰り返されるのでご注意ください。例えば `#take` と組み合わせることでページネーションの上限を設定できます。
 
 `#pageable_get` の alias として `#pget` も利用可能です。
 
@@ -206,11 +206,11 @@ end
 API request `GET https://example.com/path/to/resouce`: "Server error occurred."
 ```
 
+`json` には `Hash` の Key に [JSONPath](https://goessner.net/articles/JsonPath/) を指定して、レスポンス JSON から任意の値を取得し、 Value とマッチするかどうかでエラーハンドリングできます。Value には `String` `Integer` `Range` `Regexp` が指定可能です。上記の場合であれば、以下のような JSON にマッチします。
+
 ```ruby
 error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
 ```
-
-`json` には `Hash` の Key に [JSONPath](https://goessner.net/articles/JsonPath/) を指定して、レスポンス JSON から任意の値を取得し、 Value とマッチするかどうかでエラーハンドリングできます。Value には `String` `Integer` `Range` `Regexp` が指定可能です。上記の場合であれば、以下のような JSON にマッチします。
 
 ```json
 {

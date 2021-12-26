@@ -4,14 +4,10 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem 'my_api_client', path: '../..'
-gem 'rails', '~> 6.1.0'
+gem 'rails', '~> 7.0.0'
 gem 'sqlite3', '~> 1.4'
 
 group :development, :test do
-  gem 'byebug', platforms: %i[mri mingw x64_mingw]
+  gem 'debug', platforms: %i[mri mingw x64_mingw]
   gem 'rspec-rails'
-end
-
-group :development do
-  gem 'listen', '~> 3.3'
 end
