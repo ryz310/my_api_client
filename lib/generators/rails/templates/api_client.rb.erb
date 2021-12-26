@@ -3,9 +3,7 @@
 class <%= "#{class_name}ApiClient" %> < ::ApplicationApiClient
   endpoint '<%= options[:endpoint] %>'
 
-  # error_handling json: { '$.errors.code': 10 } do |params, logger|
-  #   # Behavior when detected an error.
-  # end
+  # error_handling json: { '$.errors.code': 10 }, raise: MyApiClient::Error
 
   def initialize
   end
@@ -13,8 +11,8 @@ class <%= "#{class_name}ApiClient" %> < ::ApplicationApiClient
 <% yeild_request_arguments do |action, http_method, pathname| -%>
   # <%= "#{http_method.upcase} #{pathname}" %>
   #
-  # @return [Sawyer::Resource] Description of the API response
-  # @raise [MyApiClient::Error] Description of the error
+  # @return [Sawyer::Resource] description_of_the_api_response
+  # @raise [MyApiClient::Error] description_of_the_error
   # @see Reference of the API
   def <%= action %>
 <% if http_method == 'get' -%>

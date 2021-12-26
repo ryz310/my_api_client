@@ -26,14 +26,6 @@ RSpec.describe <%= "#{class_name}ApiClient" %>, <%= type_metatag(:api_client) %>
           .when_receive(status_code: 400)
       end
     end
-
-    context 'when the API returns 500 Internal Server Error' do
-      it do
-        expect { api_request }
-          .to be_handled_as_an_error(MyApiClient::ServerError::InternalServerError)
-          .when_receive(status_code: 500)
-      end
-    end
   end
 <% yeild_request_arguments do |action, http_method, pathname| -%>
 
