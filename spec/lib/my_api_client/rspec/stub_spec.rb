@@ -52,7 +52,7 @@ RSpec.describe MyApiClient::Stub do
     end
 
     it 'returns the response of the calling #stub_api_client' do
-      api_client = instance_double(api(client))
+      api_client = instance_double('api_client') # rubocop:disable RSpec/VerifiedDoubleReference
       allow(self).to receive(:stub_api_client).and_return(api_client)
       expect(stubbing_all!).to eq api_client
     end

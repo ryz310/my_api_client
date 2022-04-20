@@ -21,7 +21,7 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
     { instance: instance, response: http_response }
   end
 
-  let(:instance) { instance_double(api_client, my_error_handling: nil) }
+  let(:instance) { instance_double('api_client', my_error_handling: nil) } # rubocop:disable RSpec/VerifiedDoubleReference
 
   shared_examples 'an error was detected' do
     describe 'error handling options' do
