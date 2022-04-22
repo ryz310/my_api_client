@@ -23,7 +23,7 @@ RSpec.configure do |config|
   end
 
   config.before :each, type: :integration do
-    WebMock.disable_net_connect!(allow: /#{ENV['MY_API_ENDPOINT']}*/)
+    WebMock.disable_net_connect!(allow: /#{ENV.fetch('MY_API_ENDPOINT', nil)}*/)
   end
 
   config.after :each, type: :integration do
