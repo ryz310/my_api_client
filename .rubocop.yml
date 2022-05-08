@@ -5,7 +5,7 @@ require:
 inherit_from: .rubocop_todo.yml
 
 AllCops:
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 2.7
   NewCops: enable
   Exclude:
     - rails_app/**/*
@@ -18,10 +18,10 @@ Layout/LineLength:
 
 Metrics/BlockLength:
   Exclude:
-    - 'my_api_client.gemspec'
-    - 'lib/my_api_client/rspec/matchers/**/*'
-    - 'spec/**/*'
-    - 'my_api/spec/**/*'
+    - "my_api_client.gemspec"
+    - "lib/my_api_client/rspec/matchers/**/*"
+    - "spec/**/*"
+    - "my_api/spec/**/*"
 
 Metrics/MethodLength:
   Max: 15
@@ -39,17 +39,17 @@ Style/TrailingCommaInHashLiteral:
 
 RSpec/DescribeClass:
   Exclude:
-    - 'spec/integrations/api_clients/**/*'
-    - 'spec/lib/my_api_client/rspec/matchers/**/*'
+    - "spec/integrations/api_clients/**/*"
+    - "spec/lib/my_api_client/rspec/matchers/**/*"
 
 RSpec/ExampleLength:
   Max: 10
 
 RSpec/FilePath:
   Exclude:
-    - 'spec/lib/my_api_client/integrations/**/*'
-    - 'spec/lib/my_api_client/errors/**/*'
-    - 'spec/lib/my_api_client/rspec/**/*'
+    - "spec/lib/my_api_client/integrations/**/*"
+    - "spec/lib/my_api_client/errors/**/*"
+    - "spec/lib/my_api_client/rspec/**/*"
 
 RSpec/NestedGroups:
   Max: 5

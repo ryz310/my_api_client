@@ -12,8 +12,8 @@ MyApiClient は API リクエストクラスを作成するための汎用的な
 
 ## Supported Versions
 
-* Ruby 2.6, 2.7, 3.0
-* Rails 5.2, 6.0, 6.1, 7.0
+- Ruby 2.7, 3.0, 3.1
+- Rails 5.2, 6.0, 6.1, 7.0
 
 ## Installation
 
@@ -116,7 +116,7 @@ end
 {
   "links": {
     "next": "https://example.com/pagination?page=3",
-    "previous": "https://example.com/pagination?page=1",
+    "previous": "https://example.com/pagination?page=1"
   },
   "page": 2
 }
@@ -200,7 +200,7 @@ error_handling status_code: 500..599, raise: MyApiClient::ServerError do |_param
 end
 ```
 
-上記の例であれば、ステータスコードが `500..599` の場合に `MyApiClient::ServerError`  を発生させる前に `block` の内容が実行れます。引数の `params` にはリクエスト情報とレスポンス情報が含まれています。`logger` はログ出力用インスタンスですが、このインスタンスを使ってログ出力すると、以下のようにリクエスト情報がログ出力に含まれるようになり、デバッグの際に便利です。
+上記の例であれば、ステータスコードが `500..599` の場合に `MyApiClient::ServerError` を発生させる前に `block` の内容が実行れます。引数の `params` にはリクエスト情報とレスポンス情報が含まれています。`logger` はログ出力用インスタンスですが、このインスタンスを使ってログ出力すると、以下のようにリクエスト情報がログ出力に含まれるようになり、デバッグの際に便利です。
 
 ```text
 API request `GET https://example.com/path/to/resouce`: "Server error occurred."
@@ -214,10 +214,10 @@ error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
 
 ```json
 {
-    "erros": {
-        "code": 10,
-        "message": "Some error has occurred."
-    }
+  "erros": {
+    "code": 10,
+    "message": "Some error has occurred."
+  }
 }
 ```
 
@@ -253,10 +253,10 @@ error_handling json: { '$.errors.code': :negative? }
 
 ```json
 {
-    "erros": {
-        "code": -1,
-        "message": "Some error has occurred."
-    }
+  "erros": {
+    "code": -1,
+    "message": "Some error has occurred."
+  }
 }
 ```
 
@@ -344,8 +344,8 @@ error_handling json: { '$.errors.code': 20 },
 
 `retry` オプションを使用する際は以下の点に注意が必要です。
 
-* `error_handling` に `raise` オプションの指定が必須となります。
-* Block を使った `error_handling` の定義は禁止されます。
+- `error_handling` に `raise` オプションの指定が必須となります。
+- Block を使った `error_handling` の定義は禁止されます。
 
 #### MyApiClient::NetworkError
 
@@ -654,7 +654,7 @@ end
 
 #### `pageable` option
 
-`#pageable_get`  (`#pget`) を使った実装用に `pageable` というオプションが利用できます。
+`#pageable_get` (`#pget`) を使った実装用に `pageable` というオプションが利用できます。
 `pageable` に設定する値は `Enumerable` である必要があります。
 
 ```ruby
@@ -691,7 +691,6 @@ stub_api_client_all(
 ```
 
 また、 `Enumerator` を使えば無限に続くページネーションを定義することもできます。
-
 
 ```ruby
 stub_api_client_all(
@@ -742,10 +741,10 @@ $ gem_comet release {VERSION}
 
 実行すると、 https://github.com/ryz310/my_api_client/pulls に以下のような PR が作成されます。
 
-* [Update v0\.16\.1](https://github.com/ryz310/my_api_client/pull/297)
-* [Release v0\.16\.1](https://github.com/ryz310/my_api_client/pull/298)
+- [Update v0\.16\.1](https://github.com/ryz310/my_api_client/pull/297)
+- [Release v0\.16\.1](https://github.com/ryz310/my_api_client/pull/298)
 
-まず、 `Update v{VERSION}`  という PR から merge に取り掛かります。
+まず、 `Update v{VERSION}` という PR から merge に取り掛かります。
 
 PR のコメントにも TODO が記載されていますが、まず、バージョン番号が正しく採番されているかを確認します。
 
@@ -755,12 +754,12 @@ See: [314a4c0](https://github.com/ryz310/my_api_client/pull/297/commits/314a4c06
 
 See: [33a2d17](https://github.com/ryz310/my_api_client/pull/297/commits/33a2d1703c773813c837e74ee3181906b2f2e502)
 
-これらが整ったら、 `Update v{VERSION}`  を merge します。
+これらが整ったら、 `Update v{VERSION}` を merge します。
 
-これでリリース準備が整ったので、`Release v{VERSION}`  の merge に取り掛かります。
+これでリリース準備が整ったので、`Release v{VERSION}` の merge に取り掛かります。
 
 この PR にこれからリリースする gem に対する変更が全て載っています。
-変更内容の最終確認をして、 CI も通ったことを確認したら `Release v{VERSION}`  を merge します。
+変更内容の最終確認をして、 CI も通ったことを確認したら `Release v{VERSION}` を merge します。
 
 あとは Circle CI 側で gem のリリースが自動実行されるので、暫く待ちましょう。
 

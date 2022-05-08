@@ -112,7 +112,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport (~> 6.1)
   bugsnag (>= 6.11.0)
   bundler (>= 2.0)
   my_api_client!
