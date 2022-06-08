@@ -104,8 +104,7 @@ RSpec.describe MyApiClient::Stub do
 
       context 'with MyApiClient::Error instance' do
         let(:api_client) do
-          params = instance_double(MyApiClient::Params::Params, metadata: {})
-          error = MyApiClient::ServerError.new(params)
+          error = MyApiClient::ServerError.new
           stub_api_client(
             example_api_client,
             request: { raise: error },
@@ -212,8 +211,7 @@ RSpec.describe MyApiClient::Stub do
 
       context 'with MyApiClient::Error instance' do
         let(:api_client) do
-          params = instance_double(MyApiClient::Params::Params, metadata: {})
-          error = MyApiClient::ServerError.new(params)
+          error = MyApiClient::ServerError.new
           stub_api_client(
             example_api_client,
             request: { raise: error, response: { message: 'error 1' } },
