@@ -72,8 +72,7 @@ RSpec.describe MyApiClient::Request::Executor do
 
       it 'builds an integration parameter with request and response parameters' do
         safe_execution
-        expect(MyApiClient::Params::Params)
-          .to have_received(:new).with(request_params, response)
+        expect(MyApiClient::Params::Params).to have_received(:new).with(request_params, response)
       end
 
       it 'searches error handlers in reverse order' do
