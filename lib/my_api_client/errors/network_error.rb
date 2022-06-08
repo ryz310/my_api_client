@@ -21,9 +21,9 @@ module MyApiClient
     #   The request and response parameters
     # @param original_error [StandardError]
     #   Some network error
-    def initialize(params, original_error)
+    def initialize(params = nil, original_error = nil)
       @original_error = original_error
-      super params, original_error.message
+      super params, original_error&.message
     end
 
     # Returns contents as string for to be readable for human
@@ -37,7 +37,7 @@ module MyApiClient
     #
     # @return [Hash] Metadata for bugsnag
     def metadata
-      super.merge(original_error: original_error.inspect)
+      super&.merge(original_error: original_error&.inspect)
     end
   end
 end

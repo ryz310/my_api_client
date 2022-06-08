@@ -5,7 +5,7 @@ module MyApiClient
   class Error < StandardError
     attr_reader :params
 
-    delegate :metadata, to: :params
+    delegate :metadata, to: :params, allow_nil: true
     alias to_bugsnag metadata
 
     # Initialize the error class
@@ -14,7 +14,7 @@ module MyApiClient
     #   The request and response parameters
     # @param error_message [String]
     #   The error description
-    def initialize(params, error_message = nil)
+    def initialize(params = nil, error_message = nil)
       @params = params
       super error_message
     end

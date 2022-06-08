@@ -51,7 +51,7 @@ class PaginationController < ApplicationController
   #       So this is workaround.
   def page_link(page)
     query_strings = "?#{{ page: page }.to_query}"
-    uri = File.join(ENV['JETS_HOST'], ENV['JETS_STAGE'], pagination_path)
+    uri = File.join(ENV.fetch('JETS_HOST', nil), ENV.fetch('JETS_STAGE', nil), pagination_path)
     uri.sub!('http://', 'https://')
     URI.join(uri, query_strings)
   end

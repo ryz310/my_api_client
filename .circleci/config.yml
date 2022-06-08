@@ -12,17 +12,17 @@ references:
   - &ruby_version
     ruby_version:
       type: enum
-      enum: &ruby_version_enum ['2.6', '2.7', '3.0']
-      default: '3.0'
+      enum: &ruby_version_enum ["2.7", "3.0", "3.1"]
+      default: "3.1"
   - &rails_version
     rails_version:
       type: enum
-      enum: &rails_version_enum ['5.2', '6.0', '6.1', '7.0']
-      default: '7.0'
+      enum: &rails_version_enum ["5.2", "6.0", "6.1", "7.0"]
+      default: "7.0"
   - &bundler_options
     bundler_options:
       type: string
-      default: ''
+      default: ""
 
 executors:
   api_executor:
@@ -35,14 +35,14 @@ executors:
     parameters:
       <<: *ruby_version
     docker:
-       - image: cimg/ruby:<< parameters.ruby_version >>
+      - image: cimg/ruby:<< parameters.ruby_version >>
     working_directory: ~/repo
   rails_executor:
     parameters:
       <<: *ruby_version
       <<: *rails_version
     docker:
-       - image: cimg/ruby:<< parameters.ruby_version >>
+      - image: cimg/ruby:<< parameters.ruby_version >>
     working_directory: ~/repo/rails_app/rails_<< parameters.rails_version >>
 
 commands:
@@ -109,7 +109,7 @@ commands:
           name: Run RuboCop
           command: bundle exec rubocop
   yardoc:
-    description: 'Generate YARDoc'
+    description: "Generate YARDoc"
     steps:
       - run: bundle exec yardoc -o ./yardoc
       - store_artifacts:
@@ -286,20 +286,20 @@ workflows:
             parameters:
               ruby_version: *ruby_version_enum
               rails_version: *rails_version_enum
-              bundler_options: ['--with integrations', '--without integrations']
+              bundler_options: ["--with integrations", "--without integrations"]
             exclude:
-              - ruby_version: '3.0'
-                rails_version: '5.2'
-                bundler_options: '--with integrations'
-              - ruby_version: '3.0'
-                rails_version: '5.2'
-                bundler_options: '--without integrations'
-              - ruby_version: '2.6'
-                rails_version: '7.0'
-                bundler_options: '--with integrations'
-              - ruby_version: '2.6'
-                rails_version: '7.0'
-                bundler_options: '--without integrations'
+              - ruby_version: "3.0"
+                rails_version: "5.2"
+                bundler_options: "--with integrations"
+              - ruby_version: "3.0"
+                rails_version: "5.2"
+                bundler_options: "--without integrations"
+              - ruby_version: "3.1"
+                rails_version: "5.2"
+                bundler_options: "--with integrations"
+              - ruby_version: "3.1"
+                rails_version: "5.2"
+                bundler_options: "--without integrations"
       - verify_generator:
           name: verify_generator_on_ruby_<< matrix.ruby_version >>_and_rails_<< matrix.rails_version >>
           matrix:
@@ -307,12 +307,12 @@ workflows:
               ruby_version: *ruby_version_enum
               rails_version: *rails_version_enum
             exclude:
-              - ruby_version: '3.0'
-                rails_version: '5.2'
-              - ruby_version: '2.6'
-                rails_version: '7.0'
+              - ruby_version: "3.0"
+                rails_version: "5.2"
+              - ruby_version: "3.1"
+                rails_version: "5.2"
       - test_api:
-          ruby_version:  '2.7' # Jets supports only Ruby 2.x
+          ruby_version: "2.7" # Jets supports only Ruby 2.x
       - rubocop
       - yardoc
       - upload-coverage:

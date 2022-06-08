@@ -4,7 +4,7 @@ require_relative 'my_errors'
 
 # An usage example of the `my_api_client`.
 class ApplicationApiClient < MyApiClient::Base
-  endpoint ENV['MY_API_ENDPOINT']
+  endpoint ENV.fetch('MY_API_ENDPOINT', nil)
 
   self.logger = ::Logger.new(nil)
 

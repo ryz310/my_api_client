@@ -70,7 +70,7 @@ RSpec.describe 'Integration test with My Status API', type: :integration do
           when 500 then MyApiClient::ServerError::InternalServerError
           else; return { message: "You requested status code: #{params[:status]}" }
           end
-        raise exception, MyApiClient::Params::Params.new(nil, nil)
+        raise exception
       end
     end
 

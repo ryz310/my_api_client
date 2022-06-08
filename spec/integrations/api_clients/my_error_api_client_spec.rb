@@ -61,7 +61,7 @@ RSpec.describe 'Integration test with My Error API', type: :integration do
             when 30     then MyErrors::ErrorCode30
             else;            MyErrors::ErrorCodeOther
             end
-          raise exception, MyApiClient::Params::Params.new(nil, nil)
+          raise exception
         end
       end
 

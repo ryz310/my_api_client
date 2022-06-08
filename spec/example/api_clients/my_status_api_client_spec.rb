@@ -5,7 +5,7 @@ require './example/api_clients/my_status_api_client'
 
 RSpec.describe MyStatusApiClient, type: :api_client do
   let(:api_client) { described_class.new }
-  let(:endpoint) { ENV['MY_API_ENDPOINT'] }
+  let(:endpoint) { ENV.fetch('MY_API_ENDPOINT', nil) }
   let(:headers) do
     { 'Content-Type': 'application/json;charset=UTF-8' }
   end

@@ -12,8 +12,8 @@ It is supposed to be used in Ruby on Rails, but it is made to work in other envi
 
 ## Supported Versions
 
-* Ruby 2.6, 2.7, 3.0
-* Rails 5.2, 6.0, 6.1, 7.0
+- Ruby 2.7, 3.0, 3.1
+- Rails 5.2, 6.0, 6.1, 7.0
 
 ## Installation
 
@@ -83,7 +83,7 @@ The `endpoint` defines the intersection of the request URL. Each method describe
 
 Next, define `#initialize`. Suppose you want to set an Access Token, API Key, etc. as in the example above. You can omit the definition if you don't need it.
 
-Then define `# get_users` and` # post_user`. It's a good idea to give the method name the title of the API. I'm calling `# get` and` # post` inside the method, which is the HTTP Method at the time of the request. You can also use `#patch`` #put` `#delete`.
+Then define `#get_users` and `#post_user`. It's a good idea to give the method name the title of the API. I'm calling `#get` and `#post` inside the method, which is the HTTP Method at the time of the request. You can also use `#patch` `#put` `#delete`.
 
 ### Pagination
 
@@ -116,7 +116,7 @@ For example, in the following response, `$.link.next` indicates `"https://exampl
 {
   "links": {
     "next": "https://example.com/pagination?page=3",
-    "previous": "https://example.com/pagination?page=1",
+    "previous": "https://example.com/pagination?page=1"
   },
   "page": 2
 }
@@ -216,10 +216,10 @@ In the above case, it matches JSON as below:
 
 ```json
 {
-    "erros": {
-        "code": 10,
-        "message": "Some error has occurred."
-    }
+  "erros": {
+    "code": 10,
+    "message": "Some error has occurred."
+  }
 }
 ```
 
@@ -335,8 +335,8 @@ error_handling json: { '$.errors.code': 20 },
 
 Keep the following in mind when using the `retry` option:
 
-* The `raise` option must be specified for `error_handling`
-* Definition of `error_handling` using `block` is prohibited
+- The `raise` option must be specified for `error_handling`
+- Definition of `error_handling` using `block` is prohibited
 
 #### MyApiClient::NetworkError
 
@@ -404,7 +404,6 @@ class ExampleApiClient < MyApiClient::Base
   end
 end
 ```
-
 
 WIP
 

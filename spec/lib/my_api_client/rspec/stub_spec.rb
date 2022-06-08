@@ -52,7 +52,7 @@ RSpec.describe MyApiClient::Stub do
     end
 
     it 'returns the response of the calling #stub_api_client' do
-      api_client = instance_double('api client')
+      api_client = instance_double('api_client') # rubocop:disable RSpec/VerifiedDoubleReference
       allow(self).to receive(:stub_api_client).and_return(api_client)
       expect(stubbing_all!).to eq api_client
     end
@@ -104,8 +104,7 @@ RSpec.describe MyApiClient::Stub do
 
       context 'with MyApiClient::Error instance' do
         let(:api_client) do
-          params = instance_double(MyApiClient::Params::Params, metadata: {})
-          error = MyApiClient::ServerError.new(params)
+          error = MyApiClient::ServerError.new
           stub_api_client(
             example_api_client,
             request: { raise: error },
@@ -212,8 +211,7 @@ RSpec.describe MyApiClient::Stub do
 
       context 'with MyApiClient::Error instance' do
         let(:api_client) do
-          params = instance_double(MyApiClient::Params::Params, metadata: {})
-          error = MyApiClient::ServerError.new(params)
+          error = MyApiClient::ServerError.new
           stub_api_client(
             example_api_client,
             request: { raise: error, response: { message: 'error 1' } },

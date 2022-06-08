@@ -6,12 +6,12 @@ module MyApiClient
     alias _original_initialize initialize
 
     # Override MyApiClient::Error#initialize
-    def initialize(params, error_message = nil)
+    def initialize(params = nil, error_message = nil)
       _original_initialize(params, error_message)
 
       Bugsnag.leave_breadcrumb(
         "#{self.class.name} occurred",
-        metadata.transform_values(&:inspect),
+        metadata&.transform_values(&:inspect),
         Bugsnag::Breadcrumbs::ERROR_BREADCRUMB_TYPE
       )
     end
