@@ -37,13 +37,6 @@ Naming/VariableNumber:
 RSpec/MultipleMemoizedHelpers:
   Max: 15
 
-# Offense count: 15
-# This cop supports unsafe autocorrection (--autocorrect-all).
-RSpec/Rails/HaveHttpStatus:
-  Exclude:
-    - 'my_api/spec/controllers/error_controller_spec.rb'
-    - 'my_api/spec/controllers/pagination_controller_spec.rb'
-    - 'my_api/spec/controllers/rest_controller_spec.rb'
 
 # Offense count: 3
 Style/DocumentDynamicEvalDefinition:
