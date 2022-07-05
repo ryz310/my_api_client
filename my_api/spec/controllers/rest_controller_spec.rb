@@ -13,7 +13,7 @@ describe RestController, type: :controller do
 
       it 'returns an array of posts ordered by id' do
         get '/rest', order: 'asc'
-        expect(response.status).to eq 200
+        expect(response).to have_http_status 200
         expect(response.body).to eq array_of_posts
       end
     end
@@ -29,7 +29,7 @@ describe RestController, type: :controller do
 
       it 'returns an array of posts reverse ordered by id' do
         get '/rest', order: 'desc'
-        expect(response.status).to eq 200
+        expect(response).to have_http_status 200
         expect(response.body).to eq array_of_posts
       end
     end
@@ -42,7 +42,7 @@ describe RestController, type: :controller do
 
     it 'returns a post' do
       get '/rest/:id', id: 1
-      expect(response.status).to eq 200
+      expect(response).to have_http_status 200
       expect(response.body).to eq post
     end
   end
@@ -54,7 +54,7 @@ describe RestController, type: :controller do
 
     it 'returns a created post' do
       post '/rest', title: 'New title'
-      expect(response.status).to eq 201
+      expect(response).to have_http_status 201
       expect(response.body).to eq new_post
     end
   end
@@ -67,7 +67,7 @@ describe RestController, type: :controller do
     context 'with POST method' do
       it 'returns a updated post' do
         post '/rest/:id', id: 1, title: 'Modified title'
-        expect(response.status).to eq 200
+        expect(response).to have_http_status 200
         expect(response.body).to eq the_post
       end
     end
@@ -75,7 +75,7 @@ describe RestController, type: :controller do
     context 'with PUT method' do
       it 'returns a updated post' do
         put '/rest/:id', id: 1, title: 'Modified title'
-        expect(response.status).to eq 200
+        expect(response).to have_http_status 200
         expect(response.body).to eq the_post
       end
     end
@@ -83,7 +83,7 @@ describe RestController, type: :controller do
     context 'with PATCH method' do
       it 'returns a updated post' do
         patch '/rest/:id', id: 1, title: 'Modified title'
-        expect(response.status).to eq 200
+        expect(response).to have_http_status 200
         expect(response.body).to eq the_post
       end
     end
@@ -92,7 +92,7 @@ describe RestController, type: :controller do
   describe '#delete' do
     it 'returns no body' do
       delete '/rest/:id', id: 123
-      expect(response.status).to eq 204
+      expect(response).to have_http_status 204
       expect(response.body).to be_empty
     end
   end
