@@ -46,11 +46,11 @@ GEM
       rainbow
       thor
       zeitwerk
-    aws-partitions (1.602.0)
+    aws-partitions (1.605.0)
     aws-sdk-apigateway (1.78.0)
       aws-sdk-core (~> 3, >= 3.127.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-cloudformation (1.69.0)
+    aws-sdk-cloudformation (1.70.0)
       aws-sdk-core (~> 3, >= 3.127.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-cloudwatchlogs (1.53.0)
@@ -122,7 +122,7 @@ GEM
     hashie (5.0.0)
     i18n (1.11.0)
       concurrent-ruby (~> 1.0)
-    jets (3.1.3)
+    jets (3.1.4)
       actionmailer (~> 6.1.0)
       actionpack (~> 6.1.0)
       actionview (~> 6.1.0)
@@ -140,7 +140,7 @@ GEM
       aws-sdk-sqs
       aws-sdk-ssm
       cfn-status
-      cfn_camelizer (~> 0.4.6)
+      cfn_camelizer (>= 0.4.9)
       cfn_response
       dotenv
       gems
@@ -153,11 +153,11 @@ GEM
       railties (~> 6.1.0)
       rainbow
       recursive-open-struct
-      serverlessgems (~> 0.1.4)
+      serverlessgems (>= 0.2.0)
       shotgun
       text-table
       thor
-      zeitwerk (~> 2.5.0)
+      zeitwerk (>= 2.6.0)
     jets-html-sanitizer (1.0.4)
       loofah (~> 2.2, >= 2.2.2)
     jmespath (1.6.1)
@@ -218,7 +218,7 @@ GEM
     rspec-support (3.11.0)
     rspec_junit_formatter (0.5.1)
       rspec-core (>= 2, < 4, != 2.12.0)
-    serverlessgems (0.1.6)
+    serverlessgems (0.2.0)
       gems
       memoist
       zeitwerk
@@ -230,7 +230,7 @@ GEM
       concurrent-ruby (~> 1.0)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.5.4)
+    zeitwerk (2.6.0)
 
 PLATFORMS
   ruby
