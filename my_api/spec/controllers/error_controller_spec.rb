@@ -16,7 +16,7 @@ describe ErrorController, type: :controller do
 
       it 'returns 400 Bad request with error code 10' do
         get '/error/:code', code: code
-        expect(response).to have_http_status 400
+        expect(response.status).to eq 400
         expect(response.body).to eq expected_response
       end
     end
@@ -35,7 +35,7 @@ describe ErrorController, type: :controller do
 
       it 'returns 400 Bad request with error code 20' do
         get '/error/:code', code: code
-        expect(response).to have_http_status 400
+        expect(response.status).to eq 400
         expect(response.body).to eq expected_response
       end
     end
