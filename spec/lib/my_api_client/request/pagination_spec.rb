@@ -60,7 +60,7 @@ RSpec.describe MyApiClient::Request::Pagination do
         .and_return(second_response, third_response)
     end
 
-    it { is_expected.to be_kind_of Enumerator::Lazy }
+    it { is_expected.to be_a Enumerator::Lazy }
 
     it 'executes HTTP requests sequentially to the pagination links' do
       pageable_get.to_a
