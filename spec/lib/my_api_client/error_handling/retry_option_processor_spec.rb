@@ -36,7 +36,7 @@ RSpec.describe MyApiClient::ErrorHandling::RetryOptionProcessor do
       context 'with `retry: true` option' do
         let(:retry_option) { { retry: true } }
 
-        it { is_expected.to be_kind_of(Hash).and be_blank }
+        it { is_expected.to be_a(Hash).and be_blank }
         it { expect { execute }.to change { error_handling_options[:retry] }.to(nil) }
 
         it_behaves_like 'requires `raise` option'
