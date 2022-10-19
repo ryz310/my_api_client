@@ -239,7 +239,7 @@ DEPENDENCIES
   byebug
   capybara
   dynomite
-  jets
+  jets (~> 3.1.5)
   launchy
   nokogiri (~> 1.13.8)
   puma
