@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ErrorController, type: :controller do
+describe ErrorController do
   describe '#show' do
     context 'when request error code 10' do
       let(:code) { 10 }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PaginationController, type: :controller do
+describe PaginationController do
   describe '#index' do
     let(:first_page) do
       {
