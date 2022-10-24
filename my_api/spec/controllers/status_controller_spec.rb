@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe StatusController, type: :controller do
+describe StatusController do
   describe '#show' do
     context 'when request status code 200' do
       let(:status) { 200 }
