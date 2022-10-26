@@ -175,6 +175,91 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
       end
     end
 
+    context 'with `status_code` and `headers` options' do
+      let(:matcher_options) do
+        {
+          status_code: 400,
+          headers: { 'www-authenticate': 'match header value' },
+        }
+      end
+
+      context 'when matcher options exactly match the HTTP response' do
+        let(:http_response) do
+          dummy_response(status: 400, headers: { 'www-authenticate': 'match header value' })
+        end
+
+        it_behaves_like 'an error was detected'
+      end
+
+      context 'when matcher options partially match the status code in the HTTP response' do
+        let(:http_response) do
+          dummy_response(status: 400, headers: { 'www-authenticate': 'not match header value' })
+        end
+
+        it_behaves_like 'no errors were detected'
+      end
+
+      context 'when matcher options partially match the headers in the HTTP response' do
+        let(:http_response) do
+          dummy_response(status: 403, headers: { 'www-authenticate': 'match header value' })
+        end
+
+        it_behaves_like 'no errors were detected'
+      end
+
+      context 'when matcher options does NOT match the HTTP response' do
+        let(:http_response) do
+          dummy_response(status: 404, headers: { 'www-authenticate': 'not match header value' })
+        end
+
+        it_behaves_like 'no errors were detected'
+      end
+    end
+
+    context 'with `headers` and `json` options' do
+      let(:matcher_options) do
+        {
+          headers: { 'www-authenticate': 'match header value' },
+          json: { '$.errors.code': 10 },
+        }
+      end
+
+      let(:http_response) do
+        dummy_response(
+          headers: http_response_headers,
+          body: http_response_body
+        )
+      end
+
+      context 'when matcher options exactly match the HTTP response' do
+        let(:http_response_headers) { { 'www-authenticate': 'match header value' } }
+        let(:http_response_body) { { errors: { code: 10 } }.to_json }
+
+        it_behaves_like 'an error was detected'
+      end
+
+      context 'when matcher options partially match the body in the HTTP response' do
+        let(:http_response_headers) { { 'www-authenticate': 'not match header value' } }
+        let(:http_response_body) { { errors: { code: 10 } }.to_json }
+
+        it_behaves_like 'no errors were detected'
+      end
+
+      context 'when matcher options partially match the headers in the HTTP response' do
+        let(:http_response_headers) { { 'www-authenticate': 'match header value' } }
+        let(:http_response_body) { { errors: { code: 20 } }.to_json }
+
+        it_behaves_like 'no errors were detected'
+      end
+
+      context 'when matcher options does NOT match the HTTP response' do
+        let(:http_response_headers) { { 'www-authenticate': 'not match header value' } }
+        let(:http_response_body) { { errors: { code: 20 } }.to_json }
+
+        it_behaves_like 'no errors were detected'
+      end
+    end
+
     context 'with `status_code` option' do
       let(:matcher_options) do
         { status_code: 400 }
@@ -190,6 +275,223 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
         let(:http_response) { dummy_response(status: 500) }
 
         it_behaves_like 'no errors were detected'
+      end
+    end
+
+    context 'with `headers` option' do
+      let(:http_response) { dummy_response(headers: response_headers) }
+
+      context 'with integer' do
+        let(:matcher_options) do
+          { headers: { 'content-length': 100 } }
+        end
+
+        context 'when matcher options match the HTTP response' do
+          let(:response_headers) { { 'content-length': 100 } }
+
+          it_behaves_like 'an error was detected'
+        end
+
+        context 'when matcher options does NOT match the HTTP response' do
+          let(:response_headers) { { 'content-length': 101 } }
+
+          it_behaves_like 'no errors were detected'
+        end
+      end
+
+      context 'with string' do
+        let(:matcher_options) do
+          { headers: {
+            'www-authenticate': 'Bearer error="invalid_token", error_description="DELETED CHANNEL"',
+          } }
+        end
+
+        context 'when matcher options match the HTTP response' do
+          let(:response_headers) do
+            { 'www-authenticate':
+                'Bearer error="invalid_token", error_description="DELETED CHANNEL"' }
+          end
+
+          it_behaves_like 'an error was detected'
+        end
+
+        context 'when matcher options does NOT match the HTTP response' do
+          let(:response_headers) { { 'www-authenticate': 'not match header value' } }
+
+          it_behaves_like 'no errors were detected'
+        end
+      end
+
+      context 'with boolean' do
+        let(:matcher_options) do
+          { headers: { 'Access-Control-Allow-Credentials': true } }
+        end
+
+        context 'when matcher options match the HTTP response' do
+          let(:response_headers) { { 'Access-Control-Allow-Credentials': true } }
+
+          it_behaves_like 'an error was detected'
+        end
+
+        context 'when matcher options does NOT match the HTTP response' do
+          let(:response_headers) { { 'Access-Control-Allow-Credentials': false } }
+
+          it_behaves_like 'no errors were detected'
+        end
+      end
+
+      context 'with range' do
+        let(:matcher_options) do
+          { headers: { 'content-length': 10..20 } }
+        end
+
+        context 'when matcher options match the HTTP response' do
+          let(:response_headers) { { 'content-length': 15 } }
+
+          it_behaves_like 'an error was detected'
+        end
+
+        context 'when matcher options does NOT match the HTTP response' do
+          let(:response_headers) { { 'content-length': 5 } }
+
+          it_behaves_like 'no errors were detected'
+        end
+      end
+
+      context 'with regexp' do
+        let(:matcher_options) do
+          { headers: {
+            'www-authenticate': /DELETED CHANNEL/,
+          } }
+        end
+
+        context 'when matcher options match the HTTP response' do
+          let(:response_headers) do
+            { 'www-authenticate':
+                'Bearer error="invalid_token", error_description="DELETED CHANNEL"' }
+          end
+
+          it_behaves_like 'an error was detected'
+        end
+
+        context 'when matcher options does NOT match the HTTP response' do
+          let(:response_headers) { { 'www-authenticate': 'Dnot match header value' } }
+
+          it_behaves_like 'no errors were detected'
+        end
+      end
+
+      context 'with symbol' do
+        let(:matcher_options) do
+          { headers: {
+            'content-length': :negative?,
+          } }
+        end
+
+        context 'when matcher options match the HTTP response' do
+          let(:response_headers) { { 'content-length': -1 } }
+
+          it_behaves_like 'an error was detected'
+        end
+
+        context 'when matcher options does NOT match the HTTP response' do
+          let(:response_headers) { { 'content-length': 0 } }
+
+          it_behaves_like 'no errors were detected'
+        end
+      end
+
+      context 'with forbid_nil' do
+        let(:matcher_options) do
+          { headers: :forbid_nil }
+        end
+
+        context 'when matcher options match the HTTP response' do
+          let(:response_headers) { nil }
+
+          it_behaves_like 'an error was detected'
+        end
+
+        context 'when matcher options does NOT match the HTTP response' do
+          let(:response_headers) { '' }
+
+          it_behaves_like 'no errors were detected'
+        end
+      end
+
+      context 'with unexpected operator' do
+        let(:matcher_options) do
+          { headers: {
+            'content-length': Object,
+          } }
+        end
+
+        let(:response_headers) { { 'content-length': 1000 } }
+        let(:error_handling_options) { { with: :my_error_handling } }
+
+        it { expect { execute }.to raise_error(/Unexpected operator type was given/) }
+      end
+
+      context 'with multiple condition' do
+        let(:matcher_options) do
+          { headers: {
+            'www-authenticate': 'match header value',
+            'content-length': 100,
+          } }
+        end
+
+        context 'when matcher options match the HTTP response' do
+          let(:response_headers) do
+            {
+              'www-authenticate': 'match header value',
+              'content-length': 100,
+            }
+          end
+
+          it_behaves_like 'an error was detected'
+        end
+
+        context 'when matcher options does NOT match the HTTP response' do
+          let(:response_headers) do
+            {
+              'www-authenticate': 'not match header value',
+              'content-length': 101,
+            }
+          end
+
+          it_behaves_like 'no errors were detected'
+        end
+
+        context 'when matcher options matches a part of the HTTP response' do
+          let(:response_headers) do
+            {
+              'www-authenticate': 'not match header value',
+              'content-length': 100,
+            }
+          end
+
+          it_behaves_like 'no errors were detected'
+        end
+
+        context 'when matcher options does matches a part of the HTTP response' do
+          let(:response_headers) do
+            {
+              'content-length': 100,
+            }
+          end
+
+          it_behaves_like 'no errors were detected'
+        end
+
+        context 'when matcher options does not match headers of the HTTP response' do
+          let(:response_headers) do
+            {
+              'content-type': 'text/html',
+            }
+          end
+
+          it_behaves_like 'no errors were detected'
+        end
       end
     end
 
