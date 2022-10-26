@@ -4,7 +4,7 @@ module MyApiClient
   module ErrorHandling
     # Generates an error handler proc (or symbol)
     class Generator < ServiceAbstract
-      ARGUMENTS = %i[instance response status_code json with raise block].freeze
+      ARGUMENTS = %i[instance response status_code headers json with raise block].freeze
 
       # @param options [Hash]
       #   Options for this generator
@@ -36,6 +36,7 @@ module MyApiClient
 
       def call
         return unless match?(_status_code, _response.status)
+        return unless match_headers?(_headers, _response.headers)
         return unless match_body?(_json, _response.body)
 
         generate_error_handler
@@ -99,6 +100,17 @@ module MyApiClient
           target.respond_to?(operator) && target.public_send(operator)
         else
           raise "Unexpected operator type was given: #{operator.inspect}"
+        end
+      end
+
+      def match_headers?(headers, response_headers)
+        return true if headers.nil?
+        return response_headers.nil? if headers == :forbid_nil
+        return false if response_headers.blank?
+
+        headers.all? do |header_key, operator|
+          target = response_headers[header_key]
+          match?(operator, target)
         end
       end
 
