@@ -36,7 +36,7 @@ module MyApiClient
 
       def call
         return unless match?(_status_code, _response.status)
-        return unless match_all?(_json, _response.body)
+        return unless match_body?(_json, _response.body)
 
         generate_error_handler
       end
@@ -102,7 +102,7 @@ module MyApiClient
         end
       end
 
-      def match_all?(json, response_body)
+      def match_body?(json, response_body)
         return true if json.nil?
         return response_body.nil? if json == :forbid_nil
         return false if response_body.blank?
