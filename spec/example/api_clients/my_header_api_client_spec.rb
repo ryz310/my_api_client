@@ -30,7 +30,7 @@ RSpec.describe MyHeaderApiClient, type: :api_client do
       let(:first_header_value) { 'first' }
       let(:second_header_value) { 'second' }
 
-      it 'requests to "GET header" with parameters' do
+      it 'requests to "GET header" with query parameters' do
         uri = URI.join(endpoint, 'header')
         uri.query = URI.encode_www_form({ 'X-First-Header': 'first', 'X-Second-Header': 'second' })
 
@@ -48,7 +48,7 @@ RSpec.describe MyHeaderApiClient, type: :api_client do
         }.compact
       end
 
-      context 'when the first header is invalid' do
+      context 'when the first header contains invalid' do
         let(:first_header_value) { 'this is invalid header value' }
         let(:second_header_value) { nil }
 
@@ -59,83 +59,64 @@ RSpec.describe MyHeaderApiClient, type: :api_client do
         end
       end
 
-      context 'when the first header is zero' do
-        let(:first_header_value) { 0 }
-        let(:second_header_value) { nil }
+      context 'when the first header contains unknown' do
+        let(:first_header_value) { 'this header value is unknown' }
 
-        it do
-          expect { api_request! }
-            .to be_handled_as_an_error(MyErrors::FirstHeaderIs00)
-            .when_receive(headers: response_headers)
+        context 'when the second header contains error' do
+          let(:second_header_value) { 'error has occurred' }
+
+          it do
+            expect { api_request! }
+              .to be_handled_as_an_error(MyErrors::MultipleHeaderIsInvalid)
+              .when_receive(headers: response_headers)
+          end
+        end
+
+        context 'when the second header does not contain error' do
+          let(:second_header_value) { 'ok' }
+
+          it do
+            expect { api_request! }
+              .not_to be_handled_as_an_error(MyApiClient::ClientError)
+              .when_receive(headers: response_headers)
+          end
         end
       end
 
-      context 'when the first header is in 1xx' do
-        let(:first_header_value) { rand(100..199) }
-        let(:second_header_value) { nil }
+      context 'when the first header does not contain unknown' do
+        let(:first_header_value) { 'ok' }
 
-        it do
-          expect { api_request! }
-            .to be_handled_as_an_error(MyErrors::FirstHeaderIs1xx)
-            .when_receive(headers: response_headers)
+        context 'when the second header contains error' do
+          let(:second_header_value) { 'error has occurred' }
+
+          it do
+            expect { api_request! }
+              .not_to be_handled_as_an_error(MyApiClient::ClientError)
+              .when_receive(headers: response_headers)
+          end
         end
       end
 
-      context 'when the first header is in 2xx and the second header is in 3xx' do
-        let(:first_header_value) { rand(200..299) }
-        let(:second_header_value) { rand(300..399) }
-
-        it do
-          expect { api_request! }
-            .to be_handled_as_an_error(MyErrors::MultipleHeaderIsInvalid)
-            .when_receive(headers: response_headers)
-        end
-      end
-
-      context 'when the first header is in 2xx and the second header is out of 3xx' do
-        let(:first_header_value) { rand(200..299) }
-        let(:second_header_value) { 400 }
-
-        it do
-          expect { api_request! }
-            .not_to be_handled_as_an_error(MyApiClient::ClientError)
-            .when_receive(headers: response_headers)
-        end
-      end
-
-      context 'when the first header is out of 2xx and the second header is in 3xx' do
-        let(:first_header_value) { 300 }
-        let(:second_header_value) { rand(300..399) }
-
-        it do
-          expect { api_request! }
-            .not_to be_handled_as_an_error(MyApiClient::ClientError)
-            .when_receive(headers: response_headers)
-        end
-      end
-
-
-      context 'when the first header is 30' do
-        let(:first_header_value) { 30 }
+      context 'when the first header has nothing' do
+        let(:first_header_value) { 'nothing' }
         let(:second_header_value) { nil }
 
         context 'with status code: 404' do
           it do
             expect { api_request! }
-              .to be_handled_as_an_error(MyErrors::FirstHeaderIs30WithNotFound)
+              .to be_handled_as_an_error(MyErrors::FirstHeaderHasNothingAndNotFound)
               .when_receive(headers: response_headers, status_code: 404)
           end
         end
 
-        context 'without status code: 404' do
-          it do
+        context 'with status code: 401' do
+          it 'is expected to be handled MyApiClient::ClientError by default error handlers' do
             expect { api_request! }
-              .to be_handled_as_an_error(MyErrors::FirstHeaderIs30)
-              .when_receive(headers: response_headers, status_code: 200)
+              .to be_handled_as_an_error(MyApiClient::ClientError::Unauthorized)
+              .when_receive(headers: response_headers, status_code: 401)
           end
         end
       end
-
     end
   end
 end

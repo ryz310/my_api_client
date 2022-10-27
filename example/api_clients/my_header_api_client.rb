@@ -8,26 +8,21 @@ class MyHeaderApiClient < ApplicationApiClient
   error_handling headers: { 'X-First-Header': /invalid/ },
                  raise: MyErrors::FirstHeaderIsInvalid
 
-  error_handling headers: { 'X-First-Header': :zero? },
-                 raise: MyErrors::FirstHeaderIs00
-
-  error_handling headers: { 'X-First-Header': 100..199 },
-                 raise: MyErrors::FirstHeaderIs1xx
-
   error_handling headers: {
-                   'X-First-Header': 200..299,
-                   'X-Second-Header': 300..399,
+                   'X-First-Header': /unknown/,
+                   'X-Second-Header': /error/,
                  },
                  raise: MyErrors::MultipleHeaderIsInvalid
 
-    error_handling headers: { 'X-First-Header': 30 },
-                  raise: MyErrors::FirstHeaderIs30
-
-  error_handling headers: { 'X-First-Header': 30 },
+  error_handling headers: { 'X-First-Header': /nothing/ },
                  status_code: 404,
-                 raise: MyErrors::FirstHeaderIs30WithNotFound
+                 raise: MyErrors::FirstHeaderHasNothingAndNotFound
 
   # GET header
+  #
+  # @param first_header [String] X-First-Header
+  # @param second_header [String] X-Second-Header
+  # @return [Sawyer::Resource]
   def get_header(first_header:, second_header:)
     get 'header', headers: headers, query: {
       'X-First-Header': first_header,

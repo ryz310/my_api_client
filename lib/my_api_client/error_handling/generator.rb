@@ -14,6 +14,9 @@ module MyApiClient
       #   The target of verifying
       # @option status_code [String, Range, Integer, Regexp]
       #   Verifies response HTTP status code and raises error if matched
+      # @option headers [String, Regexp]
+      #   Verifies response HTTP header and raises error if matched
+      #   If specified `:forbid_nil`, it forbid `nil` on response_header.
       # @option json [Hash, Symbol]
       #   Verifies response body as JSON and raises error if matched.
       #   If specified `:forbid_nil`, it forbid `nil` on response_body.
