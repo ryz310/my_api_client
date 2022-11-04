@@ -24,4 +24,13 @@ module MyErrors
 
   # Error code: other
   class ErrorCodeOther < MyApiClient::ClientError; end
+
+  # Header: X-First-Header has invalid
+  class FirstHeaderIsInvalid < MyApiClient::ClientError; end
+
+  # Header: X-First-Header has nothing and status is 404
+  class FirstHeaderHasNothingAndNotFound < MyApiClient::ClientError; end
+
+  # Header: X-First-Header has unknown and X-Second-Header has error
+  class MultipleHeaderIsInvalid < MyApiClient::ClientError; end
 end

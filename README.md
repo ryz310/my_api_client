@@ -223,6 +223,21 @@ In the above case, it matches JSON as below:
 }
 ```
 
+For `headers`, specify response header for the Key of `Hash`, get an arbitrary value from the response header, and check whether it matches value. You can handle errors. You can specify `String` and `Regexp` for value.
+
+```ruby
+error_handling headers: { 'www-authenticate': /invalid token/ }, with: :my_error_handling
+```
+
+In the above case, it matches response header as below:
+
+```text
+cache-control: no-cache, no-store, max-age=0, must-revalidate
+content-type: application/json
+www-authenticate: Bearer error="invalid_token", error_description="invalid token"
+content-length: 104
+```
+
 By specifying the instance method name in `with`, when an error is detected, any method can be executed before raising an exception. The arguments passed to the method are `params` and `logger` as in the `block` definition. Note that `block` and` with` cannot be used at the same time.
 
 ```ruby

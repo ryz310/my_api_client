@@ -4,7 +4,7 @@ module MyApiClient
   module ErrorHandling
     # Generates an error handler proc (or symbol)
     class Generator < ServiceAbstract
-      ARGUMENTS = %i[instance response status_code json with raise block].freeze
+      ARGUMENTS = %i[instance response status_code headers json with raise block].freeze
 
       # @param options [Hash]
       #   Options for this generator
@@ -14,6 +14,8 @@ module MyApiClient
       #   The target of verifying
       # @option status_code [String, Range, Integer, Regexp]
       #   Verifies response HTTP status code and raises error if matched
+      # @option headers [String, Regexp]
+      #   Verifies response HTTP header and raises error if matched
       # @option json [Hash, Symbol]
       #   Verifies response body as JSON and raises error if matched.
       #   If specified `:forbid_nil`, it forbid `nil` on response_body.
@@ -36,7 +38,8 @@ module MyApiClient
 
       def call
         return unless match?(_status_code, _response.status)
-        return unless match_all?(_json, _response.body)
+        return unless match_headers?(_headers, _response.headers)
+        return unless match_body?(_json, _response.body)
 
         generate_error_handler
       end
@@ -102,7 +105,17 @@ module MyApiClient
         end
       end
 
-      def match_all?(json, response_body)
+      def match_headers?(headers, response_headers)
+        return true if headers.nil?
+        return false if response_headers.blank?
+
+        headers.all? do |header_key, operator|
+          target = response_headers[header_key]
+          match?(operator, target)
+        end
+      end
+
+      def match_body?(json, response_body)
         return true if json.nil?
         return response_body.nil? if json == :forbid_nil
         return false if response_body.blank?
