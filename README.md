@@ -225,11 +225,11 @@ In the above case, it matches JSON as below:
 
 For `headers`, specify response header for the Key of `Hash`, get an arbitrary value from the response header, and check whether it matches value. You can handle errors. You can specify `String` and `Regexp` for value.
 
-In the above case, it matches response header as below:
-
 ```ruby
 error_handling headers: { 'www-authenticate': /invalid token/ }, with: :my_error_handling
 ```
+
+In the above case, it matches response header as below:
 
 ```text
 cache-control: no-cache, no-store, max-age=0, must-revalidate

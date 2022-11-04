@@ -223,11 +223,12 @@ error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
 
 `headers` には `Hash` の Key に レスポンスのヘッダーキーを指定して、 Value とマッチするかどうかでエラーハンドリングできます。Value には `String` `Regexp` が指定可能です。
 
-上記の場合であれば、以下のような レスポンスヘッダー にマッチします。
 
 ```ruby
 error_handling headers: { 'www-authenticate': /invalid token/ }, with: :my_error_handling
 ```
+
+上記の場合であれば、以下のような レスポンスヘッダー にマッチします。
 
 ```text
 cache-control: no-cache, no-store, max-age=0, must-revalidate
