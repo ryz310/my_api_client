@@ -401,24 +401,6 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
         end
       end
 
-      context 'with forbid_nil' do
-        let(:matcher_options) do
-          { headers: :forbid_nil }
-        end
-
-        context 'when matcher options match the HTTP response' do
-          let(:response_headers) { nil }
-
-          it_behaves_like 'an error was detected'
-        end
-
-        context 'when matcher options does NOT match the HTTP response' do
-          let(:response_headers) { '' }
-
-          it_behaves_like 'no errors were detected'
-        end
-      end
-
       context 'with unexpected operator' do
         let(:matcher_options) do
           { headers: {

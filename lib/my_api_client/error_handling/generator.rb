@@ -16,7 +16,6 @@ module MyApiClient
       #   Verifies response HTTP status code and raises error if matched
       # @option headers [String, Regexp]
       #   Verifies response HTTP header and raises error if matched
-      #   If specified `:forbid_nil`, it forbid `nil` on response_header.
       # @option json [Hash, Symbol]
       #   Verifies response body as JSON and raises error if matched.
       #   If specified `:forbid_nil`, it forbid `nil` on response_body.
@@ -108,7 +107,6 @@ module MyApiClient
 
       def match_headers?(headers, response_headers)
         return true if headers.nil?
-        return response_headers.nil? if headers == :forbid_nil
         return false if response_headers.blank?
 
         headers.all? do |header_key, operator|
