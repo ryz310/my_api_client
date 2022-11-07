@@ -3,57 +3,28 @@
 ## v0.24.0 (Nov 07, 2022)
 
 ### Feature
-### Bugfix
-### Security
-### Breaking Change
+
+- [#792](https://github.com/ryz310/my_api_client/pull/792) Support response header error handling ([@okumud](https://github.com/okumud))
+
 ### Rubocop Challenge
+
+- [#757](https://github.com/ryz310/my_api_client/pull/757) RSpec/Rails/HaveHttpStatus-20220712233101 ([@ryz310](https://github.com/ryz310))
+- [#777](https://github.com/ryz310/my_api_client/pull/777) RSpec/ClassCheck-20220912233101 ([@ryz310](https://github.com/ryz310))
+- [#790](https://github.com/ryz310/my_api_client/pull/790) RSpec/Rails/InferredSpecType-20221023233100 ([@ryz310](https://github.com/ryz310))
+
 ### Dependabot
+
+- [#758](https://github.com/ryz310/my_api_client/pull/758) ryz310/dependabot/bundler/rubocop-performance-1.14.3 ([@ryz310](https://github.com/ryz310))
+- [#772](https://github.com/ryz310/my_api_client/pull/772) Bump pry-byebug from 3.10.0 to 3.10.1 ([@ryz310](https://github.com/ryz310))
+- [#773](https://github.com/ryz310/my_api_client/pull/773) Bump webmock from 3.17.1 to 3.18.1 ([@ryz310](https://github.com/ryz310))
+- [#775](https://github.com/ryz310/my_api_client/pull/775) Bump activesupport from 7.0.3.1 to 7.0.4 ([@ryz310](https://github.com/ryz310))
+- [#778](https://github.com/ryz310/my_api_client/pull/778) Bump rspec_junit_formatter from 0.5.1 to 0.6.0 ([@ryz310](https://github.com/ryz310))
+- [#780](https://github.com/ryz310/my_api_client/pull/780) Bump faraday from 2.5.2 to 2.6.0 ([@ryz310](https://github.com/ryz310))
+- [#791](https://github.com/ryz310/my_api_client/pull/791) Bump rspec from 3.11.0 to 3.12.0 ([@ryz310](https://github.com/ryz310))
+
 ### Misc
 
-* [#734](https://github.com/ryz310/my_api_client/pull/734) Bump dynomite from 1.2.6 to 1.2.7 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#735](https://github.com/ryz310/my_api_client/pull/735) ryz310/rubocop-challenge/20220627233106 ([@ryz310](https://github.com/ryz310))
-* [#737](https://github.com/ryz310/my_api_client/pull/737) Re-generate .rubocop_todo.yml with RuboCop v1.31.1 ([@ryz310](https://github.com/ryz310))
-* [#736](https://github.com/ryz310/my_api_client/pull/736) Bump jets from 3.1.2 to 3.1.3 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#738](https://github.com/ryz310/my_api_client/pull/738) Bump rack from 2.2.3.1 to 2.2.4 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#756](https://github.com/ryz310/my_api_client/pull/756) Bump nokogiri from 1.13.6 to 1.13.7 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#744](https://github.com/ryz310/my_api_client/pull/744) Bump rails-html-sanitizer from 1.3.0 to 1.4.3 in /rails_app/rails_5.2 ([@ryz310](https://github.com/ryz310))
-* [#745](https://github.com/ryz310/my_api_client/pull/745) Bump rails-html-sanitizer from 1.4.2 to 1.4.3 in /rails_app/rails_7.0 ([@ryz310](https://github.com/ryz310))
-* [#747](https://github.com/ryz310/my_api_client/pull/747) Bump rails-html-sanitizer from 1.4.2 to 1.4.3 in /rails_app/rails_6.0 ([@ryz310](https://github.com/ryz310))
-* [#746](https://github.com/ryz310/my_api_client/pull/746) Bump rails-html-sanitizer from 1.4.2 to 1.4.3 in /rails_app/rails_6.1 ([@ryz310](https://github.com/ryz310))
-* [#754](https://github.com/ryz310/my_api_client/pull/754) Bump activerecord from 6.1.6 to 6.1.6.1 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#755](https://github.com/ryz310/my_api_client/pull/755) Bump activesupport from 7.0.3 to 7.0.3.1 ([@ryz310](https://github.com/ryz310))
-* [#740](https://github.com/ryz310/my_api_client/pull/740) Bump jets from 3.1.3 to 3.1.4 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#757](https://github.com/ryz310/my_api_client/pull/757) RSpec/Rails/HaveHttpStatus-20220712233101 ([@ryz310](https://github.com/ryz310))
-* [#758](https://github.com/ryz310/my_api_client/pull/758) ryz310/dependabot/bundler/rubocop-performance-1.14.3 ([@ryz310](https://github.com/ryz310))
-* [#759](https://github.com/ryz310/my_api_client/pull/759) Re-generate .rubocop_todo.yml with RuboCop v1.32.0 ([@ryz310](https://github.com/ryz310))
-* [#760](https://github.com/ryz310/my_api_client/pull/760) Bump tzinfo from 1.2.9 to 1.2.10 in /rails_app/rails_5.2 ([@ryz310](https://github.com/ryz310))
-* [#761](https://github.com/ryz310/my_api_client/pull/761) Bump tzinfo from 1.2.9 to 1.2.10 in /rails_app/rails_6.0 ([@ryz310](https://github.com/ryz310))
-* [#762](https://github.com/ryz310/my_api_client/pull/762) Bump nokogiri from 1.13.7 to 1.13.8 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#763](https://github.com/ryz310/my_api_client/pull/763) Bump faraday from 2.3.0 to 2.4.0 ([@ryz310](https://github.com/ryz310))
-* [#764](https://github.com/ryz310/my_api_client/pull/764) Bump webmock from 3.14.0 to 3.16.0 ([@ryz310](https://github.com/ryz310))
-* [#765](https://github.com/ryz310/my_api_client/pull/765) Re-generate .rubocop_todo.yml with RuboCop v1.33.0 ([@ryz310](https://github.com/ryz310))
-* [#766](https://github.com/ryz310/my_api_client/pull/766) Bump webmock from 3.16.0 to 3.17.0 ([@ryz310](https://github.com/ryz310))
-* [#767](https://github.com/ryz310/my_api_client/pull/767) Bump faraday from 2.4.0 to 2.5.1 ([@ryz310](https://github.com/ryz310))
-* [#768](https://github.com/ryz310/my_api_client/pull/768) Bump jets from 3.1.4 to 3.1.5 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#769](https://github.com/ryz310/my_api_client/pull/769) Bump webmock from 3.17.0 to 3.17.1 ([@ryz310](https://github.com/ryz310))
-* [#770](https://github.com/ryz310/my_api_client/pull/770) Bump faraday from 2.5.1 to 2.5.2 ([@ryz310](https://github.com/ryz310))
-* [#771](https://github.com/ryz310/my_api_client/pull/771) Bump pry-byebug from 3.9.0 to 3.10.0 ([@ryz310](https://github.com/ryz310))
-* [#772](https://github.com/ryz310/my_api_client/pull/772) Bump pry-byebug from 3.10.0 to 3.10.1 ([@ryz310](https://github.com/ryz310))
-* [#773](https://github.com/ryz310/my_api_client/pull/773) Bump webmock from 3.17.1 to 3.18.1 ([@ryz310](https://github.com/ryz310))
-* [#774](https://github.com/ryz310/my_api_client/pull/774) Bump puma from 5.6.4 to 5.6.5 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#777](https://github.com/ryz310/my_api_client/pull/777) RSpec/ClassCheck-20220912233101 ([@ryz310](https://github.com/ryz310))
-* [#775](https://github.com/ryz310/my_api_client/pull/775) Bump activesupport from 7.0.3.1 to 7.0.4 ([@ryz310](https://github.com/ryz310))
-* [#778](https://github.com/ryz310/my_api_client/pull/778) Bump rspec_junit_formatter from 0.5.1 to 0.6.0 ([@ryz310](https://github.com/ryz310))
-* [#779](https://github.com/ryz310/my_api_client/pull/779) Bump rspec_junit_formatter from 0.5.1 to 0.6.0 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#780](https://github.com/ryz310/my_api_client/pull/780) Bump faraday from 2.5.2 to 2.6.0 ([@ryz310](https://github.com/ryz310))
-* [#784](https://github.com/ryz310/my_api_client/pull/784) Pin the version of the jets gem ([@ryz310](https://github.com/ryz310))
-* [#788](https://github.com/ryz310/my_api_client/pull/788) Bump nokogiri from 1.13.7 to 1.13.9 in /rails_app/rails_5.2 ([@ryz310](https://github.com/ryz310))
-* [#787](https://github.com/ryz310/my_api_client/pull/787) Bump nokogiri from 1.13.7 to 1.13.9 in /rails_app/rails_7.0 ([@ryz310](https://github.com/ryz310))
-* [#785](https://github.com/ryz310/my_api_client/pull/785) Bump nokogiri from 1.13.7 to 1.13.9 in /rails_app/rails_6.1 ([@ryz310](https://github.com/ryz310))
-* [#786](https://github.com/ryz310/my_api_client/pull/786) Bump nokogiri from 1.13.7 to 1.13.9 in /rails_app/rails_6.0 ([@ryz310](https://github.com/ryz310))
-* [#790](https://github.com/ryz310/my_api_client/pull/790) ryz310/rubocop-challenge/20221023233100 ([@ryz310](https://github.com/ryz310))
-* [#791](https://github.com/ryz310/my_api_client/pull/791) Bump rspec from 3.11.0 to 3.12.0 ([@ryz310](https://github.com/ryz310))
-* [#792](https://github.com/ryz310/my_api_client/pull/792) Support response header error handling ([@okumud](https://github.com/okumud))
+- [#784](https://github.com/ryz310/my_api_client/pull/784) Pin the version of the jets gem ([@ryz310](https://github.com/ryz310))
 
 ## v0.23.0 (Jun 08, 2022)
 
