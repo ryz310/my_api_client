@@ -56,3 +56,7 @@ RSpec/NestedGroups:
 
 RSpec/MultipleExpectations:
   Max: 4
+
+RSpec/Rails/HaveHttpStatus:
+  Exclude:
+    - "my_api/spec/controllers/**/*"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe RestController, type: :controller do
+describe RestController do
   describe '#index' do
     context 'with order = asc' do
       let(:array_of_posts) do

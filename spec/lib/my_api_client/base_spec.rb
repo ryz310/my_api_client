@@ -21,7 +21,7 @@ RSpec.describe MyApiClient::Base do
 
   describe '.logger=' do
     it 'overrides the log output destination' do
-      expect(instance.logger).to be_kind_of MyLoggerClass
+      expect(instance.logger).to be_a MyLoggerClass
     end
   end
 end

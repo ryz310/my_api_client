@@ -1,5 +1,31 @@
 # Change log
 
+## v0.24.0 (Nov 07, 2022)
+
+### Feature
+
+- [#792](https://github.com/ryz310/my_api_client/pull/792) Support response header error handling ([@okumud](https://github.com/okumud))
+
+### Rubocop Challenge
+
+- [#757](https://github.com/ryz310/my_api_client/pull/757) RSpec/Rails/HaveHttpStatus-20220712233101 ([@ryz310](https://github.com/ryz310))
+- [#777](https://github.com/ryz310/my_api_client/pull/777) RSpec/ClassCheck-20220912233101 ([@ryz310](https://github.com/ryz310))
+- [#790](https://github.com/ryz310/my_api_client/pull/790) RSpec/Rails/InferredSpecType-20221023233100 ([@ryz310](https://github.com/ryz310))
+
+### Dependabot
+
+- [#758](https://github.com/ryz310/my_api_client/pull/758) ryz310/dependabot/bundler/rubocop-performance-1.14.3 ([@ryz310](https://github.com/ryz310))
+- [#772](https://github.com/ryz310/my_api_client/pull/772) Bump pry-byebug from 3.10.0 to 3.10.1 ([@ryz310](https://github.com/ryz310))
+- [#773](https://github.com/ryz310/my_api_client/pull/773) Bump webmock from 3.17.1 to 3.18.1 ([@ryz310](https://github.com/ryz310))
+- [#775](https://github.com/ryz310/my_api_client/pull/775) Bump activesupport from 7.0.3.1 to 7.0.4 ([@ryz310](https://github.com/ryz310))
+- [#778](https://github.com/ryz310/my_api_client/pull/778) Bump rspec_junit_formatter from 0.5.1 to 0.6.0 ([@ryz310](https://github.com/ryz310))
+- [#780](https://github.com/ryz310/my_api_client/pull/780) Bump faraday from 2.5.2 to 2.6.0 ([@ryz310](https://github.com/ryz310))
+- [#791](https://github.com/ryz310/my_api_client/pull/791) Bump rspec from 3.11.0 to 3.12.0 ([@ryz310](https://github.com/ryz310))
+
+### Misc
+
+- [#784](https://github.com/ryz310/my_api_client/pull/784) Pin the version of the jets gem ([@ryz310](https://github.com/ryz310))
+
 ## v0.23.0 (Jun 08, 2022)
 
 ### Feature
