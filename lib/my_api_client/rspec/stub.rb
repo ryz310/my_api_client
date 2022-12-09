@@ -86,7 +86,7 @@ module MyApiClient
       when Proc
         stub_as_resource(options.call(*request))
       when Hash
-        if options[:raise] # rubocop:disable Style/GuardClause
+        if options[:raise]
           raise process_raise_option(options[:raise], options[:response], options[:status_code])
         elsif options[:response]
           stub_as_resource(options[:response])
