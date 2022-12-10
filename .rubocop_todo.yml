@@ -23,11 +23,6 @@ Lint/MissingSuper:
     - 'lib/my_api_client/request/executor.rb'
     - 'lib/my_api_client/sleeper.rb'
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Lint/RedundantCopDisableDirective:
-  Exclude:
-    - 'lib/my_api_client/rspec/stub.rb'
 
 # Offense count: 6
 # Configuration parameters: EnforcedStyle, CheckMethodNames, CheckSymbols, AllowedIdentifiers, AllowedPatterns.
