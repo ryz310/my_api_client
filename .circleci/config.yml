@@ -153,7 +153,7 @@ commands:
           name: Install Bundler 2.x
           command: gem install bundler -v '~> 2.0'
       - ruby-orbs/bundle-install:
-          cache_key_prefix: v1-dependencies-<< parameters.ruby_version >>
+          cache_key_prefix: v2-dependencies-<< parameters.ruby_version >>
           bundle_extra_args: << parameters.bundler_options >>
           restore_bundled_with: false
   test_and_deploy_for_api:
