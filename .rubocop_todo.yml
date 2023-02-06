@@ -32,11 +32,6 @@ Naming/VariableNumber:
     - 'spec/lib/my_api_client/error_handling_spec.rb'
     - 'spec/lib/my_api_client/request/executor_spec.rb'
 
-# Offense count: 3
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Performance/StringInclude:
-  Exclude:
-    - 'spec/integrations/api_clients/my_header_api_client_spec.rb'
 
 # Offense count: 101
 # Configuration parameters: AllowSubject.
