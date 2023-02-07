@@ -45,10 +45,10 @@ RSpec.describe 'Integration test with My Header API', type: :integration do
 
       let(:get_header) do
         lambda do |params|
-          if /unknown/.match?(params[:first_header]) &&
-             /error/.match?(params[:second_header])
+          if params[:first_header].include?('unknown') &&
+             params[:second_header].include?('error')
             raise MyErrors::MultipleHeaderIsInvalid
-          elsif /invalid/.match?(params[:first_header])
+          elsif params[:first_header].include?('invalid')
             raise MyErrors::FirstHeaderIsInvalid
           end
         end
