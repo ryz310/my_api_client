@@ -1,5 +1,6 @@
 require:
   - rubocop-performance
+  - rubocop-rake
   - rubocop-rspec
 
 inherit_from: .rubocop_todo.yml
@@ -10,6 +11,9 @@ AllCops:
   Exclude:
     - rails_app/**/*
     - vendor/bundle/**/*
+
+Gemspec/DevelopmentDependencies:
+  Enabled: false
 
 Layout/LineLength:
   Max: 100
