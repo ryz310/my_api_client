@@ -12,7 +12,7 @@ MyApiClient は API リクエストクラスを作成するための汎用的な
 
 ## Supported Versions
 
-- Ruby 2.7, 3.0, 3.1
+- Ruby 2.7, 3.0, 3.1, 3.2
 - Rails 6.0, 6.1, 7.0
 
 ## Installation
@@ -223,7 +223,6 @@ error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
 
 `headers` には `Hash` の Key に レスポンスのヘッダーキーを指定して、 Value とマッチするかどうかでエラーハンドリングできます。Value には `String` `Regexp` が指定可能です。
 
-
 ```ruby
 error_handling headers: { 'www-authenticate': /invalid token/ }, with: :my_error_handling
 ```
@@ -236,7 +235,6 @@ content-type: application/json
 www-authenticate: Bearer error="invalid_token", error_description="invalid token"
 content-length: 104
 ```
-
 
 `with` にはインスタンスメソッド名を指定することで、エラーを検出した際、例外を発生させる前に任意のメソッドを実行させることができます。メソッドに渡される引数は `block` 定義の場合と同じく `params` と `logger` です。なお、 `block` と `with` は同時には利用できません。
 
