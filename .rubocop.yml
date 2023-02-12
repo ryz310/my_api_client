@@ -12,6 +12,9 @@ AllCops:
     - rails_app/**/*
     - vendor/bundle/**/*
 
+Gemspec/DevelopmentDependencies:
+  Enabled: false
+
 Layout/LineLength:
   Max: 100
   Exclude:
