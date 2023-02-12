@@ -2,7 +2,7 @@
 
 RSpec.describe MyApiClient::Request::Logger do
   let(:instance) { described_class.new(logger, method, uri) }
-  let(:logger) { instance_double(::Logger, logging_methods) }
+  let(:logger) { instance_double(Logger, logging_methods) }
   let(:logging_methods) { described_class::LOG_LEVEL.zip([]).to_h }
   let(:uri) { URI.parse('https://example.com/path/to/resouce') }
   let(:method) { :get }

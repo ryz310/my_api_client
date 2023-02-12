@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = '>= 2.7.0'
 
-  spec.add_dependency 'activesupport', '>= 5.2.0'
+  spec.add_dependency 'activesupport', '>= 6.0.0'
   spec.add_dependency 'faraday', '>= 0.17.1'
   spec.add_dependency 'jsonpath'
   spec.add_dependency 'sawyer', '>= 0.8.2'
@@ -36,8 +36,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec_junit_formatter'
   spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'rubocop-performance'
+  spec.add_development_dependency 'rubocop-rake'
   spec.add_development_dependency 'rubocop-rspec'
-  spec.add_development_dependency 'simplecov', '0.21.2'
+  spec.add_development_dependency 'simplecov', '0.22.0'
   spec.add_development_dependency 'webmock'
   spec.add_development_dependency 'yard'
   spec.metadata = {

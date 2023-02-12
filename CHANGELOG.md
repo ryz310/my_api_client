@@ -1,5 +1,24 @@
 # Change log
 
+## v0.25.0 (Feb 12, 2023)
+
+### Breaking Change
+
+- [#864](https://github.com/ryz310/my_api_client/pull/864) Support Ruby 3.2 and drop support for Rails 5.2 ([@ryz310](https://github.com/ryz310))
+
+### Rubocop Challenge
+
+- [#809](https://github.com/ryz310/my_api_client/pull/809) Style/RedundantConstantBase-20221208233100 ([@ryz310](https://github.com/ryz310))
+- [#812](https://github.com/ryz310/my_api_client/pull/812) Lint/RedundantCopDisableDirective-20221211233112 ([@ryz310](https://github.com/ryz310))
+- [#862](https://github.com/ryz310/my_api_client/pull/862) Performance/StringInclude-20230206233100 ([@ryz310](https://github.com/ryz310))
+
+### Dependabot
+
+- [#830](https://github.com/ryz310/my_api_client/pull/830) ryz310/dependabot/bundler/simplecov-0.22.0 ([@ryz310](https://github.com/ryz310))
+- [#858](https://github.com/ryz310/my_api_client/pull/858) Bump faraday from 2.7.3 to 2.7.4 ([@ryz310](https://github.com/ryz310))
+- [#859](https://github.com/ryz310/my_api_client/pull/859) Bump activesupport from 7.0.4.1 to 7.0.4.2 ([@ryz310](https://github.com/ryz310))
+- [#863](https://github.com/ryz310/my_api_client/pull/863) Bump bugsnag from 6.25.1 to 6.25.2 ([@ryz310](https://github.com/ryz310))
+
 ## v0.24.0 (Nov 07, 2022)
 
 ### Feature
