@@ -190,8 +190,8 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     nio4r (2.5.9)
-    nokogiri (1.14.4)
-      mini_portile2 (~> 2.8.0)
+    nokogiri (1.15.0)
+      mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     public_suffix (5.0.1)
     puma (6.2.2)
@@ -255,7 +255,7 @@ DEPENDENCIES
   dynomite
   jets (~> 3.2.1)
   launchy
-  nokogiri (~> 1.14.4)
+  nokogiri (~> 1.15.0)
   puma
   rack
   rspec
