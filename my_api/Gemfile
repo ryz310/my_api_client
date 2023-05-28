@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-gem 'jets', '~> 3.2.2'
+gem 'jets', '~> 4.0.0'
 
 gem 'dynomite'
 
