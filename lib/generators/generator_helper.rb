@@ -3,6 +3,10 @@
 module MyApiClient
   # The helper module for source generators
   module GeneratorHelper
+    def self.included(base)
+      base.include(Rails::Generators::ResourceHelpers)
+    end
+
     def yeild_request_arguments
       requests.each do |request|
         http_method, pathname = request.split(':')
