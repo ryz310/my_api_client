@@ -55,6 +55,9 @@ RSpec/FilePath:
     - "spec/lib/my_api_client/errors/**/*"
     - "spec/lib/my_api_client/rspec/**/*"
 
+RSpec/IndexedLet:
+  Max: 3
+
 RSpec/NestedGroups:
   Max: 5
 

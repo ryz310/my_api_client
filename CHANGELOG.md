@@ -1,5 +1,19 @@
 # Change log
 
+## v0.26.0 (Jul 04, 2023)
+
+### Bugfix
+
+- [#914](https://github.com/ryz310/my_api_client/pull/914) Fix error that generating api client failed on Rails 7 ([@ryz310](https://github.com/ryz310))
+
+### Dependabot
+
+- [#889](https://github.com/ryz310/my_api_client/pull/889) Bump yard from 0.9.32 to 0.9.34 ([@ryz310](https://github.com/ryz310))
+- [#893](https://github.com/ryz310/my_api_client/pull/893) Bump jsonpath from 1.1.2 to 1.1.3 ([@ryz310](https://github.com/ryz310))
+- [#897](https://github.com/ryz310/my_api_client/pull/897) Bump rubocop-performance from 1.17.1 to 1.18.0 ([@ryz310](https://github.com/ryz310))
+- [#912](https://github.com/ryz310/my_api_client/pull/912) Bump activesupport from 7.0.5.1 to 7.0.6 ([@ryz310](https://github.com/ryz310))
+- [#913](https://github.com/ryz310/my_api_client/pull/913) Bump faraday from 2.7.8 to 2.7.9 ([@ryz310](https://github.com/ryz310))
+
 ## v0.25.0 (Feb 12, 2023)
 
 ### Breaking Change
