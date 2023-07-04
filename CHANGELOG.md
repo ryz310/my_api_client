@@ -2,62 +2,17 @@
 
 ## v0.26.0 (Jul 04, 2023)
 
-### Feature
 ### Bugfix
-### Security
-### Breaking Change
-### Rubocop Challenge
-### Dependabot
-### Misc
 
-* [#867](https://github.com/ryz310/my_api_client/pull/867) Bump puma from 6.0.2 to 6.1.0 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#868](https://github.com/ryz310/my_api_client/pull/868) Bump nokogiri from 1.14.1 to 1.14.2 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#869](https://github.com/ryz310/my_api_client/pull/869) ryz310/dependabot/bundler/my_api/puma-6.1.1 ([@ryz310](https://github.com/ryz310))
-* [#870](https://github.com/ryz310/my_api_client/pull/870) ryz310/dependabot/bundler/my_api/rack-2.2.6.3 ([@ryz310](https://github.com/ryz310))
-* [#873](https://github.com/ryz310/my_api_client/pull/873) Bump rack from 2.2.6.2 to 2.2.6.3 in /rails_app/rails_6.0 ([@ryz310](https://github.com/ryz310))
-* [#871](https://github.com/ryz310/my_api_client/pull/871) Bump rack from 2.2.6.2 to 2.2.6.3 in /rails_app/rails_7.0 ([@ryz310](https://github.com/ryz310))
-* [#872](https://github.com/ryz310/my_api_client/pull/872) Bump rack from 2.2.6.2 to 2.2.6.3 in /rails_app/rails_6.1 ([@ryz310](https://github.com/ryz310))
-* [#878](https://github.com/ryz310/my_api_client/pull/878) Bump rack from 2.2.6.3 to 2.2.6.4 in /rails_app/rails_7.0 ([@ryz310](https://github.com/ryz310))
-* [#879](https://github.com/ryz310/my_api_client/pull/879) Bump activesupport from 6.1.7.1 to 6.1.7.3 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#876](https://github.com/ryz310/my_api_client/pull/876) Bump rack from 2.2.6.3 to 2.2.6.4 in /rails_app/rails_6.0 ([@ryz310](https://github.com/ryz310))
-* [#874](https://github.com/ryz310/my_api_client/pull/874) Bump activesupport from 7.0.4.2 to 7.0.4.3 ([@ryz310](https://github.com/ryz310))
-* [#875](https://github.com/ryz310/my_api_client/pull/875) Bump rack from 2.2.6.3 to 2.2.6.4 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#877](https://github.com/ryz310/my_api_client/pull/877) Bump rack from 2.2.6.3 to 2.2.6.4 in /rails_app/rails_6.1 ([@ryz310](https://github.com/ryz310))
-* [#880](https://github.com/ryz310/my_api_client/pull/880) Bump puma from 6.1.1 to 6.2.0 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#881](https://github.com/ryz310/my_api_client/pull/881) Bump puma from 6.2.0 to 6.2.1 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#882](https://github.com/ryz310/my_api_client/pull/882) Bump capybara from 3.38.0 to 3.39.0 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#884](https://github.com/ryz310/my_api_client/pull/884) Bump rubocop-performance from 1.16.0 to 1.17.1 ([@ryz310](https://github.com/ryz310))
-* [#883](https://github.com/ryz310/my_api_client/pull/883) Bump yard from 0.9.28 to 0.9.32 ([@ryz310](https://github.com/ryz310))
-* [#885](https://github.com/ryz310/my_api_client/pull/885) Bump nokogiri from 1.14.2 to 1.14.3 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#886](https://github.com/ryz310/my_api_client/pull/886) Bump nokogiri from 1.14.1 to 1.14.3 in /rails_app/rails_7.0 ([@ryz310](https://github.com/ryz310))
-* [#888](https://github.com/ryz310/my_api_client/pull/888) Bump nokogiri from 1.14.1 to 1.14.3 in /rails_app/rails_6.1 ([@ryz310](https://github.com/ryz310))
-* [#887](https://github.com/ryz310/my_api_client/pull/887) Bump nokogiri from 1.14.1 to 1.14.3 in /rails_app/rails_6.0 ([@ryz310](https://github.com/ryz310))
-* [#889](https://github.com/ryz310/my_api_client/pull/889) Bump yard from 0.9.32 to 0.9.34 ([@ryz310](https://github.com/ryz310))
-* [#890](https://github.com/ryz310/my_api_client/pull/890) Bump puma from 6.2.1 to 6.2.2 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#891](https://github.com/ryz310/my_api_client/pull/891) ryz310/dependabot/bundler/my_api/rack-2.2.7 ([@ryz310](https://github.com/ryz310))
-* [#892](https://github.com/ryz310/my_api_client/pull/892) Bump jets from 3.2.0 to 3.2.1 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#893](https://github.com/ryz310/my_api_client/pull/893) Bump jsonpath from 1.1.2 to 1.1.3 ([@ryz310](https://github.com/ryz310))
-* [#894](https://github.com/ryz310/my_api_client/pull/894) Bump nokogiri from 1.14.3 to 1.14.4 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#895](https://github.com/ryz310/my_api_client/pull/895) ryz310/dependabot/bundler/my_api/capybara-3.39.1 ([@ryz310](https://github.com/ryz310))
-* [#896](https://github.com/ryz310/my_api_client/pull/896) Bump nokogiri from 1.14.4 to 1.15.0 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#897](https://github.com/ryz310/my_api_client/pull/897) Bump rubocop-performance from 1.17.1 to 1.18.0 ([@ryz310](https://github.com/ryz310))
-* [#899](https://github.com/ryz310/my_api_client/pull/899) Bump jets from 3.2.1 to 3.2.2 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#898](https://github.com/ryz310/my_api_client/pull/898) Bump nokogiri from 1.15.0 to 1.15.1 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#900](https://github.com/ryz310/my_api_client/pull/900) Bump faraday from 2.7.4 to 2.7.5 ([@ryz310](https://github.com/ryz310))
-* [#901](https://github.com/ryz310/my_api_client/pull/901) Bump activesupport from 7.0.4.3 to 7.0.5 ([@ryz310](https://github.com/ryz310))
-* [#902](https://github.com/ryz310/my_api_client/pull/902) Bump nokogiri from 1.15.1 to 1.15.2 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#903](https://github.com/ryz310/my_api_client/pull/903) Bump jets from 3.2.2 to 4.0.0 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#904](https://github.com/ryz310/my_api_client/pull/904) Bump puma from 6.2.2 to 6.3.0 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#905](https://github.com/ryz310/my_api_client/pull/905) Bump jets from 4.0.0 to 4.0.1 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#906](https://github.com/ryz310/my_api_client/pull/906) Bump faraday from 2.7.5 to 2.7.6 ([@ryz310](https://github.com/ryz310))
-* [#907](https://github.com/ryz310/my_api_client/pull/907) Bump capybara from 3.39.1 to 3.39.2 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#908](https://github.com/ryz310/my_api_client/pull/908) Bump faraday from 2.7.6 to 2.7.7 ([@ryz310](https://github.com/ryz310))
-* [#909](https://github.com/ryz310/my_api_client/pull/909) Bump activesupport from 7.0.5 to 7.0.5.1 ([@ryz310](https://github.com/ryz310))
-* [#910](https://github.com/ryz310/my_api_client/pull/910) Bump faraday from 2.7.7 to 2.7.8 ([@ryz310](https://github.com/ryz310))
-* [#912](https://github.com/ryz310/my_api_client/pull/912) Bump activesupport from 7.0.5.1 to 7.0.6 ([@ryz310](https://github.com/ryz310))
-* [#911](https://github.com/ryz310/my_api_client/pull/911) Bump actionpack from 6.1.7.3 to 6.1.7.4 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#913](https://github.com/ryz310/my_api_client/pull/913) Bump faraday from 2.7.8 to 2.7.9 ([@ryz310](https://github.com/ryz310))
-* [#914](https://github.com/ryz310/my_api_client/pull/914) Fix error that generating api client failed on Rails 7 ([@ryz310](https://github.com/ryz310))
+- [#914](https://github.com/ryz310/my_api_client/pull/914) Fix error that generating api client failed on Rails 7 ([@ryz310](https://github.com/ryz310))
+
+### Dependabot
+
+- [#889](https://github.com/ryz310/my_api_client/pull/889) Bump yard from 0.9.32 to 0.9.34 ([@ryz310](https://github.com/ryz310))
+- [#893](https://github.com/ryz310/my_api_client/pull/893) Bump jsonpath from 1.1.2 to 1.1.3 ([@ryz310](https://github.com/ryz310))
+- [#897](https://github.com/ryz310/my_api_client/pull/897) Bump rubocop-performance from 1.17.1 to 1.18.0 ([@ryz310](https://github.com/ryz310))
+- [#912](https://github.com/ryz310/my_api_client/pull/912) Bump activesupport from 7.0.5.1 to 7.0.6 ([@ryz310](https://github.com/ryz310))
+- [#913](https://github.com/ryz310/my_api_client/pull/913) Bump faraday from 2.7.8 to 2.7.9 ([@ryz310](https://github.com/ryz310))
 
 ## v0.25.0 (Feb 12, 2023)
 
