@@ -10,7 +10,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (7.0.6)
+    activesupport (7.0.7)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
@@ -39,7 +39,7 @@ GEM
       multi_json
     language_server-protocol (3.17.0.3)
     method_source (1.0.0)
-    minitest (5.18.1)
+    minitest (5.19.0)
     multi_json (1.15.0)
     parallel (1.23.0)
     parser (3.2.2.3)
