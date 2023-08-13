@@ -7,7 +7,7 @@ gem 'jets', '~> 4.0.3'
 gem 'dynomite'
 
 # See: https://github.com/boltops-tools/jets/issues/523
-gem 'nokogiri', '~> 1.15.3'
+gem 'nokogiri', '~> 1.15.4'
 
 # development and test groups are not bundled as part of the deployment
 group :development, :test do
