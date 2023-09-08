@@ -294,7 +294,7 @@ workflows:
               ruby_version: *ruby_version_enum
               rails_version: *rails_version_enum
       - test_api:
-          ruby_version: "2.7" # Jets supports only Ruby 2.x
+          ruby_version: "3.2"
       - rubocop
       - yardoc
       - upload-coverage:
