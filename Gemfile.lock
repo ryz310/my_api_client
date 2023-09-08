@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     my_api_client (0.26.0)
-      activesupport (>= 6.0.0)
+      activesupport (>= 6.1.0)
       faraday (>= 0.17.1)
       jsonpath
       sawyer (>= 0.8.2)
