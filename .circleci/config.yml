@@ -17,7 +17,7 @@ references:
   - &rails_version
     rails_version:
       type: enum
-      enum: &rails_version_enum ["6.0", "6.1", "7.0"]
+      enum: &rails_version_enum ["6.1", "7.0"]
       default: "7.0"
   - &bundler_options
     bundler_options:
