@@ -46,7 +46,7 @@ GEM
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     json (2.6.3)
-    jsonpath (1.1.4)
+    jsonpath (1.1.5)
       multi_json
     language_server-protocol (3.17.0.3)
     method_source (1.0.0)
