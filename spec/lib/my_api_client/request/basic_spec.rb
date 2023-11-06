@@ -28,7 +28,7 @@ RSpec.describe MyApiClient::Request::Basic do
 
       before { allow(instance).to receive(:_request_with_relative_uri).and_return(response) }
 
-      context 'when the block is not given' do
+      context 'without a block' do
         subject(:execute) do
           instance.public_send(http_method, pathname, headers: headers, query: query, body: body)
         end
@@ -44,7 +44,7 @@ RSpec.describe MyApiClient::Request::Basic do
         end
       end
 
-      context 'when the block is given' do
+      context 'with a block' do
         subject(:execute) do
           instance.public_send(
             http_method,
@@ -63,8 +63,16 @@ RSpec.describe MyApiClient::Request::Basic do
             .with(http_method, pathname, headers, query, body)
         end
 
-        it 'passes the sawyer response to the block parameter and returns the block result' do
-          expect(execute).to eq response
+        it 'passes the sawyer response to the block parameter' do
+          expect do |b|
+            instance.public_send(http_method, pathname, &b)
+          end.to yield_with_args(response)
+        end
+
+        it 'returns the block result' do
+          expect do
+            instance.public_send(http_method, pathname) { |_result| 'a return value of block' }
+          end.to eq 'a return value of block'
         end
       end
     end
