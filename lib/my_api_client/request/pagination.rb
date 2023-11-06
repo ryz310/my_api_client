@@ -18,12 +18,19 @@ module MyApiClient
       # @param body [Hash, nil]
       #   Request body. You should not specify it when use GET method.
       # @return [Enumerator::Lazy]
-      #   Yields the pagination API response.
+      #   Yields the pagination API response if the block is given.
+      #   Whatever the block returns if the block is given.
+      # @yield
+      #   Process the response body with the given block.
+      # @yieldparam response [Sawyer::Response]
+      #   Response instance.
+      # @yieldreturn [<T>]
+      #   The block result.
       def pageable_get(pathname, paging:, headers: nil, query: nil)
         Enumerator.new do |y|
           response = call(:_request_with_relative_uri, :get, pathname, headers, query, nil)
           loop do
-            y << response.data
+            y << (block_given? ? yield(response) : response.data)
 
             next_uri = JsonPath.new(paging).first(response.body)
             break if next_uri.blank?
