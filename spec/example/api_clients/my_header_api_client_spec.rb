@@ -15,7 +15,7 @@ RSpec.describe MyHeaderApiClient, type: :api_client do
       api_client.get_header(first_header: first_header_value, second_header: second_header_value)
     end
 
-    context 'when the qurey parameters are nil' do
+    context 'when the query parameters are nil' do
       let(:first_header_value) { nil }
       let(:second_header_value) { nil }
 
@@ -26,7 +26,7 @@ RSpec.describe MyHeaderApiClient, type: :api_client do
       end
     end
 
-    context 'when the qurey parameters is set' do
+    context 'when the query parameters is set' do
       let(:first_header_value) { 'first' }
       let(:second_header_value) { 'second' }
 
