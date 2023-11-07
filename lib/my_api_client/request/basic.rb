@@ -25,9 +25,9 @@ module MyApiClient
           #   Process the response body with the given block.
           # @yieldparam response [Sawyer::Response]
           #   Response instance.
-          # @yieldreturn [<T>]
+          # @yieldreturn [Object]
           #   The block result.
-          # @return [<T>]
+          # @return [Object]
           #   Whatever the block returns if the block is given.
           def #{http_method}(pathname, headers: nil, query: nil, body: nil)
             response = call(:_request_with_relative_uri, :#{http_method}, pathname, headers, query, body)
