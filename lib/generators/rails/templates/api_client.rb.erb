@@ -9,7 +9,7 @@ class <%= "#{class_name}ApiClient" %> < ::ApplicationApiClient
   end
 
 <% yeild_request_arguments do |action, http_method, pathname| -%>
-  # <%= "#{http_method.upcase} #{pathname}" %>
+  # <%= "#{http_method.upcase} #{options[:endpoint]}/#{pathname}" %>
   #
   # @return [Sawyer::Resource] description_of_the_api_response
   # @raise [MyApiClient::Error] description_of_the_error
