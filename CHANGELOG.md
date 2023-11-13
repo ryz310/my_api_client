@@ -3,41 +3,42 @@
 ## v0.27.0 (Nov 13, 2023)
 
 ### Feature
-### Bugfix
-### Security
+
+- [#944](https://github.com/ryz310/my_api_client/pull/944) Add block to retrieve sawyer response ([@okumud](https://github.com/okumud))
+
+```rb
+api_clinet = ExampleApiClient.new(access_token: 'access_token')
+
+# You can retrieve sawyer response with return value
+api_clinet.get_users #=> #<Sawyer::Resource>
+
+# You can retrieve sawyer response with block
+api_clinet.get_users do |response|
+  response #=> #<Sawyer::Response>
+  response.headers #=> #<Hash>
+  response.data #=> #<Sawyer::Resource>
+end
+```
+
 ### Breaking Change
+
+- [#931](https://github.com/ryz310/my_api_client/pull/931) End of support for ruby 2.7 and rails 6.0 ([@ryz310](https://github.com/ryz310))
+
 ### Rubocop Challenge
+
 ### Dependabot
+
+- [#919](https://github.com/ryz310/my_api_client/pull/919) Bump bugsnag from 6.25.2 to 6.26.0 ([@ryz310](https://github.com/ryz310))
+- [#929](https://github.com/ryz310/my_api_client/pull/929) Bump webmock from 3.19.0 to 3.19.1 ([@ryz310](https://github.com/ryz310))
+- [#934](https://github.com/ryz310/my_api_client/pull/934) Bump rubocop-performance from 1.19.0 to 1.19.1 ([@ryz310](https://github.com/ryz310))
+- [#933](https://github.com/ryz310/my_api_client/pull/933) Bump faraday from 2.7.10 to 2.7.11 ([@ryz310](https://github.com/ryz310))
+- [#939](https://github.com/ryz310/my_api_client/pull/939) Bump jsonpath from 1.1.4 to 1.1.5 ([@ryz310](https://github.com/ryz310))
+- [#942](https://github.com/ryz310/my_api_client/pull/942) Bump rake from 13.0.6 to 13.1.0 ([@ryz310](https://github.com/ryz310))
+- [#945](https://github.com/ryz310/my_api_client/pull/945) Bump activesupport from 7.1.1 to 7.1.2 ([@ryz310](https://github.com/ryz310))
+
 ### Misc
 
-* [#917](https://github.com/ryz310/my_api_client/pull/917) Bump nokogiri from 1.15.2 to 1.15.3 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#918](https://github.com/ryz310/my_api_client/pull/918) Bump faraday from 2.7.9 to 2.7.10 ([@ryz310](https://github.com/ryz310))
-* [#919](https://github.com/ryz310/my_api_client/pull/919) Bump bugsnag from 6.25.2 to 6.26.0 ([@ryz310](https://github.com/ryz310))
-* [#920](https://github.com/ryz310/my_api_client/pull/920) Bump rack from 2.2.7 to 2.2.8 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#921](https://github.com/ryz310/my_api_client/pull/921) Bump jets from 4.0.1 to 4.0.3 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#922](https://github.com/ryz310/my_api_client/pull/922) ryz310/dependabot/bundler/activesupport-7.0.7 ([@ryz310](https://github.com/ryz310))
-* [#923](https://github.com/ryz310/my_api_client/pull/923) ryz310/dependabot/bundler/my_api/nokogiri-1.15.4 ([@ryz310](https://github.com/ryz310))
-* [#924](https://github.com/ryz310/my_api_client/pull/924) ryz310/dependabot/bundler/rubocop-performance-1.19.0 ([@ryz310](https://github.com/ryz310))
-* [#925](https://github.com/ryz310/my_api_client/pull/925) Bump puma from 6.3.0 to 6.3.1 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#926](https://github.com/ryz310/my_api_client/pull/926) Bump activesupport from 7.0.7 to 7.0.7.2 ([@ryz310](https://github.com/ryz310))
-* [#927](https://github.com/ryz310/my_api_client/pull/927) ryz310/dependabot/bundler/my_api/activesupport-6.1.7.6 ([@ryz310](https://github.com/ryz310))
-* [#928](https://github.com/ryz310/my_api_client/pull/928) Bump webmock from 3.18.1 to 3.19.0 ([@ryz310](https://github.com/ryz310))
-* [#929](https://github.com/ryz310/my_api_client/pull/929) Bump webmock from 3.19.0 to 3.19.1 ([@ryz310](https://github.com/ryz310))
-* [#931](https://github.com/ryz310/my_api_client/pull/931) End of support for ruby 2.7 and rails 6.0 ([@ryz310](https://github.com/ryz310))
-* [#930](https://github.com/ryz310/my_api_client/pull/930) Bump jets from 4.0.3 to 4.0.4 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#932](https://github.com/ryz310/my_api_client/pull/932) Bump activesupport from 7.0.7.2 to 7.0.8 ([@ryz310](https://github.com/ryz310))
-* [#934](https://github.com/ryz310/my_api_client/pull/934) Bump rubocop-performance from 1.19.0 to 1.19.1 ([@ryz310](https://github.com/ryz310))
-* [#933](https://github.com/ryz310/my_api_client/pull/933) Bump faraday from 2.7.10 to 2.7.11 ([@ryz310](https://github.com/ryz310))
-* [#935](https://github.com/ryz310/my_api_client/pull/935) Bump puma from 6.3.1 to 6.4.0 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#936](https://github.com/ryz310/my_api_client/pull/936) Bump jsonpath from 1.1.3 to 1.1.4 ([@ryz310](https://github.com/ryz310))
-* [#937](https://github.com/ryz310/my_api_client/pull/937) ryz310/dependabot/bundler/activesupport-7.1.0 ([@ryz310](https://github.com/ryz310))
-* [#938](https://github.com/ryz310/my_api_client/pull/938) ryz310/dependabot/bundler/activesupport-7.1.1 ([@ryz310](https://github.com/ryz310))
-* [#939](https://github.com/ryz310/my_api_client/pull/939) Bump jsonpath from 1.1.4 to 1.1.5 ([@ryz310](https://github.com/ryz310))
-* [#941](https://github.com/ryz310/my_api_client/pull/941) ryz310/dependabot/bundler/my_api/jets-4.0.7 ([@ryz310](https://github.com/ryz310))
-* [#942](https://github.com/ryz310/my_api_client/pull/942) Bump rake from 13.0.6 to 13.1.0 ([@ryz310](https://github.com/ryz310))
-* [#944](https://github.com/ryz310/my_api_client/pull/944) Add block to retrieve sawyer response ([@okumud](https://github.com/okumud))
-* [#946](https://github.com/ryz310/my_api_client/pull/946) Fix a broken spec ([@ryz310](https://github.com/ryz310))
-* [#945](https://github.com/ryz310/my_api_client/pull/945) Bump activesupport from 7.1.1 to 7.1.2 ([@ryz310](https://github.com/ryz310))
+- [#946](https://github.com/ryz310/my_api_client/pull/946) Fix a broken spec ([@ryz310](https://github.com/ryz310))
 
 ## v0.26.0 (Jul 04, 2023)
 
