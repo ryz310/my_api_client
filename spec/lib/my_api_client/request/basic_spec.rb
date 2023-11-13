@@ -3,10 +3,6 @@
 RSpec.describe MyApiClient::Request::Basic do
   described_class::HTTP_METHODS.each do |http_method|
     describe "##{http_method}" do
-      subject(:execute) do
-        instance.public_send(http_method, pathname, headers: headers, query: query, body: body)
-      end
-
       let(:mock_class) do
         Class.new do
           include MyApiClient::Request::Basic
@@ -30,16 +26,54 @@ RSpec.describe MyApiClient::Request::Basic do
         let(:body) { { name: 'John', birth: Date.today } }
       end
 
-      before { allow(instance).to receive(:_request_with_relative_uri).and_return(response) }
-
-      it 'calls the request method with relative URL' do
-        execute
-        expect(instance).to have_received(:_request_with_relative_uri)
-          .with(http_method, pathname, headers, query, body)
+      before do
+        allow(instance).to receive(:_request_with_relative_uri).and_return(response)
       end
 
-      it 'returns a response body object' do
-        expect(execute).to eq resource
+      context 'without a block' do
+        subject(:execute) do
+          instance.public_send(http_method, pathname, headers: headers, query: query, body: body)
+        end
+
+        it 'calls the request method with relative URL' do
+          execute
+          expect(instance).to have_received(:_request_with_relative_uri)
+            .with(http_method, pathname, headers, query, body)
+        end
+
+        it 'returns a response body object' do
+          expect(execute).to eq resource
+        end
+      end
+
+      context 'with a block' do
+        subject(:execute) do
+          instance.public_send(
+            http_method,
+            pathname,
+            headers: headers,
+            query: query,
+            body: body
+          ) do |response|
+            response
+          end
+        end
+
+        it 'calls the request method with relative URL' do
+          execute
+          expect(instance).to have_received(:_request_with_relative_uri)
+            .with(http_method, pathname, headers, query, body)
+        end
+
+        it 'passes the sawyer response to the block parameter' do
+          expect { |b| instance.public_send(http_method, pathname, &b) }
+            .to yield_with_args(response)
+        end
+
+        it 'returns the block result' do
+          expect(instance.public_send(http_method, pathname) { |_| 'a return value of block' })
+            .to eq 'a return value of block'
+        end
       end
     end
   end

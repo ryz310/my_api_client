@@ -5,8 +5,8 @@ module MyApiClient
   class ServiceAbstract
     private_class_method :new
 
-    def self.call(**args, &block)
-      new(**args, &block).send(:call)
+    def self.call(...)
+      new(...).send(:call)
     end
 
     # private

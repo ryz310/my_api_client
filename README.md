@@ -16,8 +16,8 @@ It is supposed to be used in Ruby on Rails, but it is made to work in other envi
 
 ## Supported Versions
 
-- Ruby 2.7, 3.0, 3.1, 3.2
-- Rails 6.0, 6.1, 7.0
+- Ruby 3.0, 3.1, 3.2
+- Rails 6.1, 7.0
 
 ## Installation
 
@@ -56,7 +56,7 @@ class ExampleApiClient < MyApiClient::Base
 
   # GET https://example.com/v1/users
   #
-  # @return [Sawyer::Response] HTTP response parameter
+  # @return [Sawyer::Resource] HTTP resource parameter
   def get_users
     get 'users', headers: headers, query: { key: 'value' }
   end
@@ -64,7 +64,7 @@ class ExampleApiClient < MyApiClient::Base
   # POST https://example.com/v1/users
   #
   # @param name [String] Username which want to create
-  # @return [Sawyer::Response] HTTP response parameter
+  # @return [Sawyer::Resource] HTTP resource parameter
   def post_user(name:)
     post 'users', headers: headers, body: { name: name }
   end
@@ -80,7 +80,7 @@ class ExampleApiClient < MyApiClient::Base
 end
 
 api_clinet = ExampleApiClient.new(access_token: 'access_token')
-api_clinet.get_users #=> #<Sawyer::Response>
+api_clinet.get_users #=> #<Sawyer::Resource>
 ```
 
 The `endpoint` defines the intersection of the request URL. Each method described below defines a subsequent path. In the above example, `get 'users'` will request to `GET https://example.com/v1/users`.

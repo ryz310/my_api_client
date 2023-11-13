@@ -2,12 +2,12 @@
 
 source 'https://rubygems.org'
 
-gem 'jets', '~> 4.0.1'
+gem 'jets', '~> 4.0.7'
 
 gem 'dynomite'
 
 # See: https://github.com/boltops-tools/jets/issues/523
-gem 'nokogiri', '~> 1.15.2'
+gem 'nokogiri', '~> 1.15.4'
 
 # development and test groups are not bundled as part of the deployment
 group :development, :test do

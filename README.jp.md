@@ -12,8 +12,8 @@ MyApiClient は API リクエストクラスを作成するための汎用的な
 
 ## Supported Versions
 
-- Ruby 2.7, 3.0, 3.1, 3.2
-- Rails 6.0, 6.1, 7.0
+- Ruby 3.0, 3.1, 3.2
+- Rails 6.1, 7.0
 
 ## Installation
 
@@ -52,7 +52,7 @@ class ExampleApiClient < MyApiClient::Base
 
   # GET https://example.com/v1/users
   #
-  # @return [Sawyer::Response] HTTP response parameter
+  # @return [Sawyer::Resource] HTTP resource parameter
   def get_users
     get 'users', headers: headers, query: { key: 'value' }
   end
@@ -60,7 +60,7 @@ class ExampleApiClient < MyApiClient::Base
   # POST https://example.com/v1/users
   #
   # @param name [String] Username which want to create
-  # @return [Sawyer::Response] HTTP response parameter
+  # @return [Sawyer::Resource] HTTP resource parameter
   def post_user(name:)
     post 'users', headers: headers, body: { name: name }
   end
@@ -76,7 +76,7 @@ class ExampleApiClient < MyApiClient::Base
 end
 
 api_clinet = ExampleApiClient.new(access_token: 'access_token')
-api_clinet.get_users #=> #<Sawyer::Response>
+api_clinet.get_users #=> #<Sawyer::Resource>
 ```
 
 クラス定義の最初に記述される `endpoint` にはリクエスト URL の共通部分を定義します。後述の各メソッドで後続の path を定義しますが、上記の例だと `get 'users'` と定義すると、 `GET https://example.com/v1/users` というリクエストが実行されます。
@@ -416,7 +416,7 @@ class GetUsersApiClient < ExampleApiClient
 
   # GET https://example.com/users
   #
-  # @return [Sawyer::Response] HTTP response parameter
+  # @return [Sawyer::Resource] HTTP resource parameter
   def request
     get 'users', query: { key: 'value' }, headers: headers
   end
@@ -428,7 +428,7 @@ class PostUserApiClient < ExampleApiClient
   # POST https://example.com/users
   #
   # @param name [String] Username which want to create
-  # @return [Sawyer::Response] HTTP response parameter
+  # @return [Sawyer::Resource] HTTP resource parameter
   def request(name:)
     post 'users', headers: headers, body: { name: name }
   end
