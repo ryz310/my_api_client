@@ -9,7 +9,7 @@ module MyApiClient
       #
       # @param pathname [String]
       #   Pathname of the request target URL. It's joined with the defined by `endpoint`.
-      # @param paging [String]
+      # @param paging [String, Proc]
       #   Specify the pagination link path included in the response body as JsonPath expression
       # @param headers [Hash, nil]
       #   Request headers.
@@ -25,7 +25,7 @@ module MyApiClient
           loop do
             y << response.data
 
-            next_uri = JsonPath.new(paging).first(response.body)
+            next_uri = get_next_url(paging, response)
             break if next_uri.blank?
 
             response = call(:_request_with_absolute_uri, :get, next_uri, headers, nil)
@@ -34,6 +34,27 @@ module MyApiClient
       end
 
       alias pget pageable_get
+
+      private
+
+      # Returns the next URL for pagination
+      #
+      # @param paging [String, Proc]
+      #   Specify the pagination link path included in the response body as JsonPath expression
+      # @param response [MyApiClient::Response]
+      #   The response object
+      # @return [String, nil]
+      #   The next URL for pagination
+      def get_next_url(paging, response)
+        case paging
+        when String
+          JsonPath.new(paging).first(response.body)
+        when Proc
+          paging.call(response)
+        else
+          raise ArgumentError, "Invalid paging argument: #{paging}"
+        end
+      end
     end
   end
 end
