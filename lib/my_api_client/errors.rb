@@ -16,7 +16,7 @@ module MyApiClient
     #   The error description
     def initialize(params = nil, error_message = nil)
       @params = params
-      super error_message
+      super(error_message)
     end
 
     # Returns contents as string for to be readable for human
