@@ -144,6 +144,7 @@ module MyApiClient
         status: status_code.presence || 400,
         headers: {},
         data: stub_as_resource(params),
+        body: params.to_json,
         timing: 0.123
       )
     end

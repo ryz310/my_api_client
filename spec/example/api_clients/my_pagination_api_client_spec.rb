@@ -10,9 +10,7 @@ RSpec.describe MyPaginationApiClient, type: :api_client do
     { 'Content-Type': 'application/json;charset=UTF-8' }
   end
 
-  describe '#pagination' do
-    subject(:api_request!) { api_client.pagination.first }
-
+  shared_examples 'an API client' do
     it do
       expect { api_request! }
         .to request_to(:get, URI.join(endpoint, 'pagination'))
@@ -38,5 +36,17 @@ RSpec.describe MyPaginationApiClient, type: :api_client do
           .when_receive(status_code: 500)
       end
     end
+  end
+
+  describe '#paging_with_jsonpath' do
+    subject(:api_request!) { api_client.paging_with_jsonpath.first }
+
+    it_behaves_like 'an API client'
+  end
+
+  describe '#paging_with_proc' do
+    subject(:api_request!) { api_client.paging_with_proc.first }
+
+    it_behaves_like 'an API client'
   end
 end
