@@ -23,7 +23,7 @@ module MyApiClient
     #   Some network error
     def initialize(params = nil, original_error = nil)
       @original_error = original_error
-      super params, original_error&.message
+      super(params, original_error&.message)
     end
 
     # Returns contents as string for to be readable for human
