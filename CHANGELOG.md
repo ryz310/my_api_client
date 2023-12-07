@@ -3,18 +3,19 @@
 ## v1.0.0 (Dec 07, 2023)
 
 ### Feature
-### Bugfix
-### Security
-### Breaking Change
-### Rubocop Challenge
-### Dependabot
-### Misc
 
-* [#949](https://github.com/ryz310/my_api_client/pull/949) Bump nokogiri from 1.15.4 to 1.15.5 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#950](https://github.com/ryz310/my_api_client/pull/950) ryz310/dependabot/bundler/faraday-2.7.12 ([@ryz310](https://github.com/ryz310))
-* [#951](https://github.com/ryz310/my_api_client/pull/951) ryz310/dependabot/bundler/my_api/jets-4.0.9 ([@ryz310](https://github.com/ryz310))
-* [#953](https://github.com/ryz310/my_api_client/pull/953) Bump jets from 4.0.9 to 4.0.10 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#955](https://github.com/ryz310/my_api_client/pull/955) Enable Dynamic URL Generation for `#pageable_get` via `Proc` Objects ([@ryz310](https://github.com/ryz310))
+- [#955](https://github.com/ryz310/my_api_client/pull/955) Enable Dynamic URL Generation for `#pageable_get` via `Proc` Objects ([@ryz310](https://github.com/ryz310))
+
+```ruby
+# Example of using a Proc with pageable_get
+pget 'api/example', headers:, query:, paging: ->(response) {
+  # Custom logic to generate the next URL
+}
+```
+
+### Dependabot
+
+- [#950](https://github.com/ryz310/my_api_client/pull/950) Bump faraday from 2.7.11 to 2.7.12 ([@ryz310](https://github.com/ryz310))
 
 ## v0.27.0 (Nov 13, 2023)
 
@@ -39,8 +40,6 @@ end
 ### Breaking Change
 
 - [#931](https://github.com/ryz310/my_api_client/pull/931) End of support for ruby 2.7 and rails 6.0 ([@ryz310](https://github.com/ryz310))
-
-### Rubocop Challenge
 
 ### Dependabot
 
