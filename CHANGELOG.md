@@ -1,5 +1,22 @@
 # Change log
 
+## v1.1.0 (Jan 09, 2024)
+
+### Feature
+### Bugfix
+### Security
+### Breaking Change
+### Rubocop Challenge
+### Dependabot
+### Misc
+
+* [#968](https://github.com/ryz310/my_api_client/pull/968) ryz310/dependabot/bundler/my_api/nokogiri-1.16.0 ([@ryz310](https://github.com/ryz310))
+* [#969](https://github.com/ryz310/my_api_client/pull/969) ryz310/dependabot/bundler/my_api/puma-6.4.1 ([@ryz310](https://github.com/ryz310))
+* [#971](https://github.com/ryz310/my_api_client/pull/971) Bump puma from 6.4.1 to 6.4.2 in /my_api ([@ryz310](https://github.com/ryz310))
+* [#965](https://github.com/ryz310/my_api_client/pull/965) ryz310/dependabot/bundler/faraday-2.8.1 ([@ryz310](https://github.com/ryz310))
+* [#970](https://github.com/ryz310/my_api_client/pull/970) Fix handling when the error changes after a retry ([@ashimomura](https://github.com/ashimomura))
+* [#972](https://github.com/ryz310/my_api_client/pull/972) Bump rubocop-performance from 1.19.1 to 1.20.2 ([@ryz310](https://github.com/ryz310))
+
 ## v1.0.0 (Dec 07, 2023)
 
 ### Feature
