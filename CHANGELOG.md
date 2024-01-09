@@ -1,5 +1,16 @@
 # Change log
 
+## v1.1.0 (Jan 09, 2024)
+
+### Bugfix
+
+- [#970](https://github.com/ryz310/my_api_client/pull/970) Fix handling when the error changes after a retry ([@ashimomura](https://github.com/ashimomura))
+
+### Dependabot
+
+- [#965](https://github.com/ryz310/my_api_client/pull/965) Bump faraday from 2.7.12 to 2.8.1 ([@ryz310](https://github.com/ryz310))
+- [#972](https://github.com/ryz310/my_api_client/pull/972) Bump rubocop-performance from 1.19.1 to 1.20.2 ([@ryz310](https://github.com/ryz310))
+
 ## v1.0.0 (Dec 07, 2023)
 
 ### Feature
