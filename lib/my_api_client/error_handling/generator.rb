@@ -84,7 +84,7 @@ module MyApiClient
                   "You can use options that: #{ARGUMENTS}"
           end
 
-          instance_variable_set("@_#{k}", v)
+          instance_variable_set(:"@_#{k}", v)
         end
       end
 
