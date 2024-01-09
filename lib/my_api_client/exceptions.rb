@@ -55,5 +55,16 @@ module MyApiClient
       @retry_count += 1
       @retry_result = call(*args)
     end
+
+    # call the handler for exception
+    #
+    # @note
+    #   To avoid handling the exception of the retry origin on the second and subsequent retries,
+    #   make exception.cause visited.
+    # @override ActiveSupport::Rescuable#rescue_with_handler
+    # @param exception [Exception] Target exception
+    def rescue_with_handler(exception)
+      self.class.rescue_with_handler(exception, object: self, visited_exceptions: [exception.cause])
+    end
   end
 end
