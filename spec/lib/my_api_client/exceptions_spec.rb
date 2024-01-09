@@ -4,6 +4,7 @@ RSpec.describe MyApiClient::Exceptions do
   let(:mock_class) do
     stub_const 'RetriableError', Class.new(StandardError)
     stub_const 'DiscardableError', Class.new(StandardError)
+    stub_const 'OtherError', Class.new(StandardError)
 
     Class.new do
       include MyApiClient::Exceptions
@@ -76,6 +77,20 @@ RSpec.describe MyApiClient::Exceptions do
 
       it 'returns the result of the retry' do
         expect { execute_call }.to raise_error(RetriableError)
+      end
+    end
+
+    context 'when an error occurs and fails again with another error due to retry' do
+      before do
+        results = %i[retriable_error another_error]
+        allow(instance).to receive(:execute).twice do
+          result = results.shift
+          result == :retriable_error ? raise(RetriableError) : raise(OtherError)
+        end
+      end
+
+      it 'returns the last exception raised' do
+        expect { execute_call }.to raise_error(OtherError)
       end
     end
   end
