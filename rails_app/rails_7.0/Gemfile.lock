@@ -2,7 +2,7 @@ PATH
   remote: ../..
   specs:
     my_api_client (0.24.0)
-      activesupport (>= 6.0.0)
+      activesupport (>= 6.1.0)
       faraday (>= 0.17.1)
       jsonpath
       sawyer (>= 0.8.2)
@@ -124,12 +124,12 @@ GEM
       net-protocol
       timeout
     nio4r (2.5.8)
-    nokogiri (1.14.3-x86_64-darwin)
+    nokogiri (1.16.2-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.14.3-x86_64-linux)
+    nokogiri (1.16.2-x86_64-linux)
       racc (~> 1.4)
     public_suffix (5.0.1)
-    racc (1.6.2)
+    racc (1.7.3)
     rack (2.2.6.4)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
