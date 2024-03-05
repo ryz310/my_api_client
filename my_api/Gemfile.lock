@@ -107,6 +107,7 @@ GEM
       memoist
       rainbow
     cfn_response (0.2.0)
+    childprocess (5.0.0)
     concurrent-ruby (1.2.2)
     crass (1.0.6)
     date (3.3.4)
@@ -164,8 +165,9 @@ GEM
     jmespath (1.6.2)
     kramdown (2.4.0)
       rexml
-    launchy (2.5.2)
+    launchy (3.0.0)
       addressable (~> 2.8)
+      childprocess (~> 5.0)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
