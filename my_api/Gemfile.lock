@@ -165,7 +165,7 @@ GEM
     jmespath (1.6.2)
     kramdown (2.4.0)
       rexml
-    launchy (3.0.0)
+    launchy (3.0.1)
       addressable (~> 2.8)
       childprocess (~> 5.0)
     loofah (2.22.0)
@@ -195,7 +195,7 @@ GEM
     nokogiri (1.16.4)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    public_suffix (5.0.4)
+    public_suffix (5.0.5)
     puma (6.4.2)
       nio4r (~> 2.0)
     racc (1.7.3)
