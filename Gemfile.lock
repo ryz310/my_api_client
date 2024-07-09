@@ -37,8 +37,9 @@ GEM
     diff-lcs (1.5.1)
     docile (1.4.0)
     drb (2.2.1)
-    faraday (2.9.2)
+    faraday (2.10.0)
       faraday-net_http (>= 2.0, < 3.2)
+      logger
     faraday-net_http (3.1.0)
       net-http
     hashdiff (1.1.0)
@@ -48,6 +49,7 @@ GEM
     jsonpath (1.1.5)
       multi_json
     language_server-protocol (3.17.0.3)
+    logger (1.6.0)
     method_source (1.0.0)
     minitest (5.23.1)
     multi_json (1.15.0)
