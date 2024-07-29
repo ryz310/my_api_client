@@ -219,8 +219,8 @@ GEM
     rake (13.1.0)
     recursive-open-struct (1.1.3)
     regexp_parser (2.9.0)
-    rexml (3.2.8)
-      strscan (>= 3.0.9)
+    rexml (3.3.2)
+      strscan
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
