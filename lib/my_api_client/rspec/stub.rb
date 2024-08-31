@@ -22,12 +22,12 @@ module MyApiClient
     #       pageable: [ { id: 1 }, { id: 2 }]              # for `#pageable_get`.
     #     },
     #     get_user: { response: { id: 1 } },               # Returns an arbitrary response.
-    #     post_users: { id: 1 },                           # You can ommit `response` keyword.
+    #     post_users: { id: 1 },                           # You can omit `response` keyword.
     #     patch_user: ->(params) { { id: params[:id] } },  # Returns calculated result as response.
     #     put_user: { raise: MyApiClient::ClientError }    # Raises an arbitrary error.
     #     delete_user: {
     #       raise: MyApiClient::ClientError,
-    #       response: { errors: [{ code: 10 }] },          # You can stub response and statu code
+    #       response: { errors: [{ code: 10 }] },          # You can stub response and status code
     #       status_code: 429,                              # with an arbitrary error.
     #     }
     #   )
@@ -54,7 +54,7 @@ module MyApiClient
     #       pageable: [ { id: 1 }, { id: 2 }]              # for `#pageable_get`.
     #     },
     #     get_user: { response: { id: 1 } },               # Returns an arbitrary response.
-    #     post_users: { id: 1 },                           # You can ommit `response` keyword.
+    #     post_users: { id: 1 },                           # You can omit `response` keyword.
     #     patch_user: ->(params) { { id: params[:id] } },  # Returns calculated result as response.
     #     put_user: { raise: MyApiClient::ClientError }    # Raises an arbitrary error.
     #     delete_user: {
@@ -113,10 +113,10 @@ module MyApiClient
 
     # Provides a shorthand for `raise` option.
     # `MyApiClient::Error` requires `MyApiClient::Params::Params` instance on
-    # initialize, but it makes trubolesome. `MyApiClient::NetworkError` is more.
+    # initialize, but it makes troublesome. `MyApiClient::NetworkError` is more.
     # If given a error instance, it will return raw value without processing.
     #
-    # @param exception [Clsas, MyApiClient::Error] Processing target.
+    # @param exception [Class, MyApiClient::Error] Processing target.
     # @param response [Hash] describe_response_here
     # @param status_code [Integer] describe_status_code_here
     # @return [MyApiClient::Error] Processed exception.

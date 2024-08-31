@@ -169,7 +169,7 @@ RSpec.describe MyApiClient::Stub do
       end
     end
 
-    context 'when use `raise`, `respones` and `status_code` options' do
+    context 'when use `raise`, `response` and `status_code` options' do
       shared_examples 'a stub to raise an error' do |error|
         let(:api_client) do
           stub_api_client(
@@ -313,7 +313,7 @@ RSpec.describe MyApiClient::Stub do
         )
       end
 
-      it 'provides alias of `reponse` options' do
+      it 'provides alias of `response` options' do
         response1 = api_client.request(user_id: 1)
         expect(response1.id).to eq 'alias'
         response2 = api_client.request_all
