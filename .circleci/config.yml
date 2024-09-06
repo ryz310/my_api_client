@@ -12,8 +12,8 @@ references:
   - &ruby_version
     ruby_version:
       type: enum
-      enum: &ruby_version_enum ["3.1", "3.2"]
-      default: "3.2"
+      enum: &ruby_version_enum ["3.1", "3.2", "3.3"]
+      default: "3.3"
   - &rails_version
     rails_version:
       type: enum
@@ -252,7 +252,7 @@ jobs:
       - code-climate/install
       - code-climate/sum-coverage:
           input: codeclimate.*.json
-          parts: 12
+          parts: 18
       - code-climate/upload-coverage
   rubocop:
     executor: gem_executor
@@ -294,7 +294,7 @@ workflows:
               ruby_version: *ruby_version_enum
               rails_version: *rails_version_enum
       - test_api:
-          ruby_version: "3.2"
+          ruby_version: "3.2" # Ruby on Jets requires Ruby 2.5, 2.7 or 3.2
       - rubocop
       - yardoc
       - upload-coverage:
