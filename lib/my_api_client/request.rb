@@ -15,11 +15,11 @@ module MyApiClient
     # @param pathname [String]
     #   Pathname of the request target URL.
     #   It's joined with the defined by `endpoint`.
-    # @param headers [Hash, nil]
+    # @param headers [Hash, Proc<Hash>, nil]
     #   Request headers.
     # @param query [Hash, nil]
     #   Query string.
-    # @param body [Hash, nil]
+    # @param body [Hash, Proc<Hash>, nil]
     #   Request body.
     # @return [Sawyer::Response]
     #   Response instance.
@@ -35,9 +35,9 @@ module MyApiClient
     #   HTTP method. e.g. `:get`, `:post`, `:put`, `:patch` and `:delete`.
     # @param uri [URI]
     #   Request target URI including query strings.
-    # @param headers [Hash, nil]
+    # @param headers [Hash, Proc<Hash>, nil]
     #   Request headers.
-    # @param body [Hash, nil]
+    # @param body [Hash, Proc<Hash>, nil]
     #   Request body.
     # @return [Sawyer::Response]
     #   Response instance.

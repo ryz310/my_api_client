@@ -13,11 +13,11 @@ module MyApiClient
           # @param pathname [String]
           #   Pathname of the request target URL.
           #   It's joined with the defined by `endpoint`.
-          # @param headers [Hash, nil]
+          # @param headers [Hash, Proc<Hash>, nil]
           #   Request headers.
           # @param query [Hash, nil]
           #   Query string.
-          # @param body [Hash, nil]
+          # @param body [Hash, Proc<Hash>, nil]
           #   Request body. You should not specify it when use GET method.
           # @return [Sawyer::Resource]
           #   Response body instance if the block is not given.
