@@ -32,7 +32,7 @@ RSpec.describe MyApiClient::Request::Basic do
 
       context 'without a block' do
         subject(:execute) do
-          instance.public_send(http_method, pathname, headers: headers, query: query, body: body)
+          instance.public_send(http_method, pathname, headers:, query:, body:)
         end
 
         it 'calls the request method with relative URL' do
@@ -51,9 +51,9 @@ RSpec.describe MyApiClient::Request::Basic do
           instance.public_send(
             http_method,
             pathname,
-            headers: headers,
-            query: query,
-            body: body
+            headers:,
+            query:,
+            body:
           ) do |response|
             response
           end

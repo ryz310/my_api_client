@@ -11,7 +11,7 @@ RSpec.describe MyStatusApiClient, type: :api_client do
   end
 
   describe '#get_status' do
-    subject(:api_request!) { api_client.get_status(status: status) }
+    subject(:api_request!) { api_client.get_status(status:) }
 
     shared_examples 'to handle errors' do
       context 'when returned status code is 400' do
@@ -70,7 +70,7 @@ RSpec.describe MyStatusApiClient, type: :api_client do
     it 'requests to "GET status/:status' do
       expect { api_request! }
         .to request_to(:get, URI.join(endpoint, "status/#{status}"))
-        .with(headers: headers)
+        .with(headers:)
     end
 
     it_behaves_like 'to handle errors' do

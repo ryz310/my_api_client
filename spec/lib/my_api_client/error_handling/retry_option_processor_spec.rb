@@ -5,7 +5,7 @@ require 'my_api_client/rspec/matcher_helper'
 RSpec.describe MyApiClient::ErrorHandling::RetryOptionProcessor do
   describe '.call' do
     subject(:execute) do
-      described_class.call(error_handling_options: error_handling_options)
+      described_class.call(error_handling_options:)
     end
 
     let(:error_handling_options) do

@@ -10,7 +10,7 @@ describe StatusController do
       end
 
       it 'returns 200 OK' do
-        get '/status/:status', status: status
+        get('/status/:status', status:)
         expect(response.status).to eq status
         expect(response.body).to eq expected_response
       end
@@ -24,7 +24,7 @@ describe StatusController do
       end
 
       it 'returns 400 Bad request' do
-        get '/status/:status', status: status
+        get('/status/:status', status:)
         expect(response.status).to eq status
         expect(response.body).to eq expected_response
       end
@@ -38,7 +38,7 @@ describe StatusController do
       end
 
       it 'returns 500 Internal server error' do
-        get '/status/:status', status: status
+        get('/status/:status', status:)
         expect(response.status).to eq status
         expect(response.body).to eq expected_response
       end

@@ -57,7 +57,7 @@ RSpec.describe 'Integration test with My Status API', type: :integration do
   end
 
   context 'with stubbed API client' do
-    let(:api_client) { stub_api_client(MyStatusApiClient, get_status: get_status) }
+    let(:api_client) { stub_api_client(MyStatusApiClient, get_status:) }
 
     let(:get_status) do
       lambda do |params|

@@ -29,7 +29,7 @@ module MyApiClient
       #
       # @return [String] Contents as string
       def inspect
-        { request: request, response: response }.inspect
+        { request:, response: }.inspect
       end
 
       private

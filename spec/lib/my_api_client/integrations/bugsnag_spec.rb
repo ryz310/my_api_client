@@ -4,7 +4,7 @@ if defined?(Bugsnag)
   RSpec.describe MyApiClient::Error do
     describe '#initialize' do
       context 'with params and error message' do
-        let(:params) { instance_double(MyApiClient::Params::Params, metadata: metadata) }
+        let(:params) { instance_double(MyApiClient::Params::Params, metadata:) }
         let(:metadata) { { a: 1, b: { c: 2, d: 3 } } }
 
         it 'calls Bugsnag.leave_breadcrumb with metadata' do

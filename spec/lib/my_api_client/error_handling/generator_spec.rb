@@ -18,7 +18,7 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
   end
 
   let(:required_params) do
-    { instance: instance, response: http_response }
+    { instance:, response: http_response }
   end
 
   let(:instance) { instance_double('api_client', my_error_handling: nil) } # rubocop:disable RSpec/VerifiedDoubleReference
@@ -43,7 +43,7 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
 
         context 'with `block` option' do
           let(:error_handling_options) do
-            { raise: MyApiClient::ClientError, block: block }
+            { raise: MyApiClient::ClientError, block: }
           end
 
           let(:block) { instance_double(Proc, call: nil) }
@@ -79,7 +79,7 @@ RSpec.describe MyApiClient::ErrorHandling::Generator do
 
         context 'with `block` option' do
           let(:error_handling_options) do
-            { block: block }
+            { block: }
           end
 
           let(:block) { instance_double(Proc, call: nil) }

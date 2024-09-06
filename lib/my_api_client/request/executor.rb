@@ -22,7 +22,7 @@ module MyApiClient
         @request_params = request_params
         @request_logger = request_logger
         faraday = Faraday.new(nil, faraday_options)
-        @agent = Sawyer::Agent.new('', faraday: faraday)
+        @agent = Sawyer::Agent.new('', faraday:)
       end
 
       private

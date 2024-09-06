@@ -49,7 +49,7 @@ RSpec.describe 'Integration test with My Error API', type: :integration do
     end
 
     context 'with stubbed API client' do
-      let(:api_client) { stub_api_client(MyErrorApiClient, get_error: get_error) }
+      let(:api_client) { stub_api_client(MyErrorApiClient, get_error:) }
 
       let(:get_error) do
         lambda do |params|

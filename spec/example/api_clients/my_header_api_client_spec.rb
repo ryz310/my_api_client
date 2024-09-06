@@ -22,7 +22,7 @@ RSpec.describe MyHeaderApiClient, type: :api_client do
       it 'requests to "GET header"' do
         expect { api_request! }
           .to request_to(:get, URI.join(endpoint, 'header'))
-          .with(headers: headers)
+          .with(headers:)
       end
     end
 
@@ -36,7 +36,7 @@ RSpec.describe MyHeaderApiClient, type: :api_client do
 
         expect { api_request! }
           .to request_to(:get, uri)
-          .with(headers: headers)
+          .with(headers:)
       end
     end
 

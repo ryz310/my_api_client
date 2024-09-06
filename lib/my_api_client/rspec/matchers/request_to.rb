@@ -21,7 +21,7 @@ RSpec::Matchers.define :request_to do |expected_method, expected_url|
       @actual =
         {
           request_line: request_line(method, @actual_schema_and_hostname + pathname),
-          body: body,
+          body:,
           headers: options[:headers],
         }.compact
     end.and_return(dummy_response)
