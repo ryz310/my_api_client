@@ -13,7 +13,7 @@ class ErrorController < ApplicationController
     code = params[:code].to_i
     {
       error: {
-        code: code,
+        code:,
         message: "You requested error code: #{code}",
       },
     }

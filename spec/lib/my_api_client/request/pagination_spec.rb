@@ -60,7 +60,7 @@ RSpec.describe MyApiClient::Request::Pagination do
     describe 'paging with JSONPath' do
       subject(:pageable_get) do
         instance.pageable_get(
-          'pages/1', headers: headers, query: query, paging: '$.next'
+          'pages/1', headers:, query:, paging: '$.next'
         )
       end
 
@@ -88,7 +88,7 @@ RSpec.describe MyApiClient::Request::Pagination do
     describe 'paging with Proc' do
       subject(:pageable_get) do
         instance.pageable_get(
-          'pages/1', headers: headers, query: query, paging: ->(response) { response.data.next }
+          'pages/1', headers:, query:, paging: ->(response) { response.data.next }
         )
       end
 

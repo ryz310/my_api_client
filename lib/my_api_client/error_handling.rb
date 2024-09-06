@@ -50,7 +50,7 @@ module MyApiClient
 
         new_error_handlers = error_handlers.dup
         new_error_handlers << lambda { |instance, response|
-          Generator.call(**options.merge(instance: instance, response: response))
+          Generator.call(**options.merge(instance:, response:))
         }
         self.error_handlers = new_error_handlers
       end

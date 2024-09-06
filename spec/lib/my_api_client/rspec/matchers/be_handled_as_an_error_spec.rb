@@ -18,7 +18,7 @@ RSpec.describe 'be_handled_as_an_error' do
       end
 
       def get_users
-        get 'users', headers: headers
+        get 'users', headers:
       end
 
       private

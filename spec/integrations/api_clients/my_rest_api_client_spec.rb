@@ -75,7 +75,7 @@ RSpec.describe 'Integration test with My REST API', type: :integration do
     let(:api_client) do
       stub_api_client(
         MyRestApiClient,
-        get_posts: get_posts,
+        get_posts:,
         get_post: ->(params) { { id: params[:id], title: "Title #{params[:id]}" } },
         post_post: { response: { id: 4, title: 'New title' } },
         put_post: ->(params) { { id: params[:id], title: params[:title] } },
@@ -86,7 +86,7 @@ RSpec.describe 'Integration test with My REST API', type: :integration do
 
     let(:get_posts) do
       lambda do |params|
-        (1..3).map { |id| { id: id } }.tap { |me| me.reverse! if params[:order] == :desc }
+        (1..3).map { |id| { id: } }.tap { |me| me.reverse! if params[:order] == :desc }
       end
     end
 

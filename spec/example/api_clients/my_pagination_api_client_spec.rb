@@ -14,7 +14,7 @@ RSpec.describe MyPaginationApiClient, type: :api_client do
     it do
       expect { api_request! }
         .to request_to(:get, URI.join(endpoint, 'pagination'))
-        .with(headers: headers, query: { page: 1 })
+        .with(headers:, query: { page: 1 })
     end
 
     describe 'error handling' do

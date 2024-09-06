@@ -41,7 +41,7 @@ RSpec.describe 'Integration test with My Header API', type: :integration do
     end
 
     context 'with stubbed API client' do
-      let(:api_client) { stub_api_client(MyHeaderApiClient, get_header: get_header) }
+      let(:api_client) { stub_api_client(MyHeaderApiClient, get_header:) }
 
       let(:get_header) do
         lambda do |params|

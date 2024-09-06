@@ -2,7 +2,7 @@
 
 RSpec.describe MyApiClient::Sleeper do
   describe '.call' do
-    subject(:execute) { described_class.call(wait: wait) }
+    subject(:execute) { described_class.call(wait:) }
 
     shared_examples 'sleep processing' do |sleep_time|
       context "with `wait: #{sleep_time}`" do

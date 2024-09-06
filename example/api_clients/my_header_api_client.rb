@@ -24,7 +24,7 @@ class MyHeaderApiClient < ApplicationApiClient
   # @param second_header [String] X-Second-Header
   # @return [Sawyer::Resource]
   def get_header(first_header:, second_header:)
-    get 'header', headers: headers, query: {
+    get 'header', headers:, query: {
       'X-First-Header': first_header,
       'X-Second-Header': second_header,
     }.compact

@@ -46,7 +46,7 @@ module MyApiClient
         instance: self,
         request_params: Params::Request.new(http_method, uri, headers, body),
         request_logger: Logger.new(logger, http_method, uri),
-        faraday_options: faraday_options
+        faraday_options:
       )
     end
 

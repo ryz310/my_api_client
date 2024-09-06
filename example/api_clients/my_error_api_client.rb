@@ -23,7 +23,7 @@ class MyErrorApiClient < ApplicationApiClient
 
   # GET error/:code
   def get_error(code:)
-    get "error/#{code}", headers: headers
+    get "error/#{code}", headers:
   end
 
   private

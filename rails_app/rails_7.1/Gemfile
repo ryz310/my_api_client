@@ -1,0 +1,16 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+gem 'my_api_client', path: '../..'
+gem 'rails', '~> 7.1.4'
+gem 'sqlite3', '>= 1.4'
+
+group :development, :test do
+  gem 'debug', platforms: %i[mri windows]
+  gem 'rspec-rails'
+end
+
+group :development do
+  gem 'error_highlight', '>= 0.4.0', platforms: [:ruby]
+end

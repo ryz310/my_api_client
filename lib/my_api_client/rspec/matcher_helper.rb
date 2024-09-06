@@ -13,9 +13,9 @@ module MyApiClient
         Sawyer::Response,
         timing: 0.0,
         data: instance_double(Sawyer::Resource),
-        status: status,
-        headers: headers,
-        body: body
+        status:,
+        headers:,
+        body:
       )
     end
 

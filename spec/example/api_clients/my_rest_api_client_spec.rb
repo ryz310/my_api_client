@@ -25,7 +25,7 @@ RSpec.describe MyRestApiClient, type: :api_client do
   end
 
   describe '#get_posts' do
-    subject(:api_request!) { api_client.get_posts(order: order) }
+    subject(:api_request!) { api_client.get_posts(order:) }
 
     let(:order) { :asc }
 
@@ -33,7 +33,7 @@ RSpec.describe MyRestApiClient, type: :api_client do
       it do
         expect { api_request! }
           .to request_to(:get, URI.join(endpoint, 'rest'))
-          .with(headers: headers, query: { order: 'asc' })
+          .with(headers:, query: { order: 'asc' })
       end
     end
 
@@ -43,7 +43,7 @@ RSpec.describe MyRestApiClient, type: :api_client do
       it do
         expect { api_request! }
           .to request_to(:get, URI.join(endpoint, 'rest'))
-          .with(headers: headers, query: { order: 'desc' })
+          .with(headers:, query: { order: 'desc' })
       end
     end
 
@@ -62,7 +62,7 @@ RSpec.describe MyRestApiClient, type: :api_client do
     it 'requests to "GET rest/:id' do
       expect { api_request! }
         .to request_to(:get, URI.join(endpoint, 'rest/1'))
-        .with(headers: headers)
+        .with(headers:)
     end
 
     it_behaves_like 'to handle errors' do
@@ -80,7 +80,7 @@ RSpec.describe MyRestApiClient, type: :api_client do
     it 'requests to "POST rest"' do
       expect { api_request! }
         .to request_to(:post, URI.join(endpoint, 'rest'))
-        .with(headers: headers, body: { title: 'New title' })
+        .with(headers:, body: { title: 'New title' })
     end
 
     it_behaves_like 'to handle errors' do
@@ -98,7 +98,7 @@ RSpec.describe MyRestApiClient, type: :api_client do
     it 'requests to "PATCH rest/:id"' do
       expect { api_request! }
         .to request_to(:put, URI.join(endpoint, 'rest/1'))
-        .with(headers: headers, body: { title: 'Modified title' })
+        .with(headers:, body: { title: 'Modified title' })
     end
 
     it_behaves_like 'to handle errors' do
@@ -116,7 +116,7 @@ RSpec.describe MyRestApiClient, type: :api_client do
     it 'requests to "PATCH rest/:id"' do
       expect { api_request! }
         .to request_to(:patch, URI.join(endpoint, 'rest/1'))
-        .with(headers: headers, body: { title: 'Modified title' })
+        .with(headers:, body: { title: 'Modified title' })
     end
 
     it_behaves_like 'to handle errors' do
@@ -134,7 +134,7 @@ RSpec.describe MyRestApiClient, type: :api_client do
     it 'requests to "DELETE rest/:id"' do
       expect { api_request! }
         .to request_to(:delete, URI.join(endpoint, 'rest/1'))
-        .with(headers: headers)
+        .with(headers:)
     end
 
     it_behaves_like 'to handle errors' do

@@ -4,10 +4,10 @@ RSpec.describe MyApiClient::Request::Executor do
   describe '.call' do
     subject(:execute) do
       described_class.call(
-        instance: instance,
-        request_params: request_params,
-        request_logger: request_logger,
-        faraday_options: faraday_options
+        instance:,
+        request_params:,
+        request_logger:,
+        faraday_options:
       )
     end
 
@@ -18,7 +18,7 @@ RSpec.describe MyApiClient::Request::Executor do
     end
 
     let(:instance) do
-      instance_double(MyApiClient::Base, error_handlers: error_handlers)
+      instance_double(MyApiClient::Base, error_handlers:)
     end
 
     let(:request_params) do
@@ -60,7 +60,7 @@ RSpec.describe MyApiClient::Request::Executor do
       it 'builds faraday and sawyer agent instances with options' do
         safe_execution
         expect(Faraday).to have_received(:new).with(nil, faraday_options).ordered
-        expect(Sawyer::Agent).to have_received(:new).with('', faraday: faraday)
+        expect(Sawyer::Agent).to have_received(:new).with('', faraday:)
       end
     end
 
