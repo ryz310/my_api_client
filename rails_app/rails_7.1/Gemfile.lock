@@ -1,3 +1,12 @@
+PATH
+  remote: ../..
+  specs:
+    my_api_client (1.1.0)
+      activesupport (>= 6.1.0)
+      faraday (>= 0.17.1)
+      jsonpath
+      sawyer (>= 0.8.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -75,6 +84,8 @@ GEM
       minitest (>= 5.1)
       mutex_m
       tzinfo (~> 2.0)
+    addressable (2.8.7)
+      public_suffix (>= 2.0.2, < 7.0)
     base64 (0.2.0)
     bigdecimal (3.1.8)
     builder (3.3.0)
@@ -85,9 +96,15 @@ GEM
     debug (1.9.2)
       irb (~> 1.10)
       reline (>= 0.3.8)
+    diff-lcs (1.5.1)
     drb (2.2.1)
     error_highlight (0.6.0)
     erubi (1.13.0)
+    faraday (2.11.0)
+      faraday-net_http (>= 2.0, < 3.4)
+      logger
+    faraday-net_http (3.3.0)
+      net-http
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.5)
@@ -96,6 +113,9 @@ GEM
     irb (1.14.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
+    jsonpath (1.1.5)
+      multi_json
+    logger (1.6.1)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -107,7 +127,10 @@ GEM
     marcel (1.0.4)
     mini_mime (1.1.5)
     minitest (5.25.1)
+    multi_json (1.15.0)
     mutex_m (0.2.0)
+    net-http (0.4.1)
+      uri
     net-imap (0.4.16)
       date
       net-protocol
@@ -124,8 +147,7 @@ GEM
       racc (~> 1.4)
     psych (5.1.2)
       stringio
-    puma (6.4.2)
-      nio4r (~> 2.0)
+    public_suffix (6.0.1)
     racc (1.8.1)
     rack (3.1.7)
     rack-session (2.0.0)
@@ -169,6 +191,26 @@ GEM
       psych (>= 4.0.0)
     reline (0.5.10)
       io-console (~> 0.5)
+    rspec-core (3.13.1)
+      rspec-support (~> 3.13.0)
+    rspec-expectations (3.13.2)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-mocks (3.13.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-rails (7.0.1)
+      actionpack (>= 7.0)
+      activesupport (>= 7.0)
+      railties (>= 7.0)
+      rspec-core (~> 3.13)
+      rspec-expectations (~> 3.13)
+      rspec-mocks (~> 3.13)
+      rspec-support (~> 3.13)
+    rspec-support (3.13.1)
+    sawyer (0.9.2)
+      addressable (>= 2.3.5)
+      faraday (>= 0.17.3, < 3)
     sqlite3 (2.0.4-x86_64-darwin)
     sqlite3 (2.0.4-x86_64-linux-gnu)
     stringio (3.1.1)
@@ -176,6 +218,7 @@ GEM
     timeout (0.4.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    uri (0.13.1)
     webrick (1.8.1)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
@@ -189,13 +232,10 @@ PLATFORMS
 DEPENDENCIES
   debug
   error_highlight (>= 0.4.0)
-  puma (>= 5.0)
+  my_api_client!
   rails (~> 7.1.4)
+  rspec-rails
   sqlite3 (>= 1.4)
-  tzinfo-data
-
-RUBY VERSION
-   ruby 3.1.6p260
 
 BUNDLED WITH
    2.3.27
