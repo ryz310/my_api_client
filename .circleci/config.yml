@@ -17,8 +17,8 @@ references:
   - &rails_version
     rails_version:
       type: enum
-      enum: &rails_version_enum ["6.1", "7.0", "7.1"]
-      default: "7.1"
+      enum: &rails_version_enum ["6.1", "7.0", "7.1", "7.2"]
+      default: "7.2"
   - &bundler_options
     bundler_options:
       type: string
@@ -252,7 +252,7 @@ jobs:
       - code-climate/install
       - code-climate/sum-coverage:
           input: codeclimate.*.json
-          parts: 18
+          parts: 24
       - code-climate/upload-coverage
   rubocop:
     executor: gem_executor
