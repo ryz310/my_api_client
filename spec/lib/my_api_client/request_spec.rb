@@ -108,9 +108,9 @@ RSpec.describe MyApiClient::Request do
     it 'calls the request executor class with builded instances' do
       request
       expect(MyApiClient::Request::Executor).to have_received(:call).with(
-        instance: instance,
-        request_params: request_params,
-        request_logger: request_logger,
+        instance:,
+        request_params:,
+        request_logger:,
         faraday_options: { request: { timeout: 3.seconds, open_timeout: 2.seconds } }
       )
     end

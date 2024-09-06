@@ -11,7 +11,7 @@ class MyStatusApiClient < ApplicationApiClient
 
   # GET status/:status
   def get_status(status:)
-    get "status/#{status}", headers: headers
+    get "status/#{status}", headers:
   end
 
   private

@@ -8,13 +8,13 @@ class MyPaginationApiClient < ApplicationApiClient
   # Paging with JSONPath
   # GET pagination?page=1
   def paging_with_jsonpath
-    pget 'pagination', headers: headers, query: { page: 1 }, paging: '$.links.next'
+    pget 'pagination', headers:, query: { page: 1 }, paging: '$.links.next'
   end
 
   # Paging with Proc
   # GET pagination?page=1
   def paging_with_proc
-    pget 'pagination', headers: headers, query: { page: 1 }, paging: lambda { |response|
+    pget 'pagination', headers:, query: { page: 1 }, paging: lambda { |response|
       response.data.links.next
     }
   end

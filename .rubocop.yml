@@ -2,11 +2,12 @@ require:
   - rubocop-performance
   - rubocop-rake
   - rubocop-rspec
+  - rubocop-rspec_rails
 
 inherit_from: .rubocop_todo.yml
 
 AllCops:
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 3.1
   NewCops: enable
   Exclude:
     - rails_app/**/*
@@ -49,7 +50,7 @@ RSpec/DescribeClass:
 RSpec/ExampleLength:
   Max: 10
 
-RSpec/FilePath:
+RSpec/SpecFilePathFormat:
   Exclude:
     - "spec/lib/my_api_client/integrations/**/*"
     - "spec/lib/my_api_client/errors/**/*"
@@ -64,6 +65,6 @@ RSpec/NestedGroups:
 RSpec/MultipleExpectations:
   Max: 4
 
-RSpec/Rails/HaveHttpStatus:
+RSpecRails/HaveHttpStatus:
   Exclude:
     - "my_api/spec/controllers/**/*"

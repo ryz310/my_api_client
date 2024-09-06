@@ -30,7 +30,7 @@ module MyApiClient
     #
     # @return [String] Contents as string
     def inspect
-      { error: original_error, params: params }.inspect
+      { error: original_error, params: }.inspect
     end
 
     # Generate metadata for bugsnag.

@@ -11,12 +11,10 @@ module MyApiClient
       #   Pathname of the request target URL. It's joined with the defined by `endpoint`.
       # @param paging [String, Proc]
       #   Specify the pagination link path included in the response body as JsonPath expression
-      # @param headers [Hash, nil]
+      # @param headers [Hash, Proc<Hash>, nil]
       #   Request headers.
       # @param query [Hash, nil]
       #   Query string.
-      # @param body [Hash, nil]
-      #   Request body. You should not specify it when use GET method.
       # @return [Enumerator::Lazy]
       #   Yields the pagination API response.
       def pageable_get(pathname, paging:, headers: nil, query: nil)

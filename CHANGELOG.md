@@ -1,5 +1,52 @@
 # Change log
 
+## v1.2.0 (Sep 06, 2024)
+
+### Feature
+
+- [#1048](https://github.com/ryz310/my_api_client/pull/1048) Support lazy evaluation for request headers and body parameters ([@ryz310](https://github.com/ryz310))
+  The API client allows lazy evaluation for request headers and body parameters.
+  For example, a time-limited token can be issued immediately before the request.
+
+  ```rb
+  class ExampleApiClient < MyApiClient::Base
+    def get_users
+      get 'users', headers: headers, query: { key: 'value' }
+    end
+
+    private
+
+    def headers
+      lambda do
+        new_access_token = issue_new_access_token!
+        {
+          'Content-Type': 'application/json;charset=UTF-8',
+          'Authorization': "Bearer #{new_access_token}",
+        }
+      end
+    end
+  end
+  ```
+
+### Misc
+
+- [#1049](https://github.com/ryz310/my_api_client/pull/1049) Update supporting ruby and rails versions ([@ryz310](https://github.com/ryz310))
+  Support Ruby 3.3, Rails 7.1 and 7.2
+  End of supporting Ruby 3.0 :wave:
+
+### Dependabot
+
+- [#982](https://github.com/ryz310/my_api_client/pull/982) Bump rspec from 3.12.0 to 3.13.0 ([@ryz310](https://github.com/ryz310))
+- [#1006](https://github.com/ryz310/my_api_client/pull/1006) Bump rake from 13.2.0 to 13.2.1 ([@ryz310](https://github.com/ryz310))
+- [#1018](https://github.com/ryz310/my_api_client/pull/1018) Bump bugsnag from 6.26.4 to 6.27.0 ([@ryz310](https://github.com/ryz310))
+- [#1020](https://github.com/ryz310/my_api_client/pull/1020) Bump webmock from 3.23.0 to 3.23.1 ([@ryz310](https://github.com/ryz310))
+- [#1031](https://github.com/ryz310/my_api_client/pull/1031) Bump rubocop-performance from 1.21.0 to 1.21.1 ([@ryz310](https://github.com/ryz310))
+- [#1032](https://github.com/ryz310/my_api_client/pull/1032) Bump bugsnag from 6.27.0 to 6.27.1 ([@ryz310](https://github.com/ryz310))
+- [#1043](https://github.com/ryz310/my_api_client/pull/1043) Bump rexml from 3.3.3 to 3.3.6 ([@ryz310](https://github.com/ryz310))
+- [#1045](https://github.com/ryz310/my_api_client/pull/1045) Bump activesupport from 7.1.3.4 to 7.1.4 ([@ryz310](https://github.com/ryz310))
+- [#1046](https://github.com/ryz310/my_api_client/pull/1046) Bump faraday from 2.10.1 to 2.11.0 ([@ryz310](https://github.com/ryz310))
+- [#1047](https://github.com/ryz310/my_api_client/pull/1047) Bump yard from 0.9.36 to 0.9.37 ([@ryz310](https://github.com/ryz310))
+
 ## v1.1.0 (Jan 09, 2024)
 
 ### Bugfix

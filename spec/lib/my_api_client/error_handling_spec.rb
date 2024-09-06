@@ -56,16 +56,16 @@ RSpec.describe MyApiClient::ErrorHandling do
         expect(MyApiClient::ErrorHandling::Generator).to have_received(:call).with(
           status_code: 400..499,
           raise: MyApiClient::ClientError,
-          instance: instance,
-          response: response,
+          instance:,
+          response:,
           block: nil
         )
         target_mock_class.error_handlers[1].call(instance, response)
         expect(MyApiClient::ErrorHandling::Generator).to have_received(:call).with(
           status_code: 500..599,
           raise: MyApiClient::ServerError,
-          instance: instance,
-          response: response,
+          instance:,
+          response:,
           block: nil
         )
       end
@@ -79,16 +79,16 @@ RSpec.describe MyApiClient::ErrorHandling do
         expect(MyApiClient::ErrorHandling::Generator).to have_received(:call).with(
           status_code: 404,
           with: :not_found,
-          instance: instance,
-          response: response,
+          instance:,
+          response:,
           block: nil
         )
         target_mock_class.error_handlers[3].call(instance, response)
         expect(MyApiClient::ErrorHandling::Generator).to have_received(:call).with(
           json: { '$.errors.code': 10 },
           with: :error_code_10,
-          instance: instance,
-          response: response,
+          instance:,
+          response:,
           block: nil
         )
         target_mock_class.error_handlers[4].call(instance, response)
@@ -96,8 +96,8 @@ RSpec.describe MyApiClient::ErrorHandling do
           status_code: 200,
           json: :forbid_nil,
           with: :forbidden_from_being_blank,
-          instance: instance,
-          response: response,
+          instance:,
+          response:,
           block: nil
         )
       end
@@ -109,8 +109,8 @@ RSpec.describe MyApiClient::ErrorHandling do
         target_mock_class.error_handlers[5].call(instance, response)
         expect(MyApiClient::ErrorHandling::Generator).to have_received(:call).with(
           json: { '$.errors.code': 20 },
-          instance: instance,
-          response: response,
+          instance:,
+          response:,
           block: instance_of(Proc)
         )
       end
@@ -122,8 +122,8 @@ RSpec.describe MyApiClient::ErrorHandling do
         expect(MyApiClient::ErrorHandling::Generator).to have_received(:call).with(
           json: { '$.errors.code': 30 },
           raise: MyApiClient::ApiLimitError,
-          instance: instance,
-          response: response,
+          instance:,
+          response:,
           block: nil
         )
       end

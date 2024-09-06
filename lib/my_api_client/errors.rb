@@ -23,7 +23,7 @@ module MyApiClient
     #
     # @return [String] Contents as string
     def inspect
-      { error: super, params: params }.inspect
+      { error: super, params: }.inspect
     end
   end
 end

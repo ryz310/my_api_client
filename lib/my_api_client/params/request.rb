@@ -10,20 +10,20 @@ module MyApiClient
       #
       # @param method [Symbol] describe_method_here
       # @param uri [URI] describe_uri_here
-      # @param headers [Hash, nil] describe_headers_here
-      # @param body [Hash, nil] describe_body_here
+      # @param headers [Hash, Proc<Hash>, nil] describe_headers_here
+      # @param body [Hash, Proc<Hash>, nil] describe_body_here
       def initialize(method, uri, headers, body)
         @method = method
         @uri = uri
-        @headers = headers
-        @body = body
+        @headers = headers.is_a?(Proc) ? headers.call : headers
+        @body = body.is_a?(Proc) ? body.call : body
       end
 
       # Description of #to_sawyer_args
       #
       # @return [Array<Object>] Arguments for Sawyer::Agent#call
       def to_sawyer_args
-        [method, uri.to_s, body, { headers: headers }]
+        [method, uri.to_s, body, { headers: }]
       end
 
       # Generate metadata for bugsnag.
@@ -33,8 +33,8 @@ module MyApiClient
       def metadata
         {
           line: "#{method.upcase} #{uri}",
-          headers: headers,
-          body: body,
+          headers:,
+          body:,
         }.compact
       end
       alias to_bugsnag metadata
@@ -43,7 +43,7 @@ module MyApiClient
       #
       # @return [String] Contents as string
       def inspect
-        { method: method, uri: uri.to_s, headers: headers, body: body }.inspect
+        { method:, uri: uri.to_s, headers:, body: }.inspect
       end
     end
   end

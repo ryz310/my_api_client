@@ -11,21 +11,21 @@ RSpec.describe MyErrorApiClient, type: :api_client do
   end
 
   describe '#get_error' do
-    subject(:api_request!) { api_client.get_error(code: code) }
+    subject(:api_request!) { api_client.get_error(code:) }
 
     let(:code) { 10 }
 
     it 'requests to "GET error/:code' do
       expect { api_request! }
         .to request_to(:get, URI.join(endpoint, "error/#{code}"))
-        .with(headers: headers)
+        .with(headers:)
     end
 
     describe 'error handling' do
       let(:response_body) do
         {
           error: {
-            code: code,
+            code:,
             message: "You requested error code: #{code}",
           },
         }.to_json

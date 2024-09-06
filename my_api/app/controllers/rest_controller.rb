@@ -10,7 +10,7 @@ class RestController < ApplicationController
 
   # GET rest/:id
   def show
-    render status: :ok, json: find_post(id: id)
+    render status: :ok, json: find_post(id:)
   end
 
   # POST rest
@@ -22,7 +22,7 @@ class RestController < ApplicationController
   # POST/PUT/PATCH rest/:id
   def update
     render status: :ok,
-           json: update_post(id: id, title: params[:title])
+           json: update_post(id:, title: params[:title])
   end
 
   # DELETE rest/:id
@@ -49,11 +49,11 @@ class RestController < ApplicationController
   end
 
   def create_post(title:)
-    { id: 4, title: title }
+    { id: 4, title: }
   end
 
   def update_post(id:, title:)
-    find_post(id: id).tap do |post|
+    find_post(id:).tap do |post|
       post[:title] = title
     end
   end
