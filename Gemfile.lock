@@ -49,7 +49,7 @@ GEM
     hashdiff (1.1.1)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
-    json (2.7.2)
+    json (2.8.2)
     jsonpath (1.1.5)
       multi_json
     language_server-protocol (3.17.0.3)
@@ -60,7 +60,7 @@ GEM
     net-http (0.4.1)
       uri
     parallel (1.26.3)
-    parser (3.3.5.0)
+    parser (3.3.6.0)
       ast (~> 2.4.1)
       racc
     pry (0.14.2)
@@ -100,9 +100,9 @@ GEM
       rubocop-ast (>= 1.32.2, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
-    rubocop-ast (1.32.3)
+    rubocop-ast (1.36.1)
       parser (>= 3.3.1.0)
-    rubocop-performance (1.22.1)
+    rubocop-performance (1.23.0)
       rubocop (>= 1.48.1, < 2.0)
       rubocop-ast (>= 1.31.1, < 2.0)
     rubocop-rake (0.6.0)
