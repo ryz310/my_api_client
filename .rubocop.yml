@@ -1,5 +1,7 @@
-require:
+plugins:
   - rubocop-performance
+
+require:
   - rubocop-rake
   - rubocop-rspec
   - rubocop-rspec_rails
