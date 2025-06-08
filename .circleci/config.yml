@@ -293,8 +293,9 @@ workflows:
             parameters:
               ruby_version: *ruby_version_enum
               rails_version: *rails_version_enum
-      - test_api:
-          ruby_version: "3.2" # Ruby on Jets requires Ruby 2.5, 2.7 or 3.2
+      # TODO: Update the version of Ruby on Jets or re-create the test API server with Ruby on Rails 8.0
+      # - test_api:
+      #     ruby_version: "3.2" # Ruby on Jets requires Ruby 2.5, 2.7 or 3.2
       - rubocop
       - yardoc
       - upload-coverage:
