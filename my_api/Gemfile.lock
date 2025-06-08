@@ -37,7 +37,7 @@ GEM
       zeitwerk (~> 2.3)
     addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
-    aws-eventstream (1.3.0)
+    aws-eventstream (1.4.0)
     aws-mfa-secure (0.4.4)
       activesupport
       aws-sdk-core
@@ -46,7 +46,7 @@ GEM
       rainbow
       thor
       zeitwerk
-    aws-partitions (1.863.0)
+    aws-partitions (1.1113.0)
     aws-sdk-apigateway (1.90.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
@@ -56,14 +56,16 @@ GEM
     aws-sdk-cloudwatchlogs (1.75.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-core (3.190.0)
+    aws-sdk-core (3.225.1)
       aws-eventstream (~> 1, >= 1.3.0)
-      aws-partitions (~> 1, >= 1.651.0)
-      aws-sigv4 (~> 1.8)
+      aws-partitions (~> 1, >= 1.992.0)
+      aws-sigv4 (~> 1.9)
+      base64
       jmespath (~> 1, >= 1.6.1)
-    aws-sdk-dynamodb (1.98.0)
-      aws-sdk-core (~> 3, >= 3.188.0)
-      aws-sigv4 (~> 1.1)
+      logger
+    aws-sdk-dynamodb (1.145.0)
+      aws-sdk-core (~> 3, >= 3.225.0)
+      aws-sigv4 (~> 1.5)
     aws-sdk-kinesis (1.54.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
@@ -86,9 +88,10 @@ GEM
     aws-sdk-ssm (1.162.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
-    aws-sigv4 (1.8.0)
+    aws-sigv4 (1.12.0)
       aws-eventstream (~> 1, >= 1.0.2)
     aws_config (0.1.1)
+    base64 (0.3.0)
     builder (3.3.0)
     byebug (11.1.3)
     capybara (3.40.0)
@@ -108,21 +111,25 @@ GEM
       rainbow
     cfn_response (0.2.0)
     childprocess (5.0.0)
-    concurrent-ruby (1.3.4)
+    concurrent-ruby (1.3.5)
     crass (1.0.6)
     date (3.3.4)
     diff-lcs (1.5.1)
     dotenv (2.8.1)
-    dynomite (1.2.7)
+    dynomite (2.0.3)
+      activemodel
       activesupport
       aws-sdk-dynamodb
+      memoist
       rainbow
+      thor
+      zeitwerk
     erubi (1.13.0)
     gems (1.2.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
     hashie (5.0.0)
-    i18n (1.14.6)
+    i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     jets (4.0.10)
       actionmailer (~> 6.1.0)
@@ -168,6 +175,7 @@ GEM
     launchy (3.0.1)
       addressable (~> 2.8)
       childprocess (~> 5.0)
+    logger (1.7.0)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -181,7 +189,7 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.5)
     mini_portile2 (2.8.7)
-    minitest (5.25.1)
+    minitest (5.25.5)
     net-imap (0.4.17)
       date
       net-protocol
