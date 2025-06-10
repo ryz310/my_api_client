@@ -3,46 +3,26 @@
 ## v1.3.0 (Jun 10, 2025)
 
 ### Feature
-### Bugfix
-### Security
-### Breaking Change
-### Rubocop Challenge
+
+- [#1093](https://github.com/ryz310/my_api_client/pull/1093) Allow to use instance writer in the logger ([@ryz310](https://github.com/ryz310))
+
 ### Dependabot
+
+- [#1063](https://github.com/ryz310/my_api_client/pull/1063) Bump rexml from 3.3.8 to 3.3.9 ([@ryz310](https://github.com/ryz310))
+- [#1081](https://github.com/ryz310/my_api_client/pull/1081) Bump webmock from 3.24.0 to 3.25.0 ([@ryz310](https://github.com/ryz310))
+- [#1074](https://github.com/ryz310/my_api_client/pull/1074) Bump faraday from 2.12.0 to 2.12.2 ([@ryz310](https://github.com/ryz310))
+- [#1078](https://github.com/ryz310/my_api_client/pull/1078) Bump rubocop-performance from 1.22.1 to 1.23.1 ([@ryz310](https://github.com/ryz310))
+- [#1076](https://github.com/ryz310/my_api_client/pull/1076) Bump activesupport from 7.2.2 to 7.2.2.1 ([@ryz310](https://github.com/ryz310))
+- [#1092](https://github.com/ryz310/my_api_client/pull/1092) Bump pry-byebug from 3.10.1 to 3.11.0 ([@ryz310](https://github.com/ryz310))
+- [#1088](https://github.com/ryz310/my_api_client/pull/1088) Bump rake from 13.2.1 to 13.3.0 ([@ryz310](https://github.com/ryz310))
+- [#1090](https://github.com/ryz310/my_api_client/pull/1090) Bump rubocop-rake from 0.6.0 to 0.7.1 ([@ryz310](https://github.com/ryz310))
+- [#1091](https://github.com/ryz310/my_api_client/pull/1091) Bump rubocop-rspec_rails from 2.30.0 to 2.31.0 ([@ryz310](https://github.com/ryz310))
+- [#1089](https://github.com/ryz310/my_api_client/pull/1089) Bump rspec from 3.13.0 to 3.13.1 ([@ryz310](https://github.com/ryz310))
+
 ### Misc
 
-* [#1052](https://github.com/ryz310/my_api_client/pull/1052) Bump rubocop-performance from 1.21.1 to 1.22.0 ([@ryz310](https://github.com/ryz310))
-* [#1053](https://github.com/ryz310/my_api_client/pull/1053) Bump rubocop-performance from 1.22.0 to 1.22.1 ([@ryz310](https://github.com/ryz310))
-* [#1054](https://github.com/ryz310/my_api_client/pull/1054) Bump faraday from 2.11.0 to 2.12.0 ([@ryz310](https://github.com/ryz310))
-* [#1055](https://github.com/ryz310/my_api_client/pull/1055) Bump puma from 6.4.2 to 6.4.3 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#1056](https://github.com/ryz310/my_api_client/pull/1056) Bump webmock from 3.23.1 to 3.24.0 ([@ryz310](https://github.com/ryz310))
-* [#1057](https://github.com/ryz310/my_api_client/pull/1057) Bump rack from 2.2.9 to 2.2.10 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#1058](https://github.com/ryz310/my_api_client/pull/1058) Bump activesupport from 7.2.1 to 7.2.1.1 ([@ryz310](https://github.com/ryz310))
-* [#1059](https://github.com/ryz310/my_api_client/pull/1059) Bump actionmailer from 6.1.7.8 to 6.1.7.9 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#1061](https://github.com/ryz310/my_api_client/pull/1061) Bump activesupport from 7.2.1.1 to 7.2.1.2 ([@ryz310](https://github.com/ryz310))
-* [#1062](https://github.com/ryz310/my_api_client/pull/1062) Bump rexml from 3.3.6 to 3.3.9 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#1063](https://github.com/ryz310/my_api_client/pull/1063) Bump rexml from 3.3.8 to 3.3.9 ([@ryz310](https://github.com/ryz310))
-* [#1065](https://github.com/ryz310/my_api_client/pull/1065) Bump activesupport from 7.2.1.2 to 7.2.2 ([@ryz310](https://github.com/ryz310))
-* [#1084](https://github.com/ryz310/my_api_client/pull/1084) Stop CI for the testing API test ([@ryz310](https://github.com/ryz310))
-* [#1081](https://github.com/ryz310/my_api_client/pull/1081) Bump webmock from 3.24.0 to 3.25.0 ([@ryz310](https://github.com/ryz310))
-* [#1074](https://github.com/ryz310/my_api_client/pull/1074) Bump faraday from 2.12.0 to 2.12.2 ([@ryz310](https://github.com/ryz310))
-* [#1078](https://github.com/ryz310/my_api_client/pull/1078) Bump rubocop-performance from 1.22.1 to 1.23.1 ([@ryz310](https://github.com/ryz310))
-* [#1076](https://github.com/ryz310/my_api_client/pull/1076) Bump activesupport from 7.2.2 to 7.2.2.1 ([@ryz310](https://github.com/ryz310))
-* [#1083](https://github.com/ryz310/my_api_client/pull/1083) ryz310/misc/update-bundler ([@ryz310](https://github.com/ryz310))
-* [#1064](https://github.com/ryz310/my_api_client/pull/1064) ryz310/dependabot/bundler/my_api/dynomite-2.0.3 ([@ryz310](https://github.com/ryz310))
-* [#1070](https://github.com/ryz310/my_api_client/pull/1070) ryz310/dependabot/bundler/my_api/rails-html-sanitizer-1.6.1 ([@ryz310](https://github.com/ryz310))
-* [#1077](https://github.com/ryz310/my_api_client/pull/1077) ryz310/dependabot/bundler/my_api/nokogiri-1.17.2 ([@ryz310](https://github.com/ryz310))
-* [#1079](https://github.com/ryz310/my_api_client/pull/1079) ryz310/dependabot/bundler/my_api/launchy-3.1.0 ([@ryz310](https://github.com/ryz310))
-* [#1080](https://github.com/ryz310/my_api_client/pull/1080) ryz310/dependabot/bundler/my_api/puma-6.6.0 ([@ryz310](https://github.com/ryz310))
-* [#1085](https://github.com/ryz310/my_api_client/pull/1085) ryz310/dependabot/bundler/my_api/rack-2.2.14 ([@ryz310](https://github.com/ryz310))
-* [#1082](https://github.com/ryz310/my_api_client/pull/1082) ryz310/dependabot/bundler/my_api/net-imap-0.4.19 ([@ryz310](https://github.com/ryz310))
-* [#1092](https://github.com/ryz310/my_api_client/pull/1092) ryz310/dependabot/bundler/pry-byebug-3.11.0 ([@ryz310](https://github.com/ryz310))
-* [#1088](https://github.com/ryz310/my_api_client/pull/1088) ryz310/dependabot/bundler/rake-13.3.0 ([@ryz310](https://github.com/ryz310))
-* [#1090](https://github.com/ryz310/my_api_client/pull/1090) ryz310/dependabot/bundler/rubocop-rake-0.7.1 ([@ryz310](https://github.com/ryz310))
-* [#1091](https://github.com/ryz310/my_api_client/pull/1091) ryz310/dependabot/bundler/rubocop-rspec_rails-2.31.0 ([@ryz310](https://github.com/ryz310))
-* [#1089](https://github.com/ryz310/my_api_client/pull/1089) Bump rspec from 3.13.0 to 3.13.1 ([@ryz310](https://github.com/ryz310))
-* [#1087](https://github.com/ryz310/my_api_client/pull/1087) Bump rspec from 3.13.0 to 3.13.1 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#1086](https://github.com/ryz310/my_api_client/pull/1086) Bump rack from 2.2.14 to 2.2.17 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#1093](https://github.com/ryz310/my_api_client/pull/1093) Allow to use instance writer in the logger ([@ryz310](https://github.com/ryz310))
+- [#1083](https://github.com/ryz310/my_api_client/pull/1083) Update bundler to v2.6.9 ([@ryz310](https://github.com/ryz310))
+- [#1084](https://github.com/ryz310/my_api_client/pull/1084) Stop CI for the testing API test ([@ryz310](https://github.com/ryz310))
 
 ## v1.2.0 (Sep 06, 2024)
 
