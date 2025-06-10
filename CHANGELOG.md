@@ -2,15 +2,9 @@
 
 ## v1.3.1 (Jun 10, 2025)
 
-### Feature
-### Bugfix
-### Security
-### Breaking Change
-### Rubocop Challenge
-### Dependabot
 ### Misc
 
-* [#1096](https://github.com/ryz310/my_api_client/pull/1096) Stubs `instance_reader` and `instance_writer` on the `class_attribute` ([@ryz310](https://github.com/ryz310))
+- [#1096](https://github.com/ryz310/my_api_client/pull/1096) Stubs `instance_reader` and `instance_writer` on the `class_attribute` ([@ryz310](https://github.com/ryz310))
 
 ## v1.3.0 (Jun 10, 2025)
 
