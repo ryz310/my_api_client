@@ -8,7 +8,7 @@ module MyApiClient
     include MyApiClient::Exceptions
     include MyApiClient::Request
 
-    class_attribute :logger, instance_writer: false, default: ::Logger.new($stdout)
+    class_attribute :logger, default: ::Logger.new($stdout)
     class_attribute :error_handlers, instance_writer: false, default: []
 
     include MyApiClient::DefaultErrorHandlers
