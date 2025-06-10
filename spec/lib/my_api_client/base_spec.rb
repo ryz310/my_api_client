@@ -19,9 +19,13 @@ RSpec.describe MyApiClient::Base do
 
   let(:instance) { mock_class.new }
 
-  describe '.logger=' do
+  describe '#logger=' do
+    let(:new_logger) { Logger.new($stdout) }
+
     it 'overrides the log output destination' do
-      expect(instance.logger).to be_a MyLoggerClass
+      expect(instance.logger).not_to eq(new_logger)
+      instance.logger = new_logger
+      expect(instance.logger).to eq(new_logger)
     end
   end
 end
