@@ -68,7 +68,8 @@ module MyApiClient
     # @return [InstanceDouble]
     #   Returns a spy object of the stubbed ApiClient.
     def stub_api_client(klass, **actions_and_options)
-      instance = instance_double(klass)
+      instance = instance_double(klass, logger: klass.logger, 'logger=': nil,
+                                        error_handlers: klass.error_handlers)
       actions_and_options.each { |action, options| stubbing(instance, action, options) }
       instance
     end
