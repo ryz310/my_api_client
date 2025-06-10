@@ -59,6 +59,22 @@ RSpec.describe MyApiClient::Stub do
   end
 
   describe '#stub_api_client' do
+    describe 'class_attribute' do
+      let(:api_client) { stub_api_client(example_api_client) }
+
+      it 'stubs #logger' do
+        expect(api_client.logger).to eq example_api_client.logger
+      end
+
+      it 'stubs #logger=' do
+        expect { api_client.logger = Logger.new($stdout) }.not_to raise_error
+      end
+
+      it 'stubs #error_handlers' do
+        expect(api_client.error_handlers).to eq example_api_client.error_handlers
+      end
+    end
+
     context 'when use Proc' do
       let(:api_client) do
         stub_api_client(
