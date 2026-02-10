@@ -285,7 +285,23 @@ error_handling status_code: 200, json: :forbid_nil
 
 #### MyApiClient::Params::Params
 
-WIP
+`MyApiClient::Params::Params` はリクエストとレスポンスの情報をまとめた
+コンテナです。エラー検知時に内部で生成され、`MyApiClient::Error#params`
+から参照できます。
+
+- `params.request` は `MyApiClient::Params::Request` のインスタンス
+  - `#method`, `#uri`, `#headers`, `#body`
+- `params.response` は `Sawyer::Response`（ネットワークエラー時は `nil`）
+- `params.metadata` は外部ログ用の Hash（Bugsnag など）
+
+```ruby
+error_handling status_code: 500..599, with: :log_details
+
+def log_details(params, logger)
+  logger.warn "Request: #{params.request.inspect}"
+  logger.warn "Response: #{params.response&.status}"
+end
+```
 
 #### MyApiClient::Error
 
@@ -379,11 +395,38 @@ end
 
 ### Timeout
 
-WIP
+Faraday のタイムアウトはクラス定義時に設定できます。
+
+```ruby
+class ExampleApiClient < MyApiClient::Base
+  endpoint 'https://example.com'
+  http_read_timeout 10 # seconds
+  http_open_timeout 5  # seconds
+end
+```
+
+これらの値は `request.timeout` と `request.open_timeout` として渡されます。
+Rails 環境では `5.seconds` のような `ActiveSupport::Duration` も利用できます。
 
 ### Logger
 
-WIP
+`MyApiClient::Base` はクラスレベルの `logger` を持ちます。
+
+```ruby
+class ExampleApiClient < MyApiClient::Base
+  self.logger = Rails.logger
+end
+```
+
+各リクエストは `MyApiClient::Request::Logger` を利用し、以下のように出力されます。
+
+```text
+API request `GET https://example.com/path`: "Start"
+API request `GET https://example.com/path`: "Duration 12.3 msec"
+API request `GET https://example.com/path`: "Success (200)"
+```
+
+Ruby の `Logger` と互換性がある任意の logger を指定できます。
 
 ## One request for one class
 

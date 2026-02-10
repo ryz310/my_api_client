@@ -280,7 +280,23 @@ It seems that some services expect an empty Response Body to be returned from th
 
 #### MyApiClient::Params::Params
 
-WIP
+`MyApiClient::Params::Params` is a container for request/response information.
+It is created internally when an error is detected, and is accessible from
+`MyApiClient::Error#params`.
+
+- `params.request` is an instance of `MyApiClient::Params::Request`
+  - `#method`, `#uri`, `#headers`, `#body`
+- `params.response` is a `Sawyer::Response` (or `nil` for network errors)
+- `params.metadata` returns a Hash for external logging (e.g. Bugsnag)
+
+```ruby
+error_handling status_code: 500..599, with: :log_details
+
+def log_details(params, logger)
+  logger.warn "Request: #{params.request.inspect}"
+  logger.warn "Response: #{params.response&.status}"
+end
+```
 
 #### MyApiClient::Error
 
@@ -374,11 +390,39 @@ Note that a normal exception is raised depending on the result of the request, b
 
 ### Timeout
 
-WIP
+You can configure HTTP timeouts for Faraday via class-level DSL:
+
+```ruby
+class ExampleApiClient < MyApiClient::Base
+  endpoint 'https://example.com'
+  http_read_timeout 10 # seconds
+  http_open_timeout 5  # seconds
+end
+```
+
+These values are passed to Faraday as `request.timeout` and
+`request.open_timeout`. In Rails you can also pass `ActiveSupport::Duration`
+values such as `5.seconds`.
 
 ### Logger
 
-WIP
+`MyApiClient::Base` defines a class-level `logger`:
+
+```ruby
+class ExampleApiClient < MyApiClient::Base
+  self.logger = Rails.logger
+end
+```
+
+Each request uses `MyApiClient::Request::Logger` and outputs formatted messages:
+
+```text
+API request `GET https://example.com/path`: "Start"
+API request `GET https://example.com/path`: "Duration 12.3 msec"
+API request `GET https://example.com/path`: "Success (200)"
+```
+
+You can use any logger compatible with Ruby's `Logger` API.
 
 ## RSpec
 
@@ -424,11 +468,216 @@ class ExampleApiClient < MyApiClient::Base
 end
 ```
 
-WIP
+In most cases you should test the following two points:
+
+1. The request is sent to the correct endpoint with expected parameters.
+2. Error handling behaves correctly for specific responses.
+
+#### 1. Request parameters
+
+Use the custom matcher `request_to` with `with`:
+
+```ruby
+RSpec.describe ExampleApiClient, type: :api_client do
+  let(:api_client) { described_class.new(access_token: 'access token') }
+  let(:headers) do
+    {
+      'Content-Type': 'application/json;charset=UTF-8',
+      'Authorization': 'Bearer access token',
+    }
+  end
+
+  describe '#get_users' do
+    it do
+      expect { api_client.get_users(condition: 'condition') }
+        .to request_to(:get, 'https://example.com/v1/users')
+        .with(headers: headers, query: { search: 'condition' })
+    end
+  end
+end
+```
+
+#### 2. Error handling
+
+Use the custom matcher `be_handled_as_an_error` with `when_receive`:
+
+```ruby
+it do
+  expect { api_client.get_users(condition: 'condition') }
+    .to be_handled_as_an_error(MyApiClient::ClientError)
+    .when_receive(status_code: 200, body: { errors: { code: 10 } }.to_json)
+end
+```
+
+You can also assert that no error handling is triggered:
+
+```ruby
+it do
+  expect { api_client.get_users(condition: 'condition') }
+    .not_to be_handled_as_an_error(MyApiClient::ClientError)
+    .when_receive(status_code: 200, body: { users: { id: 1 } }.to_json)
+end
+```
+
+##### When `retry_on` is defined
+
+If you have `retry_on` in your API client:
+
+```ruby
+class ExampleApiClient < MyApiClient::Base
+  endpoint 'https://example.com'
+
+  error_handling json: { '$.errors.code': 20 }, raise: MyApiClient::ApiLimitError
+  retry_on MyApiClient::ApiLimitError, wait: 30.seconds, attempts: 3
+end
+```
+
+You can validate retries with `after_retry` and `times`:
+
+```ruby
+it do
+  expect { api_client.get_users(condition: 'condition') }
+    .to be_handled_as_an_error(MyApiClient::ApiLimitError)
+    .after_retry(3).times
+    .when_receive(status_code: 200, body: { errors: { code: 20 } }.to_json)
+end
+```
 
 ### Stubbing
 
-WIP
+#### `response` option
+
+```ruby
+class ExampleApiClient < MyApiClient::Base
+  endpoint 'https://example.com'
+
+  def request(user_id:)
+    get "users/#{user_id}"
+  end
+end
+```
+
+You can stub `ExampleApiClient#request` with `stub_api_client_all` or
+`stub_api_client` to prevent real HTTP requests:
+
+```ruby
+stub_api_client_all(
+  ExampleApiClient,
+  request: { response: { id: 12345 } }
+)
+
+response = ExampleApiClient.new.request(user_id: 1)
+response.id # => 12345
+```
+
+`response` can be omitted:
+
+```ruby
+stub_api_client_all(
+  ExampleApiClient,
+  request: { id: 12345 }
+)
+```
+
+#### Proc
+
+You can use a `Proc` to calculate a stubbed response:
+
+```ruby
+stub_api_client_all(
+  ExampleApiClient,
+  request: ->(params) { { id: params[:user_id] } }
+)
+```
+
+#### Return value of `#stub_api_client_all` and `#stub_api_client`
+
+Both methods return the stubbed API client instance. This is useful for
+spying on calls:
+
+```ruby
+def execute_api_request
+  ExampleApiClient.new.request(user_id: 1)
+end
+
+api_client = stub_api_client_all(ExampleApiClient, request: nil)
+execute_api_request
+expect(api_client).to have_received(:request).with(user_id: 1)
+```
+
+#### `raise` option
+
+Use the `raise` option to simulate exceptions:
+
+```ruby
+stub_api_client_all(ExampleApiClient, request: { raise: MyApiClient::Error })
+expect { ExampleApiClient.new.request(user_id: 1) }.to raise_error(MyApiClient::Error)
+```
+
+You can also stub response body and status code with an exception:
+
+```ruby
+stub_api_client_all(
+  ExampleApiClient,
+  request: {
+    raise: MyApiClient::Error,
+    response: { message: 'error' },
+    status_code: 429
+  }
+)
+```
+
+#### `pageable` option
+
+For `#pageable_get` (`#pget`), you can use `pageable` with an Enumerable:
+
+```ruby
+stub_api_client_all(
+  MyPaginationApiClient,
+  pagination: {
+    pageable: [
+      { page: 1 },
+      { page: 2 },
+      { page: 3 },
+    ],
+  }
+)
+
+MyPaginationApiClient.new.pagination.each do |response|
+  response.page #=> 1, 2, 3
+end
+```
+
+Each element in `pageable` can use any of the options above:
+
+```ruby
+stub_api_client_all(
+  MyPaginationApiClient,
+  pagination: {
+    pageable: [
+      { response: { page: 1 } },
+      { page: 2 },
+      ->(params) { { page: 3, user_id: params[:user_id] } },
+      { raise: MyApiClient::ClientError::IamTeapot },
+    ],
+  }
+)
+```
+
+You can also pass an infinite `Enumerator`:
+
+```ruby
+stub_api_client_all(
+  MyPaginationApiClient,
+  pagination: {
+    pageable: Enumerator.new do |y|
+      loop.with_index(1) do |_, i|
+        y << { page: i }
+      end
+    end,
+  }
+)
+```
 
 ## Development
 
