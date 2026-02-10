@@ -79,8 +79,8 @@ class ExampleApiClient < MyApiClient::Base
   end
 end
 
-api_clinet = ExampleApiClient.new(access_token: 'access_token')
-api_clinet.get_users #=> #<Sawyer::Resource>
+api_client = ExampleApiClient.new(access_token: 'access_token')
+api_client.get_users #=> #<Sawyer::Resource>
 ```
 
 The `endpoint` defines the intersection of the request URL. Each method described below defines a subsequent path. In the above example, `get 'users'` will request to `GET https://example.com/v1/users`.
@@ -112,9 +112,9 @@ class MyPaginationApiClient < ApplicationApiClient
 end
 ```
 
-In the above example, the request is first made for `GET https://example.com/v1/pagination?page=1`, followed by the URL contained in the response JSON `$.link.next`. Make a request to enumerable.
+In the above example, the request is first made for `GET https://example.com/v1/pagination?page=1`, followed by the URL contained in the response JSON `$.links.next`. Make a request to enumerable.
 
-For example, in the following response, `$.link.next` indicates `"https://example.com/pagination?page=3"`:
+For example, in the following response, `$.links.next` indicates `"https://example.com/pagination?page=3"`:
 
 ```json
 {
@@ -129,12 +129,12 @@ For example, in the following response, `$.link.next` indicates `"https://exampl
 `#pageable_get` returns [Enumerator::Lazy](https://docs.ruby-lang.org/ja/latest/class/Enumerator=3a=3aLazy.html), so you can get the following result by `#each` or `#next`:
 
 ```ruby
-api_clinet = MyPaginationApiClient.new
-api_clinet.pagination.each do |response|
+api_client = MyPaginationApiClient.new
+api_client.pagination.each do |response|
   # Do something.
 end
 
-result = api_clinet.pagination
+result = api_client.pagination
 result.next # => 1st page result
 result.next # => 2nd page result
 result.next # => 3rd page result
@@ -174,7 +174,7 @@ class ExampleApiClient < MyApiClient::Base
 
   private
 
-  # @param params [MyApiClient::Params::Params] HTTP reqest and response params
+  # @param params [MyApiClient::Params::Params] HTTP request and response params
   # @param logger [MyApiClient::Request::Logger] Logger for a request processing
   def my_error_handling(params, logger)
     logger.warn "Response Body: #{params.response.body.inspect}"
@@ -207,7 +207,7 @@ In the above example, if the status code is `500..599`, the contents of `block` 
 `logger` is an instance for log output. If you log output using this instance, the request information will be included in the log output as shown below, which is convenient for debugging:
 
 ```text
-API request `GET https://example.com/path/to/resouce`: "Server error occurred."
+API request `GET https://example.com/path/to/resource`: "Server error occurred."
 ```
 
 ```ruby
@@ -220,7 +220,7 @@ In the above case, it matches JSON as below:
 
 ```json
 {
-  "erros": {
+  "errors": {
     "code": 10,
     "message": "Some error has occurred."
   }
@@ -318,7 +318,7 @@ end
 
 #### Bugsnag breadcrumbs
 
-If you are using [Bugsnag-Ruby v6.11.0](https://github.com/bugsnag/bugsnag-ruby/releases/tag/v6.11.0) or later, [breadcrumbs function](https://docs. bugsnag.com/platforms/ruby/other/#logging-breadcrumbs) is automatically supported. With this function, `Bugsnag.leave_breadcrumb` is called internally when `MyApiClient::Error` occurs, and you can check the request information, response information, etc. when an error occurs from the Bugsnag console.
+If you are using [Bugsnag-Ruby v6.11.0](https://github.com/bugsnag/bugsnag-ruby/releases/tag/v6.11.0) or later, [breadcrumbs function](https://docs.bugsnag.com/platforms/ruby/other/#logging-breadcrumbs) is automatically supported. With this function, `Bugsnag.leave_breadcrumb` is called internally when `MyApiClient::Error` occurs, and you can check the request information, response information, etc. when an error occurs from the Bugsnag console.
 
 ### Retry
 
@@ -437,7 +437,7 @@ require 'my_api_client/rspec'
 
 ### Testing
 
-Suppose you have defined a `ApiClient` like this:
+Suppose you have defined an API client like this:
 
 ```ruby
 class ExampleApiClient < MyApiClient::Base
@@ -687,7 +687,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/my_api_client. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/ryz310/my_api_client. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
@@ -695,4 +695,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the MyApiClient project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/my_api_client/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the MyApiClient project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/ryz310/my_api_client/blob/master/CODE_OF_CONDUCT.md).

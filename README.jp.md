@@ -75,8 +75,8 @@ class ExampleApiClient < MyApiClient::Base
   end
 end
 
-api_clinet = ExampleApiClient.new(access_token: 'access_token')
-api_clinet.get_users #=> #<Sawyer::Resource>
+api_client = ExampleApiClient.new(access_token: 'access_token')
+api_client.get_users #=> #<Sawyer::Resource>
 ```
 
 クラス定義の最初に記述される `endpoint` にはリクエスト URL の共通部分を定義します。後述の各メソッドで後続の path を定義しますが、上記の例だと `get 'users'` と定義すると、 `GET https://example.com/v1/users` というリクエストが実行されます。
@@ -108,9 +108,9 @@ class MyPaginationApiClient < ApplicationApiClient
 end
 ```
 
-上記の例の場合、最初に `GET https://example.com/v1/pagination?page=1` に対してリクエストが実行され、続けてレスポンス JSON の `$.link.next` に含まれる URL に対して enumerable にリクエストを実行します。
+上記の例の場合、最初に `GET https://example.com/v1/pagination?page=1` に対してリクエストが実行され、続けてレスポンス JSON の `$.links.next` に含まれる URL に対して enumerable にリクエストを実行します。
 
-例えば以下のようなレスポンスであれば、`$.link.next` は `"https://example.com/pagination?page=3"` を示します。
+例えば以下のようなレスポンスであれば、`$.links.next` は `"https://example.com/pagination?page=3"` を示します。
 
 ```json
 {
@@ -125,12 +125,12 @@ end
 そして `#pageable_get` は [Enumerator::Lazy](https://docs.ruby-lang.org/ja/latest/class/Enumerator=3a=3aLazy.html) を返すので、 `#each` や `#next` を実行することで次の結果を取得できます。
 
 ```ruby
-api_clinet = MyPaginationApiClient.new
-api_clinet.pagination.each do |response|
+api_client = MyPaginationApiClient.new
+api_client.pagination.each do |response|
   # Do something.
 end
 
-result = api_clinet.pagination
+result = api_client.pagination
 result.next # => 1st page result
 result.next # => 2nd page result
 result.next # => 3rd page result
@@ -170,7 +170,7 @@ class ExampleApiClient < MyApiClient::Base
 
   private
 
-  # @param params [MyApiClient::Params::Params] HTTP reqest and response params
+  # @param params [MyApiClient::Params::Params] HTTP request and response params
   # @param logger [MyApiClient::Request::Logger] Logger for a request processing
   def my_error_handling(params, logger)
     logger.warn "Response Body: #{params.response.body.inspect}"
@@ -200,10 +200,10 @@ error_handling status_code: 500..599, raise: MyApiClient::ServerError do |_param
 end
 ```
 
-上記の例であれば、ステータスコードが `500..599` の場合に `MyApiClient::ServerError` を発生させる前に `block` の内容が実行れます。引数の `params` にはリクエスト情報とレスポンス情報が含まれています。`logger` はログ出力用インスタンスですが、このインスタンスを使ってログ出力すると、以下のようにリクエスト情報がログ出力に含まれるようになり、デバッグの際に便利です。
+上記の例であれば、ステータスコードが `500..599` の場合に `MyApiClient::ServerError` を発生させる前に `block` の内容が実行されます。引数の `params` にはリクエスト情報とレスポンス情報が含まれています。`logger` はログ出力用インスタンスですが、このインスタンスを使ってログ出力すると、以下のようにリクエスト情報がログ出力に含まれるようになり、デバッグの際に便利です。
 
 ```text
-API request `GET https://example.com/path/to/resouce`: "Server error occurred."
+API request `GET https://example.com/path/to/resource`: "Server error occurred."
 ```
 
 `json` には `Hash` の Key に [JSONPath](https://goessner.net/articles/JsonPath/) を指定して、レスポンス JSON から任意の値を取得し、 Value とマッチするかどうかでエラーハンドリングできます。Value には `String` `Integer` `Range` `Regexp` が指定可能です。上記の場合であれば、以下のような JSON にマッチします。
@@ -214,7 +214,7 @@ error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
 
 ```json
 {
-  "erros": {
+  "errors": {
     "code": 10,
     "message": "Some error has occurred."
   }
@@ -268,7 +268,7 @@ error_handling json: { '$.errors.code': :negative? }
 
 ```json
 {
-  "erros": {
+  "errors": {
     "code": -1,
     "message": "Some error has occurred."
   }
@@ -281,7 +281,7 @@ error_handling json: { '$.errors.code': :negative? }
 error_handling status_code: 200, json: :forbid_nil
 ```
 
-一部のサービスではサーバーから何らかの Response Body が返ってくる事を期待しているにも関わらず、空の結果が結果が返ってくるというケースがあるようです。こちらも実験的な機能ですが、そういったケースを検出するために `json: :forbid_nil` オプションを用意しました。通常の場合、Response Body が空の場合はエラー判定をしませんが、このオプションを指定するとエラーとして検知する様になります。正常応答が空となる API も存在するので、誤検知にご注意下さい。
+一部のサービスではサーバーから何らかの Response Body が返ってくる事を期待しているにも関わらず、空の結果が返ってくるというケースがあるようです。こちらも実験的な機能ですが、そういったケースを検出するために `json: :forbid_nil` オプションを用意しました。通常の場合、Response Body が空の場合はエラー判定をしませんが、このオプションを指定するとエラーとして検知する様になります。正常応答が空となる API も存在するので、誤検知にご注意下さい。
 
 #### MyApiClient::Params::Params
 
@@ -549,7 +549,7 @@ RSpec.describe ExampleApiClient, type: :api_client do
     it do
       expect { api_client.get_users(condition: 'condition') }
         .to request_to(:get, 'https://example.com/v1/users')
-        .with(headers: headers, query: { condition: 'condition' })
+        .with(headers: headers, query: { search: 'condition' })
     end
   end
 end
@@ -649,7 +649,7 @@ response.id # => 12345
 
 #### Proc
 
-リクスエストパラメータを使ったレスポンスを返すようにスタブ化したい場合は、 `Proc` を利用することで実現できます。
+リクエストパラメータを使ったレスポンスを返すようにスタブ化したい場合は、 `Proc` を利用することで実現できます。
 
 ```ruby
 stub_api_client_all(
@@ -670,7 +670,7 @@ def execute_api_request
   ExampleApiClient.new.request(user_id: 1)
 end
 
-api_clinet = stub_api_client_all(ExampleApiClient, request: nil)
+api_client = stub_api_client_all(ExampleApiClient, request: nil)
 execute_api_request
 expect(api_client).to have_received(:request).with(user_id: 1)
 ```
@@ -768,7 +768,7 @@ stub_api_client_all(
 この gem のリリースには [gem_comet](https://github.com/ryz310/gem_comet) を利用しています。
 `gem_comet` の README.md にも使い方が載っていますが、備忘録のため、こちらにもリリースフローを記載しておきます。
 
-### Preparement
+### Preparation
 
 以下のコマンドで `.envrc` を作成し、 `GITHUB_ACCESS_TOKEN` を設定します。
 
@@ -782,7 +782,7 @@ $ cp .envrc.skeleton .envrc
 $ gem install gem_comet
 ```
 
-### USAGE
+### Usage
 
 以下のコマンドで、最後のリリースから現在までに merge した PR の一覧を確認できます。
 
