@@ -22,8 +22,25 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
+  # Integration/example API specs require a real endpoint.
+  config.define_derived_metadata(file_path: %r{\Aspec/integrations/}) do |metadata|
+    metadata[:requires_my_api_endpoint] = true
+  end
+  config.define_derived_metadata(file_path: %r{\Aspec/example/api_clients/}) do |metadata|
+    metadata[:requires_my_api_endpoint] = true
+  end
+
+  if ENV.fetch('MY_API_ENDPOINT', '').empty?
+    config.filter_run_excluding requires_my_api_endpoint: true
+  end
+
   config.before :each, type: :integration do
-    WebMock.disable_net_connect!(allow: /#{ENV.fetch('MY_API_ENDPOINT', nil)}*/)
+    endpoint = ENV.fetch('MY_API_ENDPOINT', '')
+    if endpoint.empty?
+      WebMock.disable_net_connect!
+    else
+      WebMock.disable_net_connect!(allow: /#{Regexp.escape(endpoint)}/)
+    end
   end
 
   config.after :each, type: :integration do
