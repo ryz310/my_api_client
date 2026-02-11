@@ -1,0 +1,33 @@
+name: Rubocop Challenge
+
+on:
+  schedule:
+    - cron: "30 23 * * *" # 8:30am every day (JST)
+  workflow_dispatch:
+
+concurrency:
+  group: rubocop-challenge-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  rubocop_challenge:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+
+      - name: Rubocop Challenge
+        env:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gem install rubocop_challenger
+          rubocop_challenger go --email=ryz310@gmail.com --name=ryz310

@@ -22,8 +22,29 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
+  my_api_endpoint = ENV.fetch('MY_API_ENDPOINT', '')
+
+  if my_api_endpoint.empty?
+    config.filter_run_excluding type: :integration
+    config.filter_run_excluding file_path: %r{spec/example/api_clients/}
+
+    config.before :suite do
+      yellow = "\e[33m"
+      reset = "\e[0m"
+      RSpec.configuration.reporter.message(
+        "#{yellow}[my_api_client] MY_API_ENDPOINT is not set. " \
+        'Skipping specs with `type: :integration` and specs under ' \
+        "`spec/example/api_clients/`.#{reset}"
+      )
+    end
+  end
+
   config.before :each, type: :integration do
-    WebMock.disable_net_connect!(allow: /#{ENV.fetch('MY_API_ENDPOINT', nil)}*/)
+    if my_api_endpoint.empty?
+      WebMock.disable_net_connect!
+    else
+      WebMock.disable_net_connect!(allow: /#{Regexp.escape(my_api_endpoint)}/)
+    end
   end
 
   config.after :each, type: :integration do
