@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby_version: ['3.2', '3.3', '3.4']
+        ruby_version: ['3.2', '3.3', '3.4', '4.0']
         rails_version: ['7.2']
         bundler_option:
           - name: with_integrations
@@ -81,7 +81,7 @@ jobs:
         if: >-
           ${{
             env.CC_TEST_REPORTER_ID != '' &&
-            matrix.ruby_version == '3.4' &&
+            matrix.ruby_version == '4.0' &&
             matrix.rails_version == '7.2' &&
             matrix.bundler_option.name == 'with_integrations'
           }}
@@ -93,7 +93,7 @@ jobs:
         if: >-
           ${{
             env.CC_TEST_REPORTER_ID != '' &&
-            matrix.ruby_version == '3.4' &&
+            matrix.ruby_version == '4.0' &&
             matrix.rails_version == '7.2' &&
             matrix.bundler_option.name == 'with_integrations'
           }}
@@ -110,7 +110,7 @@ jobs:
         if: >-
           ${{
             env.CC_TEST_REPORTER_ID != '' &&
-            matrix.ruby_version == '3.4' &&
+            matrix.ruby_version == '4.0' &&
             matrix.rails_version == '7.2' &&
             matrix.bundler_option.name == 'with_integrations'
           }}
@@ -125,7 +125,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby_version: ['3.2', '3.3', '3.4']
+        ruby_version: ['3.2', '3.3', '3.4', '4.0']
         rails_version: ['7.2']
     defaults:
       run:
@@ -178,7 +178,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.4'
+          ruby-version: '4.0'
           bundler-cache: false
 
       - name: Install Bundler 2.x
@@ -198,7 +198,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.4'
+          ruby-version: '4.0'
           bundler-cache: false
 
       - name: Install Bundler 2.x
@@ -270,7 +270,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.4'
+          ruby-version: '4.0'
           bundler-cache: false
 
       - name: Install Bundler 2.x
