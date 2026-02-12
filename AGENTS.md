@@ -23,6 +23,8 @@
 - Update CI matrix in `.github/workflows/ci.yml`:
   - `build_gem.strategy.matrix.ruby_version` / `rails_version`
   - `verify_generator.strategy.matrix.ruby_version` / `rails_version`
+  - update representative matrix-gated conditions (e.g. coverage/upload conditions) to the intended runtime/framework pair
+- Check other workflows under `.github/workflows/` for fixed Ruby versions and align them when support policy changes.
 - Update supported versions in:
   - `README.md`
   - `README.jp.md`
