@@ -15,6 +15,31 @@
 - Patch versions may be updated to the latest available releases within the selected baseline (e.g., Ruby 3.2.x and Rails 7.2.x).
 - When updating support policy, also update `.ruby-version`, `Dockerfile` (`ARG RUBY_VERSION` and `BUNDLE_GEMFILE`), and development Dockerfiles under `rails_app/`.
 
+## Support Matrix Update Procedure
+- Decide target support matrix first (Ruby and Rails versions to keep/add/remove).
+- Update `my_api_client.gemspec`:
+  - `required_ruby_version`
+  - `activesupport` minimum version
+- Update CI matrix in `.github/workflows/ci.yml`:
+  - `build_gem.strategy.matrix.ruby_version` / `rails_version`
+  - `verify_generator.strategy.matrix.ruby_version` / `rails_version`
+- Update supported versions in:
+  - `README.md`
+  - `README.jp.md`
+- Keep development baseline files aligned:
+  - `.ruby-version`
+  - `Dockerfile` (`ARG RUBY_VERSION`)
+  - `rails_app/*/Dockerfile` (`ARG RUBY_VERSION`) for supported Rails verification apps
+- Keep verification assets aligned with supported Rails:
+  - remove unsupported `gemfiles/rails_*.gemfile`
+  - remove unsupported `rails_app/rails_*` directories
+  - keep only supported Rails verification app directories
+- Validate before commit:
+  - `docker run --rm -v "$PWD":/app -w /app my_api_client-dev bundle exec rspec`
+  - `docker run --rm -v "$PWD":/app -w /app my_api_client-dev bundle exec rubocop`
+  - `docker run --rm -v "$PWD":/app -w /app my_api_client-dev bundle exec rake build`
+- If any `rails_app/rails_*/Gemfile.lock` drifts from gemspec constraints, sync at least the `my_api_client` entry (`version` and `activesupport` lower bound).
+
 ## Docker Development Commands
 - Build development image:
   - `docker build -t my_api_client-dev .`
