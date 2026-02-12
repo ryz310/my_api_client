@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby_version: ['3.2', '3.3']
+        ruby_version: ['3.2', '3.3', '3.4']
         rails_version: ['7.2']
         bundler_option:
           - name: with_integrations
@@ -74,11 +74,14 @@ jobs:
       - name: Rake build
         run: bundle exec rake build
 
+      # Coverage formatting is intentionally executed on only one representative
+      # matrix case to avoid duplicate uploads while still validating coverage
+      # generation on the most up-to-date supported runtime/framework combination.
       - name: Install Code Climate test reporter
         if: >-
           ${{
             env.CC_TEST_REPORTER_ID != '' &&
-            matrix.ruby_version == '3.3' &&
+            matrix.ruby_version == '3.4' &&
             matrix.rails_version == '7.2' &&
             matrix.bundler_option.name == 'with_integrations'
           }}
@@ -90,7 +93,7 @@ jobs:
         if: >-
           ${{
             env.CC_TEST_REPORTER_ID != '' &&
-            matrix.ruby_version == '3.3' &&
+            matrix.ruby_version == '3.4' &&
             matrix.rails_version == '7.2' &&
             matrix.bundler_option.name == 'with_integrations'
           }}
@@ -107,7 +110,7 @@ jobs:
         if: >-
           ${{
             env.CC_TEST_REPORTER_ID != '' &&
-            matrix.ruby_version == '3.3' &&
+            matrix.ruby_version == '3.4' &&
             matrix.rails_version == '7.2' &&
             matrix.bundler_option.name == 'with_integrations'
           }}
@@ -122,7 +125,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby_version: ['3.2', '3.3']
+        ruby_version: ['3.2', '3.3', '3.4']
         rails_version: ['7.2']
     defaults:
       run:
@@ -175,7 +178,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3'
+          ruby-version: '3.4'
           bundler-cache: false
 
       - name: Install Bundler 2.x
@@ -195,7 +198,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3'
+          ruby-version: '3.4'
           bundler-cache: false
 
       - name: Install Bundler 2.x
@@ -230,6 +233,8 @@ jobs:
           name: codeclimate-coverage
           path: coverage
 
+      # Upload only when the reporter token exists and the coverage artifact
+      # from the representative matrix case is available.
       - name: Install Code Climate test reporter
         if: ${{ env.CC_TEST_REPORTER_ID != '' && hashFiles('coverage/codeclimate.gha.json') != '' }}
         run: |
@@ -265,7 +270,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3'
+          ruby-version: '3.4'
           bundler-cache: false
 
       - name: Install Bundler 2.x
