@@ -22,7 +22,7 @@ jobs:
       fail-fast: false
       matrix:
         ruby_version: ['3.2', '3.3']
-        rails_version: ['7.1', '7.2']
+        rails_version: ['7.2']
         bundler_option:
           - name: with_integrations
             with: integrations
@@ -123,7 +123,7 @@ jobs:
       fail-fast: false
       matrix:
         ruby_version: ['3.2', '3.3']
-        rails_version: ['7.1', '7.2']
+        rails_version: ['7.2']
     defaults:
       run:
         working-directory: rails_app/rails_${{ matrix.rails_version }}
