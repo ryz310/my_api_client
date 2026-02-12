@@ -9,6 +9,12 @@
   3. `git pull --ff-only origin master`
   4. `git checkout -b codex/<new-branch-name>`
 
+## Development Version Policy
+- In development environments, always use the oldest versions among currently supported Ruby and Rails.
+- Current baseline: Ruby 3.2 and Rails 7.1.
+- Patch versions may be updated to the latest available releases within the selected baseline (e.g., Ruby 3.2.x and Rails 7.1.x).
+- When updating support policy, also update `.ruby-version`, `Dockerfile` (`ARG RUBY_VERSION` and `BUNDLE_GEMFILE`), and development Dockerfiles under `rails_app/`.
+
 ## Docker Development Commands
 - Build development image:
   - `docker build -t my_api_client-dev .`
