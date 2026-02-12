@@ -32,3 +32,6 @@
   - `docker run --rm -it -v "$PWD":/app -w /app my_api_client-dev bundle exec rake build`
 - Install gem locally in container:
   - `docker run --rm -it -v "$PWD":/app -w /app my_api_client-dev bundle exec rake install`
+
+## Validation Rule
+- After making changes, run RuboCop and confirm there are no offenses.
