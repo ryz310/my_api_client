@@ -16,7 +16,7 @@ It is supposed to be used in Ruby on Rails, but it is made to work in other envi
 
 ## Supported Versions
 
-- Ruby 3.1, 3.2, 3.3
+- Ruby 3.2, 3.3
 - Rails 6.1, 7.0, 7.1, 7.2
 
 ## Installation
