@@ -22,7 +22,7 @@ jobs:
       fail-fast: false
       matrix:
         ruby_version: ['3.2', '3.3', '3.4', '4.0']
-        rails_version: ['7.2', '8.0']
+        rails_version: ['7.2', '8.0', '8.1']
         bundler_option:
           - name: with_integrations
             with: integrations
@@ -82,7 +82,7 @@ jobs:
           ${{
             env.CC_TEST_REPORTER_ID != '' &&
             matrix.ruby_version == '4.0' &&
-            matrix.rails_version == '8.0' &&
+            matrix.rails_version == '8.1' &&
             matrix.bundler_option.name == 'with_integrations'
           }}
         run: |
@@ -94,7 +94,7 @@ jobs:
           ${{
             env.CC_TEST_REPORTER_ID != '' &&
             matrix.ruby_version == '4.0' &&
-            matrix.rails_version == '8.0' &&
+            matrix.rails_version == '8.1' &&
             matrix.bundler_option.name == 'with_integrations'
           }}
         env:
@@ -111,7 +111,7 @@ jobs:
           ${{
             env.CC_TEST_REPORTER_ID != '' &&
             matrix.ruby_version == '4.0' &&
-            matrix.rails_version == '8.0' &&
+            matrix.rails_version == '8.1' &&
             matrix.bundler_option.name == 'with_integrations'
           }}
         uses: actions/upload-artifact@v4
@@ -128,7 +128,7 @@ jobs:
       fail-fast: false
       matrix:
         ruby_version: ['3.2', '3.3', '3.4', '4.0']
-        rails_version: ['7.2', '8.0']
+        rails_version: ['7.2', '8.0', '8.1']
     defaults:
       run:
         working-directory: rails_app/rails_${{ matrix.rails_version }}
