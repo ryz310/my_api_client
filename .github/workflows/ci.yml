@@ -122,6 +122,8 @@ jobs:
   verify_generator:
     name: verify_generator_on_ruby_${{ matrix.ruby_version }}_and_rails_${{ matrix.rails_version }}
     runs-on: ubuntu-latest
+    env:
+      BUNDLE_PATH: vendor/bundle
     strategy:
       fail-fast: false
       matrix:
