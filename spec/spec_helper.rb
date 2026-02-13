@@ -10,6 +10,7 @@ SimpleCov.formatters = [
 ]
 SimpleCov.start do
   add_filter '/spec/'
+  add_filter '/rails_app/'
 end
 
 require 'pry'
