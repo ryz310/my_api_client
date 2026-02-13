@@ -1,8 +1,23 @@
 # frozen_string_literal: true
 
 RSpec.describe MyApiClient::NetworkError do
+  let(:ruby34_or_later) { Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.4') }
+
   context 'when initialized with params and original error' do
     let(:instance) { described_class.new(params, network_error) }
+    let(:expected_inspect) do
+      if ruby34_or_later
+        [
+          '{error: "#<Net::OpenTimeout>", ',
+          'params: "#<MyApiClient::Params::Params#inspect>"}',
+        ].join
+      else
+        [
+          '{:error=>"#<Net::OpenTimeout>", ',
+          ':params=>"#<MyApiClient::Params::Params#inspect>"}',
+        ].join
+      end
+    end
     let(:params) do
       instance_double(
         MyApiClient::Params::Params,
@@ -29,11 +44,7 @@ RSpec.describe MyApiClient::NetworkError do
     end
 
     describe '#inspect' do
-      it 'returns contents as string for to be readable for human' do
-        expect(instance.inspect)
-          .to eq '{:error=>"#<Net::OpenTimeout>", ' \
-                 ':params=>"#<MyApiClient::Params::Params#inspect>"}'
-      end
+      it { expect(instance.inspect).to eq expected_inspect }
     end
 
     describe '#metadata' do
@@ -46,6 +57,9 @@ RSpec.describe MyApiClient::NetworkError do
 
   context 'when initialized with no arguments (for RSpec)' do
     let(:instance) { described_class.new }
+    let(:expected_inspect) do
+      ruby34_or_later ? '{error: nil, params: nil}' : '{:error=>nil, :params=>nil}'
+    end
 
     describe '#original_error' do
       it { expect(instance.original_error).to be_nil }
@@ -56,9 +70,7 @@ RSpec.describe MyApiClient::NetworkError do
     end
 
     describe '#inspect' do
-      it 'returns contents as string for to be readable for human' do
-        expect(instance.inspect).to eq '{:error=>nil, :params=>nil}'
-      end
+      it { expect(instance.inspect).to eq expected_inspect }
     end
 
     describe '#metadata' do
