@@ -17,7 +17,7 @@ It is supposed to be used in Ruby on Rails, but it is made to work in other envi
 ## Supported Versions
 
 - Ruby 3.2, 3.3, 3.4, 4.0
-- Rails 7.2
+- Rails 7.2, 8.0
 
 ## Installation
 

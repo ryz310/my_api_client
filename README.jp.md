@@ -13,7 +13,7 @@ MyApiClient は API リクエストクラスを作成するための汎用的な
 ## Supported Versions
 
 - Ruby 3.2, 3.3, 3.4, 4.0
-- Rails 7.2
+- Rails 7.2, 8.0
 
 ## Installation
 
