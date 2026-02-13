@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-ARG RUBY_VERSION=3.1.6
+ARG RUBY_VERSION=3.2.9
 FROM ruby:${RUBY_VERSION}-slim
 
 WORKDIR /app

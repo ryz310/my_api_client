@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe MyApiClient::Params::Request do
+  let(:ruby34_or_later) { Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.4') }
+
   let(:instance) { described_class.new(method, uri, headers, body) }
   let(:method) { :get }
   let(:uri) { URI.parse 'https://example.com/path/to/resource?key=value' }
@@ -9,6 +11,23 @@ RSpec.describe MyApiClient::Params::Request do
     context 'with Hash' do
       let(:headers) { { 'Content-Type': 'application/json; charset=utf-8' } }
       let(:body) { { username: 'John Smith' } }
+      let(:expected_inspect) do
+        if ruby34_or_later
+          [
+            '{method: :get, ',
+            'uri: "https://example.com/path/to/resource?key=value", ',
+            'headers: {"Content-Type": "application/json; charset=utf-8"}, ',
+            'body: {username: "John Smith"}}',
+          ].join
+        else
+          [
+            '{:method=>:get, ',
+            ':uri=>"https://example.com/path/to/resource?key=value", ',
+            ':headers=>{:"Content-Type"=>"application/json; charset=utf-8"}, ',
+            ':body=>{:username=>"John Smith"}}',
+          ].join
+        end
+      end
 
       describe '#to_sawyer_args' do
         it 'returns value formatted for arguments of Sawyer::Agent#call' do
@@ -48,13 +67,7 @@ RSpec.describe MyApiClient::Params::Request do
       end
 
       describe '#inspect' do
-        it 'returns contents as string for to be readable for human' do
-          expect(instance.inspect)
-            .to eq '{:method=>:get, ' \
-                   ':uri=>"https://example.com/path/to/resource?key=value", ' \
-                   ':headers=>{:"Content-Type"=>"application/json; charset=utf-8"}, ' \
-                   ':body=>{:username=>"John Smith"}}'
-        end
+        it { expect(instance.inspect).to eq expected_inspect }
       end
     end
 
@@ -71,6 +84,23 @@ RSpec.describe MyApiClient::Params::Request do
         lambda {
           { username: data_array.shift }
         }
+      end
+      let(:expected_inspect) do
+        if ruby34_or_later
+          [
+            '{method: :get, ',
+            'uri: "https://example.com/path/to/resource?key=value", ',
+            'headers: {"X-Request-Id": "request_id"}, ',
+            'body: {username: "user_name"}}',
+          ].join
+        else
+          [
+            '{:method=>:get, ',
+            ':uri=>"https://example.com/path/to/resource?key=value", ',
+            ':headers=>{:"X-Request-Id"=>"request_id"}, ',
+            ':body=>{:username=>"user_name"}}',
+          ].join
+        end
       end
 
       describe '#to_sawyer_args' do
@@ -111,13 +141,7 @@ RSpec.describe MyApiClient::Params::Request do
       end
 
       describe '#inspect' do
-        it 'returns contents as string for to be readable for human' do
-          expect(instance.inspect)
-            .to eq '{:method=>:get, ' \
-                   ':uri=>"https://example.com/path/to/resource?key=value", ' \
-                   ':headers=>{:"X-Request-Id"=>"request_id"}, ' \
-                   ':body=>{:username=>"user_name"}}'
-        end
+        it { expect(instance.inspect).to eq expected_inspect }
       end
     end
   end

@@ -1,6 +1,21 @@
 # frozen_string_literal: true
 
 RSpec.describe MyApiClient::Params::Params do
+  let(:ruby34_or_later) { Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.4') }
+  let(:expected_inspect) do
+    if ruby34_or_later
+      [
+        '{request: "#<MyApiClient::Params::Request#inspect>", ',
+        'response: "#<Sawyer::Response#inspect>"}',
+      ].join
+    else
+      [
+        '{:request=>"#<MyApiClient::Params::Request#inspect>", ',
+        ':response=>"#<Sawyer::Response#inspect>"}',
+      ].join
+    end
+  end
+
   let(:instance) { described_class.new(request, response) }
 
   let(:request) do
@@ -67,10 +82,6 @@ RSpec.describe MyApiClient::Params::Params do
   end
 
   describe '#inspect' do
-    it 'returns contents as string for to be readable for human' do
-      expect(instance.inspect)
-        .to eq '{:request=>"#<MyApiClient::Params::Request#inspect>", ' \
-               ':response=>"#<Sawyer::Response#inspect>"}'
-    end
+    it { expect(instance.inspect).to eq expected_inspect }
   end
 end

@@ -1,8 +1,23 @@
 # frozen_string_literal: true
 
 RSpec.describe MyApiClient::Error do
+  let(:ruby34_or_later) { Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.4') }
+
   context 'when initialized with params and error message' do
     let(:instance) { described_class.new(params, 'error message') }
+    let(:expected_inspect) do
+      if ruby34_or_later
+        [
+          '{error: "#<MyApiClient::Error: error message>", ',
+          'params: "#<MyApiClient::Params::Params#inspect>"}',
+        ].join
+      else
+        [
+          '{:error=>"#<MyApiClient::Error: error message>", ',
+          ':params=>"#<MyApiClient::Params::Params#inspect>"}',
+        ].join
+      end
+    end
 
     let(:params) do
       instance_double(
@@ -25,11 +40,7 @@ RSpec.describe MyApiClient::Error do
     end
 
     describe '#inspect' do
-      it 'returns contents as string for to be readable for human' do
-        expect(instance.inspect)
-          .to eq '{:error=>"#<MyApiClient::Error: error message>", ' \
-                 ':params=>"#<MyApiClient::Params::Params#inspect>"}'
-      end
+      it { expect(instance.inspect).to eq expected_inspect }
     end
 
     describe '#message' do
@@ -39,6 +50,13 @@ RSpec.describe MyApiClient::Error do
 
   context 'when initialized with no arguments (for RSpec)' do
     let(:instance) { described_class.new }
+    let(:expected_inspect) do
+      if ruby34_or_later
+        '{error: "#<MyApiClient::Error: MyApiClient::Error>", params: nil}'
+      else
+        '{:error=>"#<MyApiClient::Error: MyApiClient::Error>", :params=>nil}'
+      end
+    end
 
     describe '#params' do
       it { expect(instance.params).to be_nil }
@@ -49,10 +67,7 @@ RSpec.describe MyApiClient::Error do
     end
 
     describe '#inspect' do
-      it 'returns contents as string for to be readable for human' do
-        expect(instance.inspect)
-          .to eq '{:error=>"#<MyApiClient::Error: MyApiClient::Error>", :params=>nil}'
-      end
+      it { expect(instance.inspect).to eq expected_inspect }
     end
 
     describe '#message' do
