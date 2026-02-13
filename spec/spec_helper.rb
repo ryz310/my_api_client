@@ -9,7 +9,6 @@ SimpleCov.formatters = [
   SimpleCov::Formatter::JSONFormatter,
 ]
 SimpleCov.start do
-  add_filter '/spec/'
   add_filter '/rails_app/'
 end
 
