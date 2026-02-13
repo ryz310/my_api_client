@@ -61,4 +61,4 @@
   - `docker run --rm -it -v "$PWD":/app -w /app my_api_client-dev bundle exec rake install`
 
 ## Validation Rule
-- After making changes, run RuboCop and confirm there are no offenses.
+- Run RuboCop and confirm there are no offenses only when `.rb` files are changed.
