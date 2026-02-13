@@ -1,7 +1,16 @@
 # frozen_string_literal: true
 
 require 'simplecov'
-SimpleCov.start
+require 'simplecov_json_formatter'
+
+SimpleCov.command_name(ENV.fetch('SIMPLECOV_COMMAND_NAME', 'rspec'))
+SimpleCov.formatters = [
+  SimpleCov::Formatter::HTMLFormatter,
+  SimpleCov::Formatter::JSONFormatter,
+]
+SimpleCov.start do
+  add_filter '/spec/'
+end
 
 require 'pry'
 require 'bundler/setup'

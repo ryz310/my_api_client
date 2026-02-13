@@ -16,8 +16,6 @@ jobs:
   build_gem:
     name: build_on_ruby_${{ matrix.ruby_version }}_and_rails_${{ matrix.rails_version }}_${{ matrix.bundler_option.name }}
     runs-on: ubuntu-latest
-    env:
-      CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
     strategy:
       fail-fast: false
       matrix:
@@ -66,6 +64,8 @@ jobs:
         run: bundle update activesupport
 
       - name: Execute RSpec
+        env:
+          SIMPLECOV_COMMAND_NAME: build_gem_ruby_${{ matrix.ruby_version }}_rails_${{ matrix.rails_version }}_${{ matrix.bundler_option.name }}
         run: |
           bundle exec rspec --format documentation \
                             --color \
@@ -74,50 +74,16 @@ jobs:
       - name: Rake build
         run: bundle exec rake build
 
-      # Coverage formatting is intentionally executed on only one representative
-      # matrix case to avoid duplicate uploads while still validating coverage
-      # generation on the most up-to-date supported runtime/framework combination.
-      - name: Install Code Climate test reporter
-        if: >-
-          ${{
-            env.CC_TEST_REPORTER_ID != '' &&
-            matrix.ruby_version == '4.0' &&
-            matrix.rails_version == '8.1' &&
-            matrix.bundler_option.name == 'with_integrations'
-          }}
-        run: |
-          curl -fsSL https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 -o ./cc-test-reporter
-          chmod +x ./cc-test-reporter
-
-      - name: Format coverage for Code Climate
-        if: >-
-          ${{
-            env.CC_TEST_REPORTER_ID != '' &&
-            matrix.ruby_version == '4.0' &&
-            matrix.rails_version == '8.1' &&
-            matrix.bundler_option.name == 'with_integrations'
-          }}
-        env:
-          CC_TEST_REPORTER_ID: ${{ env.CC_TEST_REPORTER_ID }}
-        run: |
-          ./cc-test-reporter format-coverage \
-            --input-type simplecov \
-            --prefix "${PWD}" \
-            --output coverage/codeclimate.gha.json \
-            coverage/coverage.json
+      - name: Prepare coverage artifact
+        if: ${{ always() && hashFiles('coverage/.resultset.json') != '' }}
+        run: cp coverage/.resultset.json coverage/resultset.json
 
       - name: Upload coverage artifact
-        if: >-
-          ${{
-            env.CC_TEST_REPORTER_ID != '' &&
-            matrix.ruby_version == '4.0' &&
-            matrix.rails_version == '8.1' &&
-            matrix.bundler_option.name == 'with_integrations'
-          }}
+        if: ${{ always() && hashFiles('coverage/resultset.json') != '' }}
         uses: actions/upload-artifact@v4
         with:
-          name: codeclimate-coverage
-          path: coverage/codeclimate.gha.json
+          name: simplecov-resultset-ruby_${{ matrix.ruby_version }}-rails_${{ matrix.rails_version }}-${{ matrix.bundler_option.name }}
+          path: coverage/resultset.json
 
   verify_generator:
     name: verify_generator_on_ruby_${{ matrix.ruby_version }}_and_rails_${{ matrix.rails_version }}
@@ -226,33 +192,61 @@ jobs:
       - verify_generator
     runs-on: ubuntu-latest
     env:
-      CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      QLTY_COVERAGE_TOKEN: ${{ secrets.QLTY_COVERAGE_TOKEN }}
     steps:
-      - name: Download coverage artifact
-        uses: actions/download-artifact@v4
-        continue-on-error: true
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
         with:
-          name: codeclimate-coverage
-          path: coverage
+          ruby-version: '4.0'
+          bundler-cache: false
 
-      # Upload only when the reporter token exists and the coverage artifact
-      # from the representative matrix case is available.
-      - name: Install Code Climate test reporter
-        if: ${{ env.CC_TEST_REPORTER_ID != '' && hashFiles('coverage/codeclimate.gha.json') != '' }}
-        run: |
-          curl -fsSL https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 -o ./cc-test-reporter
-          chmod +x ./cc-test-reporter
+      - name: Install Bundler 2.x
+        run: gem install bundler -v "~> 2.0"
 
-      - name: Upload coverage
-        if: ${{ env.CC_TEST_REPORTER_ID != '' && hashFiles('coverage/codeclimate.gha.json') != '' }}
-        env:
-          CC_TEST_REPORTER_ID: ${{ env.CC_TEST_REPORTER_ID }}
+      - name: Bundle install
+        run: bundle install
+
+      - name: Download coverage artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: simplecov-resultset-*
+          path: tmp/simplecov-results
+
+      - name: Collate SimpleCov coverage
         run: |
-          if ./cc-test-reporter upload-coverage --help | grep -q -- '--input'; then
-            ./cc-test-reporter upload-coverage --input coverage/codeclimate.gha.json
-          else
-            ./cc-test-reporter upload-coverage -i coverage/codeclimate.gha.json
-          fi
+          bundle exec ruby -e "
+            require 'simplecov'
+            require 'simplecov_json_formatter'
+
+            resultset_files = Dir['tmp/simplecov-results/**/resultset.json'].sort
+            abort('No SimpleCov resultset files found') if resultset_files.empty?
+
+            SimpleCov.collate(resultset_files) do
+              formatter SimpleCov::Formatter::JSONFormatter
+              coverage_dir('coverage')
+            end
+          "
+
+      - name: Upload merged coverage artifact
+        if: ${{ hashFiles('coverage/coverage.json') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: merged-simplecov-coverage
+          path: coverage/coverage.json
+
+      - name: Upload coverage to Qlty
+        if: ${{ env.QLTY_COVERAGE_TOKEN != '' && hashFiles('coverage/coverage.json') != '' }}
+        uses: qltysh/qlty-action/coverage@v2
+        with:
+          token: ${{ env.QLTY_COVERAGE_TOKEN }}
+          files: coverage/coverage.json
+
+      - name: Notify when Qlty token is missing
+        if: ${{ env.QLTY_COVERAGE_TOKEN == '' }}
+        run: |
+          echo "QLTY_COVERAGE_TOKEN is not set. Skipping coverage upload."
 
   release:
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/release' }}
