@@ -186,6 +186,7 @@ jobs:
 
   upload_coverage:
     name: upload-coverage
+    environment: coverage
     if: ${{ github.event_name != 'pull_request' }}
     needs:
       - build_gem
