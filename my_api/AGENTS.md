@@ -1,18 +1,30 @@
 # my_api AGENTS.md
 
-## Migration Policy (Jets -> Rails 8.1)
+## Current Stack Policy
 
-- Do not keep a renamed backup directory for the old Jets app (for example, `my_api_legacy_jets/`).
-- Keep traceability in Git history instead:
-  1. Make sure Jets-based `my_api/` changes are committed before replacement work.
-  2. Replace `my_api/` with a newly created Rails 8.1 API app in the same path.
-  3. Remove Jets-specific implementation after migration is complete.
-
-## Ruby Version Policy for my_api
-
-- The Rails 8.1 `my_api/` must use the latest Ruby version.
-- Update patch level to the latest available release in that Ruby line when possible.
-- Keep version-related files aligned during migration:
+- `my_api/` is a Rails 8.1 API-only application.
+- Use the latest supported Ruby version for `my_api/`.
+- Keep these files aligned when Ruby or runtime settings change:
   - `my_api/.ruby-version`
-  - `my_api/Dockerfile` (when added/updated)
-  - CI and compose settings that build/run `my_api`
+  - `my_api/Dockerfile`
+  - `docker-compose.yml`
+  - `.github/workflows/ci.yml` (integration job)
+
+## API Compatibility Policy
+
+- Keep endpoint behavior compatible with integration specs under `spec/integrations/api_clients/`.
+- If endpoint behavior changes, update both:
+  - `my_api/app/controllers/*`
+  - related specs in `spec/integrations/api_clients/*_spec.rb`
+
+## Test Execution Policy
+
+- Run real HTTP integration tests with Docker Compose:
+  1. `docker compose up -d --build my_api`
+  2. `docker compose run --rm test`
+  3. `docker compose down --volumes --remove-orphans`
+
+## Implementation Scope Policy
+
+- Do not reintroduce Ruby on Jets specific dependencies or configuration.
+- Keep `my_api/` focused on fixture endpoints for `my_api_client` integration tests.
