@@ -724,6 +724,26 @@ stub_api_client_all(
 )
 ```
 
+## Integration Test (Real HTTP)
+
+`spec/integrations/api_clients/` 配下のテストは、 `my_api` の Rails サーバーへ実際に HTTP リクエストして検証します。
+
+`MY_API_ENDPOINT` を設定するために、まず `.envrc` を作成します。
+
+```sh
+$ cp .envrc.skeleton .envrc
+```
+
+`.envrc.skeleton` では `MY_API_ENDPOINT=http://localhost:38080` を利用します。
+
+Docker Compose を使った実行手順は以下です。
+
+```sh
+$ docker compose up -d --build my_api
+$ docker compose run --rm test bundle exec rspec spec/integrations/api_clients
+$ docker compose down --volumes --remove-orphans
+```
+
 ## Deployment
 
 この gem のリリースには [gem_comet](https://github.com/ryz310/gem_comet) を利用しています。
