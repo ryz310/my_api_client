@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Header endpoint used to test response header-based error handling.
 class HeaderController < ApplicationController
   def index
     params.to_unsafe_h.each do |header_name, header_value|

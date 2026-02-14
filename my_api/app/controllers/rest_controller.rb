@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# REST endpoints for integration test fixtures.
 class RestController < ApplicationController
   def index
     result = params[:order] == 'desc' ? posts.reverse : posts
@@ -19,7 +20,7 @@ class RestController < ApplicationController
   end
 
   def destroy
-    head :no_content
+    render status: :ok, json: nil
   end
 
   private

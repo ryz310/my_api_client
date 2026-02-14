@@ -2,8 +2,8 @@
 
 source 'https://rubygems.org'
 
-gem 'rails', '~> 8.1.2'
 gem 'puma', '>= 6.0'
+gem 'rails', '~> 8.1.2'
 
 group :development, :test do
   gem 'rspec-rails'

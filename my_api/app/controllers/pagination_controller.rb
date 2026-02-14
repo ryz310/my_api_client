@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Pagination endpoint that serves three linked pages for paging tests.
 class PaginationController < ApplicationController
   def index
     case params[:page]&.to_s

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Error endpoint that returns deterministic JSON error payloads.
 class ErrorController < ApplicationController
   def show
     render status: :bad_request, json: error_response
