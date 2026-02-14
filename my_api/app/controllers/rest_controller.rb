@@ -1,33 +1,31 @@
 # frozen_string_literal: true
 
-# A REST API
+# REST endpoints for integration test fixtures.
 class RestController < ApplicationController
-  # GET rest
+  # GET /rest
   def index
     result = params[:order] == 'desc' ? posts.reverse : posts
     render status: :ok, json: result
   end
 
-  # GET rest/:id
+  # GET /rest/:id
   def show
     render status: :ok, json: find_post(id:)
   end
 
-  # POST rest
+  # POST /rest
   def create
-    render status: :created,
-           json: create_post(title: params[:title])
+    render status: :created, json: create_post(title: params[:title])
   end
 
-  # POST/PUT/PATCH rest/:id
+  # PUT/PATCH /rest/:id
   def update
-    render status: :ok,
-           json: update_post(id:, title: params[:title])
+    render status: :ok, json: update_post(id:, title: params[:title])
   end
 
-  # DELETE rest/:id
-  def delete
-    render status: :no_content
+  # DELETE /rest/:id
+  def destroy
+    render status: :ok, json: nil
   end
 
   private
@@ -45,7 +43,7 @@ class RestController < ApplicationController
   end
 
   def find_post(id:)
-    posts.find { |p| p[:id] == id }
+    posts.find { |post| post[:id] == id }
   end
 
   def create_post(title:)
@@ -53,8 +51,6 @@ class RestController < ApplicationController
   end
 
   def update_post(id:, title:)
-    find_post(id:).tap do |post|
-      post[:title] = title
-    end
+    find_post(id:).tap { |post| post[:title] = title }
   end
 end

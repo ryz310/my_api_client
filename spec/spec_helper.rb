@@ -40,10 +40,13 @@ RSpec.configure do |config|
     config.before :suite do
       yellow = "\e[33m"
       reset = "\e[0m"
+      command = 'docker compose up -d --build my_api && ' \
+                'docker compose run --rm test'
       RSpec.configuration.reporter.message(
         "#{yellow}[my_api_client] MY_API_ENDPOINT is not set. " \
         'Skipping specs with `type: :integration` and specs under ' \
-        "`spec/example/api_clients/`.#{reset}"
+        '`spec/example/api_clients/`. ' \
+        "Run integration specs via: `#{command}`.#{reset}"
       )
     end
   end

@@ -434,6 +434,26 @@ WIP
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
+### Integration Specs With Real HTTP
+
+The integration specs under `spec/integrations/api_clients/` call the local `my_api` Rails server via HTTP.
+
+Run with Docker Compose:
+
+```sh
+docker compose up -d --build my_api
+docker compose run --rm test bundle exec rspec
+docker compose down --volumes --remove-orphans
+```
+
+Run only integration specs:
+
+```sh
+docker compose up -d --build my_api
+docker compose run --rm test bundle exec rspec spec/integrations/api_clients
+docker compose down --volumes --remove-orphans
+```
+
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing

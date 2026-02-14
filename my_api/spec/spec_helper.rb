@@ -1,31 +1,23 @@
 # frozen_string_literal: true
 
-ENV['JETS_TEST'] = '1'
-ENV['JETS_ENV'] ||= 'test'
-ENV['JETS_STAGE'] ||= 'test'
-# Ensures aws api never called. Fixture home folder does not contain ~/.aws/credentails
-ENV['HOME'] = 'spec/fixtures/home'
+require 'simplecov'
+require 'simplecov_json_formatter'
 
-require 'byebug'
-require 'fileutils'
-require 'jets'
+SimpleCov.command_name(ENV.fetch('SIMPLECOV_COMMAND_NAME', 'my_api_rspec'))
+SimpleCov.formatters = [
+  SimpleCov::Formatter::HTMLFormatter,
+  SimpleCov::Formatter::JSONFormatter,
+]
+SimpleCov.start
 
-abort('The Jets environment is running in production mode!') if Jets.env == 'production'
-Jets.boot
-
-require 'jets/spec_helpers'
-
-# Rspec helper module
-module Helpers
-  def payload(name)
-    JSON.parse(File.read("spec/fixtures/payloads/#{name}.json"))
+RSpec.configure do |config|
+  config.expect_with :rspec do |expectations|
+    expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
-end
 
-RSpec.configure do |c|
-  c.include Helpers
-end
+  config.mock_with :rspec do |mocks|
+    mocks.verify_partial_doubles = true
+  end
 
-Jets.application.configure do
-  config.helpers.host = 'https://example.com'
+  config.shared_context_metadata_behavior = :apply_to_host_groups
 end

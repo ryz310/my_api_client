@@ -3,11 +3,13 @@
 ## Branch Creation Rule
 - Always create a new branch from `master`.
 - Before creating a branch, update local `master` with the latest commits from `origin`.
+- After updating local `master`, reload and re-read `AGENTS.md` before starting any new task.
 - Example flow:
   1. `git checkout master`
   2. `git fetch origin`
   3. `git pull --ff-only origin master`
-  4. `git checkout -b codex/<new-branch-name>`
+  4. Re-open `AGENTS.md` and confirm instructions
+  5. `git checkout -b codex/<new-branch-name>`
 
 ## Development Version Policy
 - In development environments, always use the oldest versions among currently supported Ruby and Rails.
@@ -43,6 +45,9 @@
 - If any `rails_app/rails_*/Gemfile.lock` drifts from gemspec constraints, sync at least the `my_api_client` entry (`version` and `activesupport` lower bound).
 
 ## Docker Development Commands
+- Command selection policy:
+  - Use `docker compose` for integration specs that require the `my_api` server.
+  - Use `docker run` for lint, build, and local non-integration spec execution.
 - Build development image:
   - `docker build -t my_api_client-dev .`
 - Open a shell in the container (mount local source):
@@ -51,8 +56,12 @@
   - `docker run --rm -it -v "$PWD":/app -w /app my_api_client-dev bundle install`
 - Run all specs:
   - `docker run --rm -it -v "$PWD":/app -w /app my_api_client-dev bundle exec rspec`
-- Run a specific spec file:
-  - `docker run --rm -it -v "$PWD":/app -w /app my_api_client-dev bundle exec rspec spec/integrations/api_clients/my_rest_api_client_spec.rb`
+- Run integration specs with real HTTP:
+  - `docker compose up -d --build my_api`
+  - `docker compose run --rm test bundle exec rspec`
+  - (integration only) `docker compose run --rm test bundle exec rspec spec/integrations/api_clients`
+  - (my_api request specs) `docker compose run --rm my_api bundle exec rspec spec/requests`
+  - `docker compose down --volumes --remove-orphans`
 - Run RuboCop:
   - `docker run --rm -it -v "$PWD":/app -w /app my_api_client-dev bundle exec rubocop`
 - Build gem package:

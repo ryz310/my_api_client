@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# THe error code API
+# Error endpoint that returns deterministic JSON error payloads.
 class ErrorController < ApplicationController
-  # GET error/:code
+  # GET /error/:code
   def show
     render status: :bad_request, json: error_response
   end

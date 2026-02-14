@@ -1,0 +1,29 @@
+services:
+  my_api:
+    build:
+      context: ./my_api
+      dockerfile: Dockerfile
+    environment:
+      RAILS_ENV: development
+    volumes:
+      - ./my_api:/app
+    ports:
+      - "38080:3000"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:3000/status/200"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      MY_API_ENDPOINT: http://my_api:3000
+    volumes:
+      - .:/app
+    depends_on:
+      my_api:
+        condition: service_healthy
+    command: bash

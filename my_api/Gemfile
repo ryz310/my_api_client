@@ -2,25 +2,14 @@
 
 source 'https://rubygems.org'
 
-gem 'jets', '~> 4.0.10'
+gem 'puma', '>= 6.0'
+gem 'rails', '~> 8.1.2'
 
-gem 'dynomite'
-
-# See: https://github.com/boltops-tools/jets/issues/523
-gem 'nokogiri', '~> 1.17.2'
-
-# development and test groups are not bundled as part of the deployment
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platforms: %i[mri mingw x64_mingw]
-  gem 'puma'
-  gem 'rack'
-  gem 'shotgun'
+  gem 'rspec-rails'
 end
 
 group :test do
-  gem 'capybara'
-  gem 'launchy'
-  gem 'rspec'
-  gem 'rspec_junit_formatter'
+  gem 'simplecov'
+  gem 'simplecov_json_formatter'
 end
