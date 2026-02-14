@@ -62,3 +62,8 @@
 
 ## Validation Rule
 - Run RuboCop and confirm there are no offenses only when `.rb` files are changed.
+
+## Retrospective Rule
+- Propose a KPT retrospective when a task reaches a completion point, such as after creating a Pull Request.
+- Based on the KPT results, propose updates to `AGENTS.md`.
+- The timing of the retrospective may be decided by Codex when it is appropriate.
