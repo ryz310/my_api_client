@@ -1,2 +1,1 @@
 export GITHUB_ACCESS_TOKEN={GITHUB_ACCESS_TOKEN}
-export MY_API_ENDPOINT=http://localhost:38080

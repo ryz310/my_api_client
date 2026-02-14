@@ -728,14 +728,6 @@ stub_api_client_all(
 
 `spec/integrations/api_clients/` 配下のテストは、 `my_api` の Rails サーバーへ実際に HTTP リクエストして検証します。
 
-`MY_API_ENDPOINT` を設定するために、まず `.envrc` を作成します。
-
-```sh
-$ cp .envrc.skeleton .envrc
-```
-
-`.envrc.skeleton` では `MY_API_ENDPOINT=http://localhost:38080` を利用します。
-
 Docker Compose を使った実行手順は以下です。
 
 ```sh

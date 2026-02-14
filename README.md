@@ -438,13 +438,6 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run 
 
 The integration specs under `spec/integrations/api_clients/` call the local `my_api` Rails server via HTTP.
 
-Set `MY_API_ENDPOINT`:
-
-```sh
-cp .envrc.skeleton .envrc
-# .envrc sets MY_API_ENDPOINT=http://localhost:38080
-```
-
 Run with Docker Compose:
 
 ```sh
