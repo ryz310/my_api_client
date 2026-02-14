@@ -442,6 +442,14 @@ Run with Docker Compose:
 
 ```sh
 docker compose up -d --build my_api
+docker compose run --rm test bundle exec rspec
+docker compose down --volumes --remove-orphans
+```
+
+Run only integration specs:
+
+```sh
+docker compose up -d --build my_api
 docker compose run --rm test bundle exec rspec spec/integrations/api_clients
 docker compose down --volumes --remove-orphans
 ```

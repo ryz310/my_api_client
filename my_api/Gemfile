@@ -8,3 +8,8 @@ gem 'rails', '~> 8.1.2'
 group :development, :test do
   gem 'rspec-rails'
 end
+
+group :test do
+  gem 'simplecov'
+  gem 'simplecov_json_formatter'
+end

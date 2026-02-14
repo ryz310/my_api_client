@@ -47,7 +47,7 @@
 ## Docker Development Commands
 - Command selection policy:
   - Use `docker compose` for integration specs that require the `my_api` server.
-  - Use `docker run` for lint, build, and non-integration spec execution.
+  - Use `docker run` for lint, build, and local non-integration spec execution.
 - Build development image:
   - `docker build -t my_api_client-dev .`
 - Open a shell in the container (mount local source):
@@ -56,11 +56,11 @@
   - `docker run --rm -it -v "$PWD":/app -w /app my_api_client-dev bundle install`
 - Run all specs:
   - `docker run --rm -it -v "$PWD":/app -w /app my_api_client-dev bundle exec rspec`
-- Run a specific spec file:
-  - `docker run --rm -it -v "$PWD":/app -w /app my_api_client-dev bundle exec rspec spec/integrations/api_clients/my_rest_api_client_spec.rb`
 - Run integration specs with real HTTP:
   - `docker compose up -d --build my_api`
-  - `docker compose run --rm test bundle exec rspec spec/integrations/api_clients`
+  - `docker compose run --rm test bundle exec rspec`
+  - (integration only) `docker compose run --rm test bundle exec rspec spec/integrations/api_clients`
+  - (my_api request specs) `docker compose run --rm my_api bundle exec rspec spec/requests`
   - `docker compose down --volumes --remove-orphans`
 - Run RuboCop:
   - `docker run --rm -it -v "$PWD":/app -w /app my_api_client-dev bundle exec rubocop`

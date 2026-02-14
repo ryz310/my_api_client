@@ -149,7 +149,24 @@ jobs:
       - name: Run integration specs against my_api
         env:
           MY_API_ENDPOINT: http://my_api:3000
-        run: docker compose run --rm test
+          SIMPLECOV_COMMAND_NAME: integration_api
+        run: |
+          docker compose run --rm test bash -lc "
+            bundle config set --local with integrations &&
+            bundle install &&
+            bundle exec rspec spec/integrations/api_clients
+          "
+
+      - name: Prepare coverage artifact
+        if: ${{ always() && hashFiles('coverage/.resultset.json') != '' }}
+        run: cp coverage/.resultset.json coverage/resultset.json
+
+      - name: Upload coverage artifact
+        if: ${{ always() && hashFiles('coverage/resultset.json') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: simplecov-resultset-integration_api
+          path: coverage/resultset.json
 
       - name: Show my_api logs when failed
         if: ${{ failure() }}
@@ -169,7 +186,20 @@ jobs:
         run: docker compose up -d --build my_api
 
       - name: Run my_api request specs
+        env:
+          SIMPLECOV_COMMAND_NAME: my_api_request_specs
         run: docker compose run --rm my_api bundle exec rspec spec/requests
+
+      - name: Prepare coverage artifact
+        if: ${{ always() && hashFiles('my_api/coverage/.resultset.json') != '' }}
+        run: cp my_api/coverage/.resultset.json my_api/coverage/resultset.json
+
+      - name: Upload coverage artifact
+        if: ${{ always() && hashFiles('my_api/coverage/resultset.json') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: simplecov-resultset-my_api_request_specs
+          path: my_api/coverage/resultset.json
 
       - name: Show my_api logs when failed
         if: ${{ failure() }}
@@ -232,6 +262,8 @@ jobs:
     needs:
       - build_gem
       - verify_generator
+      - integration_api
+      - my_api_request_specs
     runs-on: ubuntu-latest
     env:
       QLTY_COVERAGE_TOKEN: ${{ secrets.QLTY_COVERAGE_TOKEN }}

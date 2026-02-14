@@ -732,6 +732,14 @@ Docker Compose を使った実行手順は以下です。
 
 ```sh
 $ docker compose up -d --build my_api
+$ docker compose run --rm test bundle exec rspec
+$ docker compose down --volumes --remove-orphans
+```
+
+integration spec のみ実行したい場合は以下を使ってください。
+
+```sh
+$ docker compose up -d --build my_api
 $ docker compose run --rm test bundle exec rspec spec/integrations/api_clients
 $ docker compose down --volumes --remove-orphans
 ```
