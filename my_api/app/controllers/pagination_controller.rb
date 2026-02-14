@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-# A Pagination API
 class PaginationController < ApplicationController
-  # GET pagination
   def index
     case params[:page]&.to_s
     when '1', nil
@@ -20,9 +18,7 @@ class PaginationController < ApplicationController
 
   def first_page
     {
-      links: {
-        next: page_link(2),
-      },
+      links: { next: page_link(2) },
       page: 1,
     }
   end
@@ -39,20 +35,12 @@ class PaginationController < ApplicationController
 
   def third_page
     {
-      links: {
-        previous: page_link(2),
-      },
+      links: { previous: page_link(2) },
       page: 3,
     }
   end
 
-  # NOTE: `#pagination_url` returns `http://xxxxx.execute-api.ap-northeast-1.amazonaws.com/pagination`
-  #       but it should be `https://xxxxx.execute-api.ap-northeast-1.amazonaws.com/dev/pagination`.
-  #       So this is workaround.
   def page_link(page)
-    query_strings = "?#{{ page: }.to_query}"
-    uri = File.join(ENV.fetch('JETS_HOST', nil), ENV.fetch('JETS_STAGE', nil), pagination_path)
-    uri.sub!('http://', 'https://')
-    URI.join(uri, query_strings)
+    "#{request.base_url}#{pagination_path(page: page)}"
   end
 end

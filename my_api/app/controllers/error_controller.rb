@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-# THe error code API
 class ErrorController < ApplicationController
-  # GET error/:code
   def show
     render status: :bad_request, json: error_response
   end

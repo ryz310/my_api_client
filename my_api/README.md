@@ -1,54 +1,22 @@
 # My API
 
-This is the real API for integration testing with `my_api_client`.
-
-It's built by [Ruby on Jets](https://rubyonjets.com/).
+This is the API server for integration testing with `my_api_client`.
 
 ## APIs
 
-### My Rest API
+- `GET /rest`
+- `GET /rest/:id`
+- `POST /rest`
+- `PUT/PATCH /rest/:id`
+- `DELETE /rest/:id`
+- `GET /status/:status`
+- `GET /header`
+- `GET /error/:code`
+- `GET /pagination?page=1`
 
-This is a simple REST API that returns a specified response.
-
-* `GET rest`
-* `GET rest/:id`
-* `POST rest`
-* `POST/PUT/PATCH rest/:id`
-* `DELETE rest/:id`
-
-### My Status API
-
-This API returns arbitrary status code.
-
-* `GET status/:status`
-
-### My Error API
-
-This API returns arbitrary error code as JSON.
-
-* `GET error/:code`
-
-### My Pagination API
-
-This API returns a response including pagination links.
-
-* `GET pagination?page=1`
-
-## Deployment
-
-You need to prepare following environment variables:
-
-* `AWS_REGION`
-* `AWS_ACCESS_KEY_ID`
-* `AWS_SECRET_ACCESS_KEY`
-
-For information on how to create an AWS access key and secret, see the following site:
-
-:link: [Minimal Deploy IAM Policy \- Jets Ruby Serverless Framework](https://rubyonjets.com/docs/extras/minimal-deploy-iam/)
-
-
-And execute following command:
+## Local Development
 
 ```sh
-$ bundle exec jets deploy
+bundle install
+bundle exec rails server -b 0.0.0.0 -p 3000
 ```
