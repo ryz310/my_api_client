@@ -6,7 +6,7 @@ FROM ruby:${RUBY_VERSION}-slim
 WORKDIR /app
 
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential curl git && \
+    apt-get install --no-install-recommends -y build-essential curl git libyaml-dev pkg-config && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 ENV BUNDLE_PATH=/usr/local/bundle \
@@ -22,4 +22,4 @@ COPY . /app
 
 EXPOSE 3000
 
-CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+CMD ["bundle", "exec", "rackup", "-o", "0.0.0.0", "-p", "3000"]

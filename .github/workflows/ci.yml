@@ -137,6 +137,28 @@ jobs:
       - name: Run rspec with the generated spec file
         run: bundle exec rspec -f d spec/api_clients/path/to
 
+  integration_api:
+    name: integration_api_via_docker_compose
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and start my_api
+        run: docker compose up -d --build my_api
+
+      - name: Run integration specs against my_api
+        env:
+          MY_API_ENDPOINT: http://my_api:3000
+        run: docker compose run --rm test
+
+      - name: Show my_api logs when failed
+        if: ${{ failure() }}
+        run: docker compose logs my_api
+
+      - name: Shutdown compose services
+        if: ${{ always() }}
+        run: docker compose down --volumes --remove-orphans
+
   rubocop:
     runs-on: ubuntu-latest
     steps:
@@ -253,6 +275,7 @@ jobs:
     needs:
       - build_gem
       - verify_generator
+      - integration_api
       - rubocop
     runs-on: ubuntu-latest
     permissions:
