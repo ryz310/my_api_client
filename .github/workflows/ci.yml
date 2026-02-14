@@ -157,6 +157,10 @@ jobs:
             bundle exec rspec spec/integrations/api_clients
           "
 
+      - name: Fix coverage directory ownership
+        if: ${{ always() && hashFiles('coverage/.resultset.json') != '' }}
+        run: sudo chown -R "$(id -u):$(id -g)" coverage
+
       - name: Prepare coverage artifact
         if: ${{ always() && hashFiles('coverage/.resultset.json') != '' }}
         run: cp coverage/.resultset.json coverage/resultset.json
@@ -189,6 +193,10 @@ jobs:
         env:
           SIMPLECOV_COMMAND_NAME: my_api_request_specs
         run: docker compose run --rm my_api bundle exec rspec spec/requests
+
+      - name: Fix my_api coverage directory ownership
+        if: ${{ always() && hashFiles('my_api/coverage/.resultset.json') != '' }}
+        run: sudo chown -R "$(id -u):$(id -g)" my_api/coverage
 
       - name: Prepare coverage artifact
         if: ${{ always() && hashFiles('my_api/coverage/.resultset.json') != '' }}
