@@ -2,6 +2,7 @@
 
 # Header endpoint used to test response header-based error handling.
 class HeaderController < ApplicationController
+  # GET /header
   def index
     params.to_unsafe_h.each do |header_name, header_value|
       next unless header_name.start_with?('X-')

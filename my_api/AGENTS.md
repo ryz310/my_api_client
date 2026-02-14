@@ -16,6 +16,11 @@
 - If endpoint behavior changes, update both:
   - `my_api/app/controllers/*`
   - related specs in `spec/integrations/api_clients/*_spec.rb`
+- Keep an HTTP mapping comment above each controller action in this format:
+  - `# GET /path`
+  - `# POST /path`
+  - `# PUT/PATCH /path/:id`
+  - `# DELETE /path/:id`
 
 ## Test Execution Policy
 

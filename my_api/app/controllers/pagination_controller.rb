@@ -2,6 +2,7 @@
 
 # Pagination endpoint that serves three linked pages for paging tests.
 class PaginationController < ApplicationController
+  # GET /pagination
   def index
     case params[:page]&.to_s
     when '1', nil
