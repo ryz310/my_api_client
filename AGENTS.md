@@ -3,11 +3,13 @@
 ## Branch Creation Rule
 - Always create a new branch from `master`.
 - Before creating a branch, update local `master` with the latest commits from `origin`.
+- After updating local `master`, reload and re-read `AGENTS.md` before starting any new task.
 - Example flow:
   1. `git checkout master`
   2. `git fetch origin`
   3. `git pull --ff-only origin master`
-  4. `git checkout -b codex/<new-branch-name>`
+  4. Re-open `AGENTS.md` and confirm instructions
+  5. `git checkout -b codex/<new-branch-name>`
 
 ## Development Version Policy
 - In development environments, always use the oldest versions among currently supported Ruby and Rails.
