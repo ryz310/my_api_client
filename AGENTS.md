@@ -45,6 +45,9 @@
 - If any `rails_app/rails_*/Gemfile.lock` drifts from gemspec constraints, sync at least the `my_api_client` entry (`version` and `activesupport` lower bound).
 
 ## Docker Development Commands
+- Command selection policy:
+  - Use `docker compose` for integration specs that require the `my_api` server.
+  - Use `docker run` for lint, build, and non-integration spec execution.
 - Build development image:
   - `docker build -t my_api_client-dev .`
 - Open a shell in the container (mount local source):
@@ -55,6 +58,10 @@
   - `docker run --rm -it -v "$PWD":/app -w /app my_api_client-dev bundle exec rspec`
 - Run a specific spec file:
   - `docker run --rm -it -v "$PWD":/app -w /app my_api_client-dev bundle exec rspec spec/integrations/api_clients/my_rest_api_client_spec.rb`
+- Run integration specs with real HTTP:
+  - `docker compose up -d --build my_api`
+  - `docker compose run --rm test bundle exec rspec spec/integrations/api_clients`
+  - `docker compose down --volumes --remove-orphans`
 - Run RuboCop:
   - `docker run --rm -it -v "$PWD":/app -w /app my_api_client-dev bundle exec rubocop`
 - Build gem package:
