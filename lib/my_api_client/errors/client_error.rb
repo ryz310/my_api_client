@@ -63,8 +63,12 @@ module MyApiClient
     # 421 Misdirected Request
     class MisdirectedRequest < ClientError; end
 
-    # 422 Unprocessable Entity
+    # 422 Unprocessable Entity (Deprecated)
     class UnprocessableEntity < ClientError; end
+
+    # 422 Unprocessable Content
+    class UnprocessableContent < UnprocessableEntity; end
+    deprecate_constant :UnprocessableEntity
 
     # 423 Locked
     class Locked < ClientError; end
