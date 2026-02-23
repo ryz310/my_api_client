@@ -1,7 +1,7 @@
 name: CI
 
 on:
-  push:
+  pull_request:
   workflow_dispatch:
 
 concurrency:
@@ -266,7 +266,10 @@ jobs:
   upload_coverage:
     name: upload-coverage
     environment: coverage
-    if: ${{ github.event_name != 'pull_request' }}
+    # This job runs on pull_request as well.
+    # On fork-based pull requests, secrets are unavailable, so the Qlty upload
+    # step is skipped by its token guard. On same-repository pull requests,
+    # QLTY_COVERAGE_TOKEN is available and upload can run.
     needs:
       - build_gem
       - verify_generator
@@ -329,50 +332,3 @@ jobs:
         if: ${{ env.QLTY_COVERAGE_TOKEN == '' }}
         run: |
           echo "QLTY_COVERAGE_TOKEN is not set. Skipping coverage upload."
-
-  release:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/release' }}
-    needs:
-      - build_gem
-      - verify_generator
-      - integration_api
-      - my_api_request_specs
-      - rubocop
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.ref_name }}
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '4.0'
-          bundler-cache: false
-
-      - name: Install Bundler 2.x
-        run: gem install bundler -v "~> 2.0"
-
-      - name: Bundle install
-        run: bundle install
-
-      - name: Configure Git user
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-      - name: Create RubyGems credentials
-        env:
-          RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
-        run: |
-          mkdir -p ~/.gem
-          printf -- "---\n:rubygems_api_key: %s\n" "${RUBYGEMS_API_KEY}" > ~/.gem/credentials
-          chmod 0600 ~/.gem/credentials
-
-      - name: Release gem
-        run: |
-          git push --set-upstream origin "${GITHUB_REF_NAME}" || true
-          bundle exec rake release --trace
