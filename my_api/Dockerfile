@@ -15,7 +15,7 @@ ENV BUNDLE_PATH=/usr/local/bundle \
 
 RUN gem install bundler -v "~> 2.0"
 
-COPY Gemfile /app/Gemfile
+COPY Gemfile Gemfile.lock /app/
 RUN bundle install
 
 COPY . /app
