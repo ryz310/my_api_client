@@ -31,7 +31,7 @@ module MyApiClient
       error_handling status_code: 417, raise: ClientError::ExpectationFailed
       error_handling status_code: 418, raise: ClientError::IamTeapot
       error_handling status_code: 421, raise: ClientError::MisdirectedRequest
-      error_handling status_code: 422, raise: ClientError::UnprocessableEntity
+      error_handling status_code: 422, raise: ClientError::UnprocessableContent
       error_handling status_code: 423, raise: ClientError::Locked
       error_handling status_code: 424, raise: ClientError::FailedDependency
       error_handling status_code: 425, raise: ClientError::TooEarly
