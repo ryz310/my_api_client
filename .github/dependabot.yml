@@ -5,10 +5,8 @@ updates:
   schedule:
     interval: daily
     time: "08:00"
-    timezone: Japan
+    timezone: Asia/Tokyo
   open-pull-requests-limit: 10
-  reviewers:
-  - ryz310
   assignees:
   - ryz310
   labels:
@@ -22,10 +20,8 @@ updates:
   schedule:
     interval: daily
     time: "08:00"
-    timezone: Japan
+    timezone: Asia/Tokyo
   open-pull-requests-limit: 10
-  reviewers:
-  - ryz310
   assignees:
   - ryz310
   labels:
