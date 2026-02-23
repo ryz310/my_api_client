@@ -1,7 +1,6 @@
 name: CI
 
 on:
-  push:
   pull_request:
   workflow_dispatch:
 
@@ -267,7 +266,10 @@ jobs:
   upload_coverage:
     name: upload-coverage
     environment: coverage
-    if: ${{ github.event_name != 'pull_request' }}
+    # This job runs on pull_request as well.
+    # On fork-based pull requests, secrets are unavailable, so the Qlty upload
+    # step is skipped by its token guard. On same-repository pull requests,
+    # QLTY_COVERAGE_TOKEN is available and upload can run.
     needs:
       - build_gem
       - verify_generator
