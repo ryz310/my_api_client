@@ -6,7 +6,7 @@ gem 'my_api_client', path: '../..'
 gem 'benchmark'
 gem 'cgi'
 gem 'puma', '>= 5.0'
-gem 'rails', '~> 7.2.1'
+gem 'rails', '~> 8.1.2'
 gem 'sqlite3', '>= 1.4'
 
 gem 'tzinfo-data', platforms: %i[windows jruby]
