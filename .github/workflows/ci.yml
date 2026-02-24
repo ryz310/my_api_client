@@ -28,7 +28,7 @@ jobs:
             with: ""
             without: integrations
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Ruby ${{ matrix.ruby_version }}
         uses: ruby/setup-ruby@v1
@@ -98,7 +98,7 @@ jobs:
       run:
         working-directory: rails_app/rails_${{ matrix.rails_version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Ruby ${{ matrix.ruby_version }}
         uses: ruby/setup-ruby@v1
@@ -141,7 +141,7 @@ jobs:
     name: integration_api_via_docker_compose
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Build and start my_api
         run: docker compose up -d --build my_api
@@ -184,7 +184,7 @@ jobs:
     name: my_api_request_specs_via_docker_compose
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Build and start my_api
         run: docker compose up -d --build my_api
@@ -220,7 +220,7 @@ jobs:
   rubocop:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -240,7 +240,7 @@ jobs:
   yardoc:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -279,7 +279,7 @@ jobs:
     env:
       QLTY_COVERAGE_TOKEN: ${{ secrets.QLTY_COVERAGE_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
