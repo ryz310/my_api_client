@@ -76,3 +76,6 @@
 - Propose a KPT retrospective when a task reaches a completion point, such as after creating a Pull Request.
 - Based on the KPT results, propose updates to `AGENTS.md`.
 - The timing of the retrospective may be decided by Codex when it is appropriate.
+
+## Runbook
+- Dependabot PR review and auto-merge operation steps are documented in `docs/runbooks/dependabot_pr_auto_merge.md`.
