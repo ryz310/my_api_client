@@ -67,9 +67,23 @@ gh pr comment <PR_NUMBER> --body "@dependabot rebase"
 ```
 
 8. Re-check status until the branch is up to date and required checks pass.
+- After posting `@dependabot rebase`, wait 1 minute before retrying.
+- If rebase has not started after 1 minute (for example, `mergeStateStatus` is still `BEHIND`), post `@dependabot rebase` again.
+- Retry comment posting up to 2 times in total. If it is still `BEHIND` after the second retry, stop and escalate for manual follow-up.
+- Run each command step-by-step and inspect output after each `gh pr view` call before deciding the next action.
 
 ```bash
+# Check current state
 gh pr view <PR_NUMBER> --json state,mergeStateStatus,statusCheckRollup,autoMergeRequest
+
+# If mergeStateStatus is BEHIND, wait 1 minute
+sleep 60
+
+# Re-check after waiting
+gh pr view <PR_NUMBER> --json state,mergeStateStatus,statusCheckRollup,autoMergeRequest
+
+# If still BEHIND, post @dependabot rebase (up to 2 retries total)
+# gh pr comment <PR_NUMBER> --body "@dependabot rebase"
 ```
 
 ## Done criteria
@@ -80,8 +94,10 @@ gh pr view <PR_NUMBER> --json state,mergeStateStatus,statusCheckRollup,autoMerge
 - The user-approved impact summary is recorded in the operation log/comment thread.
 
 ## Failure handling
-- If rebase does not start, re-run comment:
+- If rebase does not start, wait 1 minute, confirm `mergeStateStatus` is still `BEHIND`, then re-run comment (up to 2 retries total):
   - `@dependabot rebase`
+- Execute checks and retries sequentially (check -> wait -> re-check -> comment) rather than chaining commands without inspection.
+- If it is still `BEHIND` after 2 retries, stop automated retries and notify the user for manual follow-up.
 - If checks fail, inspect failing jobs and decide:
   - fix in a follow-up PR, or
   - close/ignore that update version with Dependabot commands.
