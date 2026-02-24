@@ -79,7 +79,7 @@ jobs:
 
       - name: Upload coverage artifact
         if: ${{ always() && hashFiles('coverage/resultset.json') != '' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: simplecov-resultset-ruby_${{ matrix.ruby_version }}-rails_${{ matrix.rails_version }}-${{ matrix.bundler_option.name }}
           path: coverage/resultset.json
@@ -167,7 +167,7 @@ jobs:
 
       - name: Upload coverage artifact
         if: ${{ always() && hashFiles('coverage/resultset.json') != '' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: simplecov-resultset-integration_api
           path: coverage/resultset.json
@@ -204,7 +204,7 @@ jobs:
 
       - name: Upload coverage artifact
         if: ${{ always() && hashFiles('my_api/coverage/resultset.json') != '' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: simplecov-resultset-my_api_request_specs
           path: my_api/coverage/resultset.json
@@ -258,7 +258,7 @@ jobs:
         run: bundle exec yardoc -o ./yardoc
 
       - name: Store YARDoc artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: yardoc
           path: ./yardoc
@@ -316,7 +316,7 @@ jobs:
 
       - name: Upload merged coverage artifact
         if: ${{ hashFiles('coverage/coverage.json') != '' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: merged-simplecov-coverage
           path: coverage/coverage.json
