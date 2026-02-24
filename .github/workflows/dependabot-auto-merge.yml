@@ -23,8 +23,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Enable auto-merge for development patch/minor updates
-        if: ${{ (steps.metadata.outputs.update-type == 'version-update:semver-patch' || steps.metadata.outputs.update-type == 'version-update:semver-minor') && steps.metadata.outputs.dependency-type == 'direct:development' }}
+      - name: Enable auto-merge for rails_app or direct development patch/minor updates
+        if: ${{ (steps.metadata.outputs.update-type == 'version-update:semver-patch' || steps.metadata.outputs.update-type == 'version-update:semver-minor') && (contains(github.event.pull_request.head.ref, '/rails_app/') || steps.metadata.outputs.dependency-type == 'direct:development') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
