@@ -8,9 +8,9 @@
 
 # MyApiClient
 
-This gem is an API client builder. It provides generic functionality for creating API request classes. It has a structure based on [Sawyer](https://github.com/lostisland/sawyer) and [Faraday](https://github.com/lostisland/faraday) with enhanced error handling functions.
+This gem is an API client builder that provides generic functionality for defining API request classes. Its architecture is based on [Sawyer](https://github.com/lostisland/sawyer) and [Faraday](https://github.com/lostisland/faraday), with enhanced error-handling features.
 
-It is supposed to be used in Ruby on Rails, but it is made to work in other environments. If you have any problems, please report them from the Issue page.
+It is primarily designed for Ruby on Rails, but it also works in other environments. If you find any issues, please report them on the Issues page.
 
 [toc]
 
@@ -27,7 +27,7 @@ Add this line to your application's Gemfile:
 gem 'my_api_client'
 ```
 
-If you are using Ruby on Rails, you can use the `generator` function.
+If you are using Ruby on Rails, you can use the generator.
 
 ```sh
 $ rails g api_client path/to/resource get:path/to/resource --endpoint https://example.com
@@ -63,7 +63,7 @@ class ExampleApiClient < MyApiClient::Base
 
   # POST https://example.com/v1/users
   #
-  # @param name [String] Username which want to create
+  # @param name [String] Username to create
   # @return [Sawyer::Resource] HTTP resource parameter
   def post_user(name:)
     post 'users', headers: headers, body: { name: name }
@@ -79,21 +79,21 @@ class ExampleApiClient < MyApiClient::Base
   end
 end
 
-api_clinet = ExampleApiClient.new(access_token: 'access_token')
-api_clinet.get_users #=> #<Sawyer::Resource>
+api_client = ExampleApiClient.new(access_token: 'access_token')
+api_client.get_users #=> #<Sawyer::Resource>
 ```
 
-The `endpoint` defines the intersection of the request URL. Each method described below defines a subsequent path. In the above example, `get 'users'` will request to `GET https://example.com/v1/users`.
+`endpoint` defines the base URL for requests. Each method then adds a relative path. In the example above, `get 'users'` sends `GET https://example.com/v1/users`.
 
-Next, define `#initialize`. Suppose you want to set an Access Token, API Key, etc. as in the example above. You can omit the definition if you don't need it.
+Next, define `#initialize` to set values such as an access token or API key. You can omit it if you do not need any instance state.
 
-Then define `#get_users` and `#post_user`. It's a good idea to give the method name the title of the API. I'm calling `#get` and `#post` inside the method, which is the HTTP Method at the time of the request. You can also use `#patch` `#put` `#delete`.
+Then define methods such as `#get_users` and `#post_user`. Inside those methods, call HTTP helpers like `#get` and `#post`. You can also use `#patch`, `#put`, and `#delete`.
 
 ### Pagination
 
-Some APIs include a URL in the response to get the continuation of the result.
+Some APIs include a URL for the next page in the response.
 
-MyApiClient provides a method called `#pageable_get` to handle such APIs as enumerable. An example is shown below:
+MyApiClient provides `#pageable_get` to treat such APIs as an enumerable. An example is shown below:
 
 ```ruby
 class MyPaginationApiClient < ApplicationApiClient
@@ -112,9 +112,9 @@ class MyPaginationApiClient < ApplicationApiClient
 end
 ```
 
-In the above example, the request is first made for `GET https://example.com/v1/pagination?page=1`, followed by the URL contained in the response JSON `$.link.next`. Make a request to enumerable.
+In the example above, the first request is `GET https://example.com/v1/pagination?page=1`. It then continues requesting the URL in `$.links.next` from each response.
 
-For example, in the following response, `$.link.next` indicates `"https://example.com/pagination?page=3"`:
+For example, in the response below, `$.links.next` points to `"https://example.com/pagination?page=3"`:
 
 ```json
 {
@@ -126,15 +126,15 @@ For example, in the following response, `$.link.next` indicates `"https://exampl
 }
 ```
 
-`#pageable_get` returns [Enumerator::Lazy](https://docs.ruby-lang.org/ja/latest/class/Enumerator=3a=3aLazy.html), so you can get the following result by `#each` or `#next`:
+`#pageable_get` returns [Enumerator::Lazy](https://docs.ruby-lang.org/ja/latest/class/Enumerator=3a=3aLazy.html), so you can iterate using `#each` or `#next`:
 
 ```ruby
-api_clinet = MyPaginationApiClient.new
-api_clinet.pagination.each do |response|
+api_client = MyPaginationApiClient.new
+api_client.pagination.each do |response|
   # Do something.
 end
 
-result = api_clinet.pagination
+result = api_client.pagination
 result.next # => 1st page result
 result.next # => 2nd page result
 result.next # => 3rd page result
@@ -153,7 +153,7 @@ end
 
 ### Error handling
 
-MyApiClient allows you to define error handling that raises an exception depending on the content of the response. Here, as an example, error handling is defined in the above code:
+MyApiClient lets you define error handling rules that raise exceptions based on response content. For example:
 
 ```ruby
 class ExampleApiClient < MyApiClient::Base
@@ -174,7 +174,7 @@ class ExampleApiClient < MyApiClient::Base
 
   private
 
-  # @param params [MyApiClient::Params::Params] HTTP reqest and response params
+  # @param params [MyApiClient::Params::Params] HTTP request and response params
   # @param logger [MyApiClient::Request::Logger] Logger for a request processing
   def my_error_handling(params, logger)
     logger.warn "Response Body: #{params.response.body.inspect}"
@@ -182,19 +182,19 @@ class ExampleApiClient < MyApiClient::Base
 end
 ```
 
-I will explain one by one. First, about the one that specifies `status_code` as follows:
+Let's go through each option. First, this rule checks `status_code`:
 
 ```ruby
 error_handling status_code: 400..499, raise: MyApiClient::ClientError
 ```
 
-This will cause `MyApiClient::ClientError` to occur as an exception if the status code of the response is `400..499` for all requests from `ExampleApiClient`. Error handling also applies to classes that inherit from `ExampleApiClient`.
+This raises `MyApiClient::ClientError` when the response status code is in `400..499` for requests from `ExampleApiClient`. Error handling rules are also inherited by child classes.
 
-Note that `Integer` `Range`, and `Regexp` can be specified for `status_code`.
+You can specify `Integer`, `Range`, or `Regexp` for `status_code`.
 
-A class that inherits `MyApiClient::Error` can be specified for `raise`. Please check [here](https://github.com/ryz310/my_api_client/blob/master/lib/my_api_client/errors) for the error class defined as standard in `my_api_client`. If `raise` is omitted, `MyApiClient::Error` will be raised.
+A class inheriting from `MyApiClient::Error` can be specified for `raise`. See [here](https://github.com/ryz310/my_api_client/blob/master/lib/my_api_client/errors) for built-in error classes. If `raise` is omitted, `MyApiClient::Error` is raised.
 
-Next, about the case of specifying `block`:
+Next, here is an example using a block:
 
 ```ruby
 error_handling status_code: 500..599, raise: MyApiClient::ServerError do |_params, logger|
@@ -202,38 +202,38 @@ error_handling status_code: 500..599, raise: MyApiClient::ServerError do |_param
 end
 ```
 
-In the above example, if the status code is `500..599`, the contents of `block` will be executed before raising `MyApiClient::ServerError`. The argument `params` contains request and response information.
+In this example, when the status code is `500..599`, the block runs before `MyApiClient::ServerError` is raised. The `params` argument includes both request and response information.
 
-`logger` is an instance for log output. If you log output using this instance, the request information will be included in the log output as shown below, which is convenient for debugging:
+`logger` is a request-scoped logger. If you log with this instance, request information is automatically included, which is useful for debugging:
 
 ```text
-API request `GET https://example.com/path/to/resouce`: "Server error occurred."
+API request `GET https://example.com/path/to/resource`: "Server error occurred."
 ```
 
 ```ruby
 error_handling json: { '$.errors.code': 10..19 }, with: :my_error_handling
 ```
 
-For `json`, specify [JSONPath](https://goessner.net/articles/JsonPath/) for the Key of `Hash`, get an arbitrary value from the response JSON, and check whether it matches value. You can handle errors. You can specify `String` `Integer` `Range` and `Regexp` for value.
+For `json`, use [JSONPath](https://goessner.net/articles/JsonPath/) as the hash key, extract values from response JSON, and match them against expected values. You can specify `String`, `Integer`, `Range`, or `Regexp` as matcher values.
 
-In the above case, it matches JSON as below:
+In this case, it matches JSON such as:
 
 ```json
 {
-  "erros": {
+  "errors": {
     "code": 10,
     "message": "Some error has occurred."
   }
 }
 ```
 
-For `headers`, specify response header for the Key of `Hash`, get an arbitrary value from the response header, and check whether it matches value. You can handle errors. You can specify `String` and `Regexp` for value.
+For `headers`, specify a response-header key and match its value. You can specify `String` or `Regexp` as matcher values.
 
 ```ruby
 error_handling headers: { 'www-authenticate': /invalid token/ }, with: :my_error_handling
 ```
 
-In the above case, it matches response header as below:
+In this case, it matches response headers such as:
 
 ```text
 cache-control: no-cache, no-store, max-age=0, must-revalidate
@@ -242,7 +242,7 @@ www-authenticate: Bearer error="invalid_token", error_description="invalid token
 content-length: 104
 ```
 
-By specifying the instance method name in `with`, when an error is detected, any method can be executed before raising an exception. The arguments passed to the method are `params` and `logger` as in the `block` definition. Note that `block` and` with` cannot be used at the same time.
+By specifying an instance method name in `with`, you can run arbitrary logic before raising an exception. The method receives `params` and `logger`, just like a block. Note that `block` and `with` cannot be used together.
 
 ```ruby
 # @param params [MyApiClient::Params::Params] HTTP req and res params
@@ -254,7 +254,7 @@ end
 
 #### Default error handling
 
-In MyApiClient, the response of status code 400 ~ 500 series is handled as an exception by default. If the status code is in the 400s, an exception class that inherits `MyApiClient::ClientError` is raised, and in the 500s, an exception class that inherits `MyApiClient::ServerError` is raised.
+By default, MyApiClient treats 4xx and 5xx responses as exceptions. In the 4xx range, it raises an exception class inheriting from `MyApiClient::ClientError`; in the 5xx range, it raises one inheriting from `MyApiClient::ServerError`.
 
 Also, `retry_on` is defined by default for `MyApiClient::NetworkError`.
 
@@ -268,7 +268,7 @@ They are defined [here](https://github.com/ryz310/my_api_client/blob/master/lib/
 error_handling json: { '$.errors.code': :negative? }
 ```
 
-Although it is an experimental function, by specifying `Symbol` for value of `status` or `json`, you can call a method for the result value and judge the result. In the above case, it matches the following JSON. If `#negative?` does not exist in the target object, the method will not be called.
+This is an experimental feature. By specifying a `Symbol` as the value for `status` or `json`, MyApiClient calls that method on the extracted value and uses the result for matching. In the example above, it matches the following JSON. If `#negative?` does not exist on the target object, the method is not called.
 
 #### forbid_nil
 
@@ -276,7 +276,7 @@ Although it is an experimental function, by specifying `Symbol` for value of `st
 error_handling status_code: 200, json: :forbid_nil
 ```
 
-It seems that some services expect an empty Response Body to be returned from the server, but an empty result is returned. This is also an experimental feature, but we have provided the `json: :forbid_nil` option to detect such cases. Normally, if the response body is empty, no error judgment is made, but if this option is specified, it will be detected as an error. Please be careful about false positives because some APIs have an empty normal response.
+Some services expect a non-empty response body but occasionally receive an empty one. This experimental option, `json: :forbid_nil`, helps detect that case. Normally, an empty response body is not treated as an error, but with this option it is. Be careful of false positives, because some APIs intentionally return empty responses.
 
 #### MyApiClient::Params::Params
 
@@ -306,7 +306,7 @@ end
 
 #### MyApiClient::Error
 
-If the response of the API request matches the matcher defined in `error_handling`, the exception handling specified in `raise` will occur. This exception class must inherit `MyApiClient::Error`.
+If an API response matches a rule defined in `error_handling`, the exception class specified in `raise` is triggered. This exception class must inherit from `MyApiClient::Error`.
 
 This exception class has a method called `#params`, which allows you to refer to request and response parameters.
 
@@ -324,11 +324,11 @@ end
 
 #### Bugsnag breadcrumbs
 
-If you are using [Bugsnag-Ruby v6.11.0](https://github.com/bugsnag/bugsnag-ruby/releases/tag/v6.11.0) or later, [breadcrumbs function](https://docs. bugsnag.com/platforms/ruby/other/#logging-breadcrumbs) is automatically supported. With this function, `Bugsnag.leave_breadcrumb` is called internally when `MyApiClient::Error` occurs, and you can check the request information, response information, etc. when an error occurs from the Bugsnag console.
+If you are using [Bugsnag-Ruby v6.11.0](https://github.com/bugsnag/bugsnag-ruby/releases/tag/v6.11.0) or later, the [breadcrumbs feature](https://docs.bugsnag.com/platforms/ruby/other/#logging-breadcrumbs) is supported automatically. When `MyApiClient::Error` occurs, `Bugsnag.leave_breadcrumb` is called internally, so you can inspect request and response details in the Bugsnag console.
 
 ### Retry
 
-Next, I would like to introduce the retry function provided by MyApiClient.
+Next, let's look at retry support in MyApiClient.
 
 ```ruby
 class ExampleApiClient < MyApiClient::Base
@@ -341,13 +341,13 @@ class ExampleApiClient < MyApiClient::Base
 end
 ```
 
-If the API request is executed many times, a network error may occur due to a line malfunction. In some cases, the network will be unavailable for a long time, but in many cases it will be a momentary error. In MyApiClient, network exceptions are collectively raised as `MyApiClient::NetworkError`. The details of this exception will be described later, but by using `retry_on`, it is possible to supplement arbitrary exception handling like `ActiveJob` and retry the API request a certain number of times and after a certain period of time.
+When an API request is executed many times, network errors can occur. Sometimes the network is unavailable for a long time, but often the error is temporary. In MyApiClient, network-related exceptions are wrapped as `MyApiClient::NetworkError`. Using `retry_on`, you can handle such exceptions and retry requests with configurable wait time and attempt count, similar to `ActiveJob`.
 
-Note that `retry_on MyApiClient::NetworkError` is implemented as standard, so it will be applied automatically without any special definition. Please define and use it only when you want to set an arbitrary value for `wait` or `attempts`.
+`retry_on MyApiClient::NetworkError` is enabled by default, so you do not need to define it unless you want custom `wait` or `attempts` values.
 
-However, unlike `ActiveJob`, it retries in synchronous processing, so I think that there is not much opportunity to use it other than retrying in case of a momentary network interruption. As in the above example, there may be cases where you retry in preparation for API Rate Limit, but it may be better to handle this with `ActiveJob`.
+Unlike `ActiveJob`, retries are performed synchronously. In practice, this is most useful for short-lived network interruptions. You can also retry for API rate limits as in the example above, but handling that with `ActiveJob` may be a better fit depending on your workload.
 
-By the way, `discard_on` is also implemented, but since the author himself has not found an effective use, I will omit the details. Please let me know if there is a good way to use it.
+`discard_on` is also implemented, but details are omitted here because a strong use case has not been identified yet.
 
 #### Convenient usage
 
@@ -366,7 +366,7 @@ error_handling json: { '$.errors.code': 20 },
                retry: { wait: 30.seconds, attempts: 3 }
 ```
 
-If you do not need to specify `wait` or` attempts` in `retry_on`, it works with `retry: true`:
+If you do not need to specify `wait` or `attempts` in `retry_on`, you can use `retry: true`:
 
 ```ruby
 error_handling json: { '$.errors.code': 20 },
@@ -381,7 +381,7 @@ Keep the following in mind when using the `retry` option:
 
 #### MyApiClient::NetworkError
 
-As mentioned above, in MyApiClient, network exceptions are collectively `raised` as `MyApiClient::NetworkError`. Like the other exceptions, it has `MyApiClient::Error` as its parent class. A list of exception classes treated as `MyApiClient::NetworkError` can be found in `MyApiClient::NETWORK_ERRORS`. You can also refer to the original exception with `#original_error`:
+As mentioned above, MyApiClient wraps network exceptions as `MyApiClient::NetworkError`. Like other client errors, its parent class is `MyApiClient::Error`. The list of wrapped exception classes is available in `MyApiClient::NETWORK_ERRORS`. You can inspect the original exception via `#original_error`:
 
 ```ruby
 begin
@@ -392,7 +392,7 @@ rescue MyApiClient::NetworkError => e
 end
 ```
 
-Note that a normal exception is raised depending on the result of the request, but since this exception is raised during the request, the exception instance does not include the response parameter.
+Unlike normal API errors that are raised after receiving a response, this exception is raised during request execution. Therefore, the exception instance does not include response parameters.
 
 ### Timeout
 
@@ -449,7 +449,7 @@ require 'my_api_client/rspec'
 
 ### Testing
 
-Suppose you have defined a `ApiClient` like this:
+Suppose you have defined an `ApiClient` like this:
 
 ```ruby
 class ExampleApiClient < MyApiClient::Base
