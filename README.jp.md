@@ -289,7 +289,29 @@ error_handling status_code: 200, json: :forbid_nil
 
 #### MyApiClient::Params::Params
 
-WIP
+`MyApiClient::Params::Params` は、リクエスト情報とレスポンス情報をひとつにまとめるための Value Object です。  
+このインスタンスはエラーハンドリング（`block` / `with`）に渡され、`MyApiClient::Error#params` からも参照できます。
+
+- `#request`: `MyApiClient::Params::Request`（HTTP method, URL, headers, body）
+- `#response`: `Sawyer::Response`（ネットワークエラー時は `nil`）
+
+また、`#metadata`（`#to_bugsnag` の alias）を使うと、通知やログに使いやすい形式でリクエスト/レスポンス情報を取得できます。
+
+```ruby
+begin
+  api_client.request
+rescue MyApiClient::Error => e
+  e.params.metadata
+  # => {
+  #      request_line: "GET https://example.com/v1/users?search=foo",
+  #      request_headers: { "Authorization" => "Bearer token" },
+  #      response_status: 429,
+  #      response_headers: { "content-type" => "application/json" },
+  #      response_body: { errors: [{ code: 20 }] },
+  #      duration: 0.123
+  #    }
+end
+```
 
 #### MyApiClient::Error
 
@@ -383,11 +405,45 @@ end
 
 ### Timeout
 
-WIP
+API Client クラスごとに HTTP タイムアウトを設定できます。
+
+```ruby
+class ApplicationApiClient < MyApiClient::Base
+  http_open_timeout 2.seconds
+  http_read_timeout 3.seconds
+end
+```
+
+- `http_open_timeout`: 接続確立までの待機時間
+- `http_read_timeout`: レスポンス読み取り時の待機時間
+
+これらは内部的に Faraday の `open_timeout` / `timeout` に渡されます。  
+タイムアウトが発生した場合は `MyApiClient::NetworkError` として扱われます。
 
 ### Logger
 
-WIP
+各 API Client クラスは `self.logger` を設定できます。  
+デフォルトは `Logger.new($stdout)` で、Rails では次のように設定するのが一般的です。
+
+```ruby
+class ApplicationApiClient < MyApiClient::Base
+  self.logger = Rails.logger
+end
+```
+
+実際のログ出力は `MyApiClient::Request::Logger` がラップし、HTTP method と URL を含めた形式で出力します。
+
+```text
+API request `GET https://example.com/v1/users`: "Start"
+API request `GET https://example.com/v1/users`: "Duration 100.0 msec"
+API request `GET https://example.com/v1/users`: "Success (200)"
+```
+
+失敗時は以下のように出力されます。
+
+```text
+API request `GET https://example.com/v1/users`: "Failure (Net::OpenTimeout)"
+```
 
 ## One request for one class
 
