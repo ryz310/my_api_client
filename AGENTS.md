@@ -76,6 +76,20 @@
 - Propose a KPT retrospective when a task reaches a completion point, such as after creating a Pull Request.
 - Based on the KPT results, propose updates to `AGENTS.md`.
 - The timing of the retrospective may be decided by Codex when it is appropriate.
+- Output destination rule: KPT content must be shared only in this Codex conversation unless the user explicitly requests another destination.
+- Do not post KPT content to GitHub comments/issues/PRs unless the user explicitly requests it.
+
+## README Update Checklist
+- When editing `README.md` or `README.jp.md`, run a typo/consistency sweep before finishing.
+- Check common typo patterns: `api_clinet`, `erros`, `reqest`, `resouce`.
+- Verify sample request parameters match method signatures and examples (e.g. query/body keys).
+- Verify JSONPath examples match sample JSON structures (e.g. `links` vs `link`).
+
+## GitHub CLI Body Safety
+- When using `gh pr create`, `gh pr comment`, or similar commands with markdown body text, avoid inline shell strings that include backticks.
+- Prefer one of the following:
+  - Use plain text without backticks in inline `--body`.
+  - Write the body to a temporary file and pass it via file-based options (or equivalent safe method) to prevent shell command substitution.
 
 ## Runbook
 - Dependabot PR review and auto-merge operation steps are documented in `docs/runbooks/dependabot_pr_auto_merge.md`.
