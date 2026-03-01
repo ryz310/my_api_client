@@ -4,11 +4,11 @@
 [![Code Coverage](https://qlty.sh/gh/ryz310/projects/my_api_client/coverage.svg)](https://qlty.sh/gh/ryz310/projects/my_api_client)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ryz310/my_api_client)
 
-日本語ドキュメントは [こちら](README.jp.md)
-
 # MyApiClient
 
 This gem is an API client builder that provides generic functionality for defining API request classes. Its architecture is based on [Sawyer](https://github.com/lostisland/sawyer) and [Faraday](https://github.com/lostisland/faraday), with enhanced error-handling features.
+
+Sawyer can be difficult for generating dummy data and may conflict with other gems in some cases, so this project may reduce direct Sawyer dependency in the future.
 
 It is primarily designed for Ruby on Rails, but it also works in other environments. If you find any issues, please report them on the Issues page.
 
@@ -436,6 +436,56 @@ On failure, it logs:
 API request `GET https://example.com/v1/users`: "Failure (Net::OpenTimeout)"
 ```
 
+## One request for one class
+
+In many cases, APIs on the same host share request headers and error structures, so defining multiple endpoints in one class is practical. If you prefer API-level separation, you can also use a "one class per API" design:
+
+```ruby
+class ExampleApiClient < MyApiClient::Base
+  endpoint 'https://example.com'
+
+  error_handling status_code: 400..599
+
+  attr_reader :access_token
+
+  def initialize(access_token:)
+    @access_token = access_token
+  end
+
+  private
+
+  def headers
+    {
+      'Content-Type': 'application/json;charset=UTF-8',
+      'Authorization': "Bearer #{access_token}",
+    }
+  end
+end
+
+class GetUsersApiClient < ExampleApiClient
+  error_handling json: { '$.errors.code': 10 }, raise: MyApiClient::ClientError
+
+  # GET https://example.com/users
+  #
+  # @return [Sawyer::Resource] HTTP resource parameter
+  def request
+    get 'users', query: { key: 'value' }, headers: headers
+  end
+end
+
+class PostUserApiClient < ExampleApiClient
+  error_handling json: { '$.errors.code': 10 }, raise: MyApiClient::ApiLimitError
+
+  # POST https://example.com/users
+  #
+  # @param name [String] Username to create
+  # @return [Sawyer::Resource] HTTP resource parameter
+  def request(name:)
+    post 'users', headers: headers, body: { name: name }
+  end
+end
+```
+
 ## RSpec
 
 ### Setup
@@ -680,11 +730,51 @@ docker compose run --rm test bundle exec rspec spec/integrations/api_clients
 docker compose down --volumes --remove-orphans
 ```
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To install this gem onto your local machine, run `bundle exec rake install`.
+
+## Deployment
+
+This project uses [gem_comet](https://github.com/ryz310/gem_comet) for release automation.
+
+### Preparation
+
+Create `.envrc` and set `GITHUB_ACCESS_TOKEN`:
+
+```sh
+cp .envrc.skeleton .envrc
+```
+
+Install `gem_comet`:
+
+```sh
+gem install gem_comet
+```
+
+### Usage
+
+Check PRs merged since the previous release:
+
+```sh
+gem_comet changelog
+```
+
+Start a release with a new version:
+
+```sh
+gem_comet release {VERSION}
+```
+
+This creates two PRs:
+
+- `Update v{VERSION}`
+- `Release v{VERSION}`
+
+Merge `Update v{VERSION}` first after checking version bump and polishing `CHANGELOG.md`.  
+Then verify `Release v{VERSION}` (including CI) and merge it to publish the gem.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/my_api_client. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/ryz310/my_api_client. Reports in Japanese are also welcome. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
@@ -692,4 +782,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the MyApiClient project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/my_api_client/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the MyApiClient project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/ryz310/my_api_client/blob/master/CODE_OF_CONDUCT.md).

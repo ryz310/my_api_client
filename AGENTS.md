@@ -29,7 +29,6 @@
 - Check other workflows under `.github/workflows/` for fixed Ruby versions and align them when support policy changes.
 - Update supported versions in:
   - `README.md`
-  - `README.jp.md`
 - Keep development baseline files aligned:
   - `.ruby-version`
   - `Dockerfile` (`ARG RUBY_VERSION`)
@@ -80,10 +79,19 @@
 - Do not post KPT content to GitHub comments/issues/PRs unless the user explicitly requests it.
 
 ## README Update Checklist
-- When editing `README.md` or `README.jp.md`, run a typo/consistency sweep before finishing.
+- When editing `README.md`, run a typo/consistency sweep before finishing.
 - Check common typo patterns: `api_clinet`, `erros`, `reqest`, `resouce`.
 - Verify sample request parameters match method signatures and examples (e.g. query/body keys).
 - Verify JSONPath examples match sample JSON structures (e.g. `links` vs `link`).
+- When removing or renaming documentation files, run `rg -n "<old-file-name>" --glob "*.md"` and resolve remaining references before finishing.
+
+## Documentation Language Policy
+- `README.md` is the single source of truth for repository documentation.
+- Do not add language-specific README copies (for example `README.jp.md`).
+- For Japanese reading support, rely on browser translation features instead of maintaining duplicate files.
+
+## Pull Request Description Rule
+- In PR descriptions, include a `Purpose of this change` section that explains why the change is needed, not only what changed.
 
 ## GitHub CLI Body Safety
 - When using `gh pr create`, `gh pr comment`, or similar commands with markdown body text, avoid inline shell strings that include backticks.
