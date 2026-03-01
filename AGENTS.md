@@ -29,7 +29,6 @@
 - Check other workflows under `.github/workflows/` for fixed Ruby versions and align them when support policy changes.
 - Update supported versions in:
   - `README.md`
-  - `README.jp.md`
 - Keep development baseline files aligned:
   - `.ruby-version`
   - `Dockerfile` (`ARG RUBY_VERSION`)
@@ -80,7 +79,7 @@
 - Do not post KPT content to GitHub comments/issues/PRs unless the user explicitly requests it.
 
 ## README Update Checklist
-- When editing `README.md` or `README.jp.md`, run a typo/consistency sweep before finishing.
+- When editing `README.md`, run a typo/consistency sweep before finishing.
 - Check common typo patterns: `api_clinet`, `erros`, `reqest`, `resouce`.
 - Verify sample request parameters match method signatures and examples (e.g. query/body keys).
 - Verify JSONPath examples match sample JSON structures (e.g. `links` vs `link`).
