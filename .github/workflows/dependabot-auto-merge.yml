@@ -12,7 +12,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  enable-automerge:
+  enable-automerge-bundler:
     if: ${{ github.actor == 'dependabot[bot]' }}
     runs-on: ubuntu-latest
 
@@ -23,8 +23,73 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Enable auto-merge for rails_app or direct development patch/minor updates
-        if: ${{ (steps.metadata.outputs.update-type == 'version-update:semver-patch' || steps.metadata.outputs.update-type == 'version-update:semver-minor') && (contains(github.event.pull_request.head.ref, '/rails_app/') || steps.metadata.outputs.dependency-type == 'direct:development') }}
+      - name: Enable auto-merge for bundler patch/minor updates (rails_app or direct development)
+        if: ${{ steps.metadata.outputs.package-ecosystem == 'bundler' && (steps.metadata.outputs.update-type == 'version-update:semver-patch' || steps.metadata.outputs.update-type == 'version-update:semver-minor') && (contains(github.event.pull_request.head.ref, '/rails_app/') || steps.metadata.outputs.dependency-type == 'direct:development') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: gh pr merge --repo "$GITHUB_REPOSITORY" --auto --merge "$PR_NUMBER"
+
+  enable-automerge-github-actions:
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate GitHub Actions update safety
+        id: guard
+        if: ${{ steps.metadata.outputs.package-ecosystem == 'github-actions' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          UPDATE_TYPE: ${{ steps.metadata.outputs.update-type }}
+          DEPENDENCY_NAME: ${{ steps.metadata.outputs.dependency-name }}
+          DEPENDENCY_NAMES: ${{ steps.metadata.outputs.dependency-names }}
+        run: |
+          set -euo pipefail
+
+          safe=true
+
+          if [[ "$UPDATE_TYPE" != "version-update:semver-patch" && "$UPDATE_TYPE" != "version-update:semver-minor" ]]; then
+            echo "Skip auto-merge: update type is not patch/minor ($UPDATE_TYPE)."
+            safe=false
+          fi
+
+          deps="$DEPENDENCY_NAMES"
+          if [[ -z "$deps" ]]; then
+            deps="$DEPENDENCY_NAME"
+          fi
+
+          if [[ -z "$deps" ]]; then
+            echo "Skip auto-merge: dependency name is missing."
+            safe=false
+          else
+            while IFS= read -r dep; do
+              dep="$(echo "$dep" | xargs)"
+              [[ -z "$dep" ]] && continue
+
+              if [[ ! "$dep" =~ ^actions/ && ! "$dep" =~ ^github/ ]]; then
+                echo "Skip auto-merge: non-GitHub official action detected ($dep)."
+                safe=false
+              fi
+            done < <(echo "$deps" | tr ',' '\n')
+          fi
+
+          files_json="$(gh api -H "Accept: application/vnd.github+json" "/repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files?per_page=100")"
+          if echo "$files_json" | jq -r '.[] | select((.patch // "") | test("(?m)^[+-]\\s*(permissions|pull_request_target)\\s*:")) | .filename' | grep -q .; then
+            echo "Skip auto-merge: permissions or pull_request_target changes were detected."
+            safe=false
+          fi
+
+          echo "safe=$safe" >> "$GITHUB_OUTPUT"
+
+      - name: Enable auto-merge for safe GitHub Actions patch/minor updates
+        if: ${{ steps.metadata.outputs.package-ecosystem == 'github-actions' && steps.guard.outputs.safe == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
