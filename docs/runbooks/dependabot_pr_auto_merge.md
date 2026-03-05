@@ -21,6 +21,15 @@ git pull --ff-only origin master
 sed -n '1,260p' AGENTS.md
 ```
 
+## Auto-merge workflow policy
+- Keep `package-ecosystem` decisions separated in `.github/workflows/dependabot-auto-merge.yml`.
+- Apply independent conditions for each ecosystem to avoid cross-ecosystem condition mixing.
+- For `github-actions` ecosystem auto-merge, require all of the following:
+  - GitHub official actions only (`actions/*` or `github/*`)
+  - non-major updates only (patch/minor)
+  - no changes related to `permissions` or `pull_request_target`
+- CI pass/fail gating is controlled by branch protection and required checks on GitHub.
+
 ## Step-by-step
 1. Open PR metadata and changed files.
 
