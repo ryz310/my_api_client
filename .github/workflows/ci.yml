@@ -294,7 +294,7 @@ jobs:
         run: bundle install
 
       - name: Download coverage artifacts
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           pattern: simplecov-resultset-*
           path: tmp/simplecov-results
