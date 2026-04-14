@@ -28,7 +28,7 @@ GEM
     ast (2.4.3)
     base64 (0.3.0)
     bigdecimal (4.0.1)
-    bugsnag (6.29.0)
+    bugsnag (6.30.0)
       concurrent-ruby (~> 1.0)
     byebug (13.0.0)
       reline (>= 0.6.0)
