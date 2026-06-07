@@ -154,7 +154,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bugsnag (>= 6.11.0)
+  bugsnag (>= 6.19.0)
   bundler (>= 2.0)
   my_api_client!
   pry-byebug

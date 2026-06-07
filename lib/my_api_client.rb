@@ -33,7 +33,7 @@ require 'my_api_client/sleeper'
 # Loads gems for feature of integrations
 begin
   require 'bugsnag'
-  require 'my_api_client/integrations/bugsnag' if defined?(Bugsnag) && Bugsnag::VERSION >= '6.11.0'
+  require 'my_api_client/integrations/bugsnag' if defined?(Bugsnag) && Bugsnag::VERSION >= '6.19.0'
 rescue LoadError
   nil
 end
