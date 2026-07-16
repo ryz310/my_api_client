@@ -324,7 +324,7 @@ end
 
 #### Bugsnag breadcrumbs
 
-If you are using [Bugsnag-Ruby v6.11.0](https://github.com/bugsnag/bugsnag-ruby/releases/tag/v6.11.0) or later, the [breadcrumbs feature](https://docs.bugsnag.com/platforms/ruby/other/#logging-breadcrumbs) is supported automatically. When `MyApiClient::Error` occurs, `Bugsnag.leave_breadcrumb` is called internally, so you can inspect request and response details in the Bugsnag console.
+If you are using [Bugsnag-Ruby v6.19.0](https://github.com/bugsnag/bugsnag-ruby/releases/tag/v6.19.0) or later, the [breadcrumbs feature](https://docs.bugsnag.com/platforms/ruby/other/#logging-breadcrumbs) is supported automatically. When `MyApiClient::Error` occurs, `Bugsnag.leave_breadcrumb` is called internally, so you can inspect request and response details in the Bugsnag console.
 
 ### Retry
 
