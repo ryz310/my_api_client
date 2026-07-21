@@ -4,6 +4,7 @@ RSpec.describe MyApiClient::Config do
   let(:super_mock_class) do
     Class.new do
       include MyApiClient::Config
+
       endpoint 'https://super_mock_class.com'
     end
   end

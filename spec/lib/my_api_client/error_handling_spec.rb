@@ -25,7 +25,7 @@ RSpec.describe MyApiClient::ErrorHandling do
     let(:grand_child_mock_class) do
       Class.new(child_mock_class) do
         error_handling json: { '$.errors.code': 20 } do
-          puts 'Use block'
+          puts 'Use block' # rubocop:disable RSpec/Output
         end
       end
     end
