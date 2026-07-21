@@ -52,6 +52,7 @@ coding agents (see `AGENTS.md`), which is the primary reason for the major versi
 - [#1180](https://github.com/ryz310/my_api_client/pull/1180) docs: complete README WIP sections and refine wording ([@ryz310](https://github.com/ryz310))
 - [#1181](https://github.com/ryz310/my_api_client/pull/1181) Consolidate README docs and remove README.jp.md ([@ryz310](https://github.com/ryz310))
 - [#1187](https://github.com/ryz310/my_api_client/pull/1187) Split Dependabot auto-merge logic by ecosystem ([@ryz310](https://github.com/ryz310))
+- [#1308](https://github.com/ryz310/my_api_client/pull/1308) Switch release workflow to RubyGems Trusted Publishing ([@ryz310](https://github.com/ryz310))
 
 ## v1.3.1 (Jun 10, 2025)
 
