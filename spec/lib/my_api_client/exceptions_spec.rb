@@ -10,13 +10,13 @@ RSpec.describe MyApiClient::Exceptions do
       include MyApiClient::Exceptions
 
       retry_on Net::OpenTimeout, wait: 0.seconds, attempts: 1 do
-        puts 'Retried but some network error occurred again.'
+        puts 'Retried but some network error occurred again.' # rubocop:disable RSpec/Output
       end
 
       retry_on RetriableError, wait: 0.seconds, attempts: 2
 
       discard_on DiscardableError do
-        puts 'A discardable error has occurred.'
+        puts 'A discardable error has occurred.' # rubocop:disable RSpec/Output
       end
 
       def run

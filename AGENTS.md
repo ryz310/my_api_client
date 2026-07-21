@@ -1,0 +1,128 @@
+# AGENTS.md
+
+## Branch Creation Rule
+
+- Always create a new branch from `master`.
+- Before creating a branch, update local `master` with the latest commits from `origin`.
+- After updating local `master`, reload and re-read `AGENTS.md` before starting any new task.
+- Example flow:
+  1. `git checkout master`
+  2. `git fetch origin`
+  3. `git pull --ff-only origin master`
+  4. Re-open `AGENTS.md` and confirm instructions
+  5. `git checkout -b codex/<new-branch-name>`
+
+## Development Version Policy
+
+- In development environments, always use the oldest versions among currently supported Ruby and Rails.
+- Current baseline: Ruby 3.2 and Rails 7.2.
+- Patch versions may be updated to the latest available releases within the selected baseline (e.g., Ruby 3.2.x and Rails 7.2.x).
+- When updating support policy, also update `.ruby-version`, `Dockerfile` (`ARG RUBY_VERSION` and `BUNDLE_GEMFILE`), and development Dockerfiles under `rails_app/`.
+
+## Support Matrix Update Procedure
+
+- Decide target support matrix first (Ruby and Rails versions to keep/add/remove).
+- Update `my_api_client.gemspec`:
+  - `required_ruby_version`
+  - `activesupport` minimum version
+- Update CI matrix in `.github/workflows/ci.yml`:
+  - `build_gem.strategy.matrix.ruby_version` / `rails_version`
+  - `verify_generator.strategy.matrix.ruby_version` / `rails_version`
+  - update representative matrix-gated conditions (e.g. coverage/upload conditions) to the intended runtime/framework pair
+- Check other workflows under `.github/workflows/` for fixed Ruby versions and align them when support policy changes.
+- Update supported versions in:
+  - `README.md`
+- Keep development baseline files aligned:
+  - `.ruby-version`
+  - `Dockerfile` (`ARG RUBY_VERSION`)
+  - `rails_app/*/Dockerfile` (`ARG RUBY_VERSION`) for supported Rails verification apps
+- Keep verification assets aligned with supported Rails:
+  - remove unsupported `gemfiles/rails_*.gemfile`
+  - remove unsupported `rails_app/rails_*` directories
+  - keep only supported Rails verification app directories
+- Validate before commit:
+  - `docker run --rm -v "$PWD":/app -w /app my_api_client-dev bundle exec rspec`
+  - `docker run --rm -v "$PWD":/app -w /app my_api_client-dev bundle exec rubocop`
+  - `docker run --rm -v "$PWD":/app -w /app my_api_client-dev bundle exec rake build`
+- If any `rails_app/rails_*/Gemfile.lock` drifts from gemspec constraints, sync at least the `my_api_client` entry (`version` and `activesupport` lower bound).
+
+## Docker Development Commands
+
+- Command selection policy:
+  - Use `docker compose` for integration specs that require the `my_api` server.
+  - Use `docker run` for lint, build, and local non-integration spec execution.
+- Build development image:
+  - `docker build -t my_api_client-dev .`
+- Open a shell in the container (mount local source):
+  - `docker run --rm -it -v "$PWD":/app -w /app my_api_client-dev bash`
+- Install/update gems:
+  - `docker run --rm -it -v "$PWD":/app -w /app my_api_client-dev bundle install`
+- Run all specs:
+  - `docker run --rm -it -v "$PWD":/app -w /app my_api_client-dev bundle exec rspec`
+- Run integration specs with real HTTP:
+  - `docker compose up -d --build my_api`
+  - `docker compose run --rm test bundle exec rspec`
+  - (integration only) `docker compose run --rm test bundle exec rspec spec/integrations/api_clients`
+  - (my_api request specs) `docker compose run --rm my_api bundle exec rspec spec/requests`
+  - `docker compose down --volumes --remove-orphans`
+- Run RuboCop:
+  - `docker run --rm -it -v "$PWD":/app -w /app my_api_client-dev bundle exec rubocop`
+- Build gem package:
+  - `docker run --rm -it -v "$PWD":/app -w /app my_api_client-dev bundle exec rake build`
+- Install gem locally in container:
+  - `docker run --rm -it -v "$PWD":/app -w /app my_api_client-dev bundle exec rake install`
+
+## Validation Rule
+
+- Run RuboCop and confirm there are no offenses only when `.rb` files are changed.
+
+## Retrospective Rule
+
+- Propose a KPT retrospective when a task reaches a completion point, such as after creating a Pull Request.
+- Based on the KPT results, propose updates to `AGENTS.md`.
+- The timing of the retrospective may be decided by Codex when it is appropriate.
+- Output destination rule: KPT content must be shared only in this Codex conversation unless the user explicitly requests another destination.
+- Do not post KPT content to GitHub comments/issues/PRs unless the user explicitly requests it.
+
+## README Update Checklist
+
+- When editing `README.md`, run a typo/consistency sweep before finishing.
+- Check common typo patterns: `api_clinet`, `erros`, `reqest`, `resouce`.
+- Verify sample request parameters match method signatures and examples (e.g. query/body keys).
+- Verify JSONPath examples match sample JSON structures (e.g. `links` vs `link`).
+- When removing or renaming documentation files, run `rg -n "<old-file-name>" --glob "*.md"` and resolve remaining references before finishing.
+
+## Documentation Language Policy
+
+- `README.md` is the single source of truth for repository documentation.
+- Do not add language-specific README copies (for example `README.jp.md`).
+- For Japanese reading support, rely on browser translation features instead of maintaining duplicate files.
+
+## Pull Request Description Rule
+
+- In PR descriptions, include a `Purpose of this change` section that explains why the change is needed, not only what changed.
+
+## GitHub CLI Body Safety
+
+- When using `gh pr create`, `gh pr comment`, or similar commands with markdown body text, avoid inline shell strings that include backticks.
+- Prefer one of the following:
+  - Use plain text without backticks in inline `--body`.
+  - Write the body to a temporary file and pass it via file-based options (or equivalent safe method) to prevent shell command substitution.
+
+## Runbook
+
+- Dependabot PR review and auto-merge operation steps are documented in `docs/runbooks/dependabot_pr_auto_merge.md`.
+
+## CHANGELOG Organization Rule
+
+- Follow the format of past versions in `CHANGELOG.md`.
+- Use `-` for bullet list items (not `*`).
+- Categorize entries under these headings, keeping only the headings that have entries (omit empty ones):
+  `Feature`, `Bugfix`, `Security`, `Breaking Change`, `Rubocop Challenge`, `Dependabot`, `Misc`.
+- Keep the category order above.
+- Dependabot section:
+  - List only bumps for the gem itself (root `Gemfile` / `.github/workflows`).
+  - Do NOT list bumps under `rails_app/*` or `my_api` (verification/test apps).
+  - When the same gem is bumped multiple times within a release, keep a single entry and merge the version range from the earliest `from` to the latest `to` (e.g. `Bump bugsnag from 6.27.1 to 6.30.0`).
+- Only a change that breaks backward compatibility goes under `Breaking Change`.
+  A rename that keeps backward compatibility (e.g. via an alias) is a `Feature`, not a breaking change.

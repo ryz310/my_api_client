@@ -3,12 +3,10 @@ updates:
 - package-ecosystem: bundler
   directory: "/"
   schedule:
-    interval: daily
+    interval: weekly
     time: "08:00"
-    timezone: Japan
+    timezone: Asia/Tokyo
   open-pull-requests-limit: 10
-  reviewers:
-  - ryz310
   assignees:
   - ryz310
   labels:
@@ -17,15 +15,92 @@ updates:
   - dependency-name: rubocop
     versions:
     - 1.9.0
+- package-ecosystem: github-actions
+  directory: "/"
+  schedule:
+    interval: weekly
+    time: "08:00"
+    timezone: Asia/Tokyo
+  open-pull-requests-limit: 10
+  assignees:
+  - ryz310
+  labels:
+  - dependabot
 - package-ecosystem: bundler
   directory: "/my_api"
   schedule:
-    interval: daily
+    interval: weekly
     time: "08:00"
-    timezone: Japan
+    timezone: Asia/Tokyo
   open-pull-requests-limit: 10
-  reviewers:
+  assignees:
   - ryz310
+  labels:
+  - dependabot
+- package-ecosystem: bundler
+  directory: "/rails_app/rails_7.2"
+  schedule:
+    interval: weekly
+    time: "08:00"
+    timezone: Asia/Tokyo
+  open-pull-requests-limit: 10
+  assignees:
+  - ryz310
+  labels:
+  - dependabot
+- package-ecosystem: github-actions
+  directory: "/rails_app/rails_7.2"
+  schedule:
+    interval: weekly
+    time: "08:00"
+    timezone: Asia/Tokyo
+  open-pull-requests-limit: 10
+  assignees:
+  - ryz310
+  labels:
+  - dependabot
+- package-ecosystem: bundler
+  directory: "/rails_app/rails_8.0"
+  schedule:
+    interval: weekly
+    time: "08:00"
+    timezone: Asia/Tokyo
+  open-pull-requests-limit: 10
+  assignees:
+  - ryz310
+  labels:
+  - dependabot
+- package-ecosystem: github-actions
+  directory: "/rails_app/rails_8.0"
+  schedule:
+    interval: weekly
+    time: "08:00"
+    timezone: Asia/Tokyo
+  open-pull-requests-limit: 10
+  assignees:
+  - ryz310
+  labels:
+  - dependabot
+- package-ecosystem: bundler
+  directory: "/rails_app/rails_8.1"
+  schedule:
+    interval: weekly
+    day: monday
+    time: "08:00"
+    timezone: Asia/Tokyo
+  open-pull-requests-limit: 10
+  assignees:
+  - ryz310
+  labels:
+  - dependabot
+- package-ecosystem: github-actions
+  directory: "/rails_app/rails_8.1"
+  schedule:
+    interval: weekly
+    day: monday
+    time: "08:00"
+    timezone: Asia/Tokyo
+  open-pull-requests-limit: 10
   assignees:
   - ryz310
   labels:

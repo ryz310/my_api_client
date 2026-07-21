@@ -1,54 +1,65 @@
 # My API
 
-This is the real API for integration testing with `my_api_client`.
-
-It's built by [Ruby on Jets](https://rubyonjets.com/).
+This is the API server for integration testing with `my_api_client`.
 
 ## APIs
 
 ### My Rest API
 
-This is a simple REST API that returns a specified response.
+Simple REST endpoints that return fixed payloads used by integration tests.
 
-* `GET rest`
-* `GET rest/:id`
-* `POST rest`
-* `POST/PUT/PATCH rest/:id`
-* `DELETE rest/:id`
+- `GET /rest`
+- `GET /rest/:id`
+- `POST /rest`
+- `PUT/PATCH /rest/:id`
+- `DELETE /rest/:id`
 
 ### My Status API
 
-This API returns arbitrary status code.
+Returns the requested status code and message.
 
-* `GET status/:status`
+- `GET /status/:status`
+
+### My Header API
+
+Echoes request headers in the response headers.
+
+- `GET /header`
 
 ### My Error API
 
-This API returns arbitrary error code as JSON.
+Returns fixed JSON error payloads for error handling tests.
 
-* `GET error/:code`
+- `GET /error/:code`
 
 ### My Pagination API
 
-This API returns a response including pagination links.
+Returns paginated responses with `links.next` and `links.previous`.
 
-* `GET pagination?page=1`
+- `GET /pagination?page=1`
 
-## Deployment
-
-You need to prepare following environment variables:
-
-* `AWS_REGION`
-* `AWS_ACCESS_KEY_ID`
-* `AWS_SECRET_ACCESS_KEY`
-
-For information on how to create an AWS access key and secret, see the following site:
-
-:link: [Minimal Deploy IAM Policy \- Jets Ruby Serverless Framework](https://rubyonjets.com/docs/extras/minimal-deploy-iam/)
-
-
-And execute following command:
+## Local Development
 
 ```sh
-$ bundle exec jets deploy
+bundle install
+bundle exec rackup -o 0.0.0.0 -p 3000
+```
+
+## Run With Docker Compose
+
+From repository root:
+
+```sh
+docker compose up -d --build my_api
+docker compose run --rm my_api bundle exec rspec spec/requests
+docker compose run --rm test bundle exec rspec
+docker compose down --volumes --remove-orphans
+```
+
+Run only integration specs:
+
+```sh
+docker compose up -d --build my_api
+docker compose run --rm test bundle exec rspec spec/integrations/api_clients
+docker compose down --volumes --remove-orphans
 ```

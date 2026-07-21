@@ -11,7 +11,7 @@ module MyApiClient
 
       Bugsnag.leave_breadcrumb(
         "#{self.class.name} occurred",
-        metadata&.transform_values(&:inspect),
+        metadata,
         Bugsnag::Breadcrumbs::ERROR_BREADCRUMB_TYPE
       )
     end

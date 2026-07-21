@@ -1,0 +1,8 @@
+.github
+.yardoc
+coverage
+tmp
+log
+vendor/bundle
+.bundle
+.rspec_status

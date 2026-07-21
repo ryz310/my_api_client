@@ -1,5 +1,58 @@
 # Change log
 
+## v2.0.0 (Jul 21, 2026)
+
+This major release marks the shift to an AI-assisted (agent-driven) development workflow.
+The development environment, CI/CD, and contribution guidelines were reorganized around AI
+coding agents (see `AGENTS.md`), which is the primary reason for the major version bump.
+
+### Feature
+
+- [#1153](https://github.com/ryz310/my_api_client/pull/1153) Rename from UnprocessableEntity to UnprocessableContent ([@ashimomura](https://github.com/ashimomura))
+
+### Bugfix
+
+- [#1276](https://github.com/ryz310/my_api_client/pull/1276) Stop stringifying the metadata left in the Bugsnag breadcrumb ([@masakiq](https://github.com/masakiq))
+
+### Dependabot
+
+- [#1111](https://github.com/ryz310/my_api_client/pull/1111) Bump rexml from 3.4.1 to 3.4.2 ([@ryz310](https://github.com/ryz310))
+- [#1114](https://github.com/ryz310/my_api_client/pull/1114) Bump faraday from 2.13.1 to 2.14.0 ([@ryz310](https://github.com/ryz310))
+- [#1117](https://github.com/ryz310/my_api_client/pull/1117) Bump rubocop-performance from 1.25.0 to 1.26.1 ([@ryz310](https://github.com/ryz310))
+- [#1119](https://github.com/ryz310/my_api_client/pull/1119) Bump rspec from 3.13.1 to 3.13.2 ([@ryz310](https://github.com/ryz310))
+- [#1121](https://github.com/ryz310/my_api_client/pull/1121) Bump sawyer from 0.9.2 to 0.9.3 ([@ryz310](https://github.com/ryz310))
+- [#1128](https://github.com/ryz310/my_api_client/pull/1128) Bump rubocop-rspec_rails from 2.31.0 to 2.32.0 ([@ryz310](https://github.com/ryz310))
+- [#1161](https://github.com/ryz310/my_api_client/pull/1161) Bump pry-byebug from 3.11.0 to 3.12.0 ([@ryz310](https://github.com/ryz310))
+- [#1184](https://github.com/ryz310/my_api_client/pull/1184) Bump actions/upload-artifact from 6 to 7 ([@ryz310](https://github.com/ryz310))
+- [#1183](https://github.com/ryz310/my_api_client/pull/1183) Bump actions/download-artifact from 4 to 8 ([@ryz310](https://github.com/ryz310))
+- [#1214](https://github.com/ryz310/my_api_client/pull/1214) Bump webmock from 3.25.1 to 3.26.2 ([@ryz310](https://github.com/ryz310))
+- [#1216](https://github.com/ryz310/my_api_client/pull/1216) Bump activesupport from 7.2.2.1 to 8.1.3 ([@ryz310](https://github.com/ryz310))
+- [#1236](https://github.com/ryz310/my_api_client/pull/1236) Bump bugsnag from 6.27.1 to 6.30.0 ([@ryz310](https://github.com/ryz310))
+- [#1235](https://github.com/ryz310/my_api_client/pull/1235) Bump rake from 13.3.0 to 13.4.1 ([@ryz310](https://github.com/ryz310))
+- [#1298](https://github.com/ryz310/my_api_client/pull/1298) Bump yard from 0.9.37 to 0.9.45 ([@ryz310](https://github.com/ryz310))
+
+### Misc
+
+- [#1133](https://github.com/ryz310/my_api_client/pull/1133) Migrate CI from CircleCI to GitHub Actions ([@ryz310](https://github.com/ryz310))
+- [#1134](https://github.com/ryz310/my_api_client/pull/1134) Set up Docker-based development environment ([@ryz310](https://github.com/ryz310))
+- [#1135](https://github.com/ryz310/my_api_client/pull/1135) Update support matrix (Ruby 3.2-4.0 / Rails 7.2-8.1) ([@ryz310](https://github.com/ryz310))
+- [#1136](https://github.com/ryz310/my_api_client/pull/1136) Migrate CI coverage upload from Code Climate to Qlty ([@ryz310](https://github.com/ryz310))
+- [#1137](https://github.com/ryz310/my_api_client/pull/1137) Add Dependabot auto-merge workflow for dev patch updates ([@ryz310](https://github.com/ryz310))
+- [#1142](https://github.com/ryz310/my_api_client/pull/1142) Adjust CI triggers and SimpleCov spec filtering ([@ryz310](https://github.com/ryz310))
+- [#1143](https://github.com/ryz310/my_api_client/pull/1143) Add KPT retrospective rule and extend Dependabot dev auto-merge ([@ryz310](https://github.com/ryz310))
+- [#1144](https://github.com/ryz310/my_api_client/pull/1144) Migrate my_api from Jets to Rails 8.1 with compose-based CI integration ([@ryz310](https://github.com/ryz310))
+- [#1155](https://github.com/ryz310/my_api_client/pull/1155) Fix my_api compose build to honor Gemfile.lock ([@ryz310](https://github.com/ryz310))
+- [#1156](https://github.com/ryz310/my_api_client/pull/1156) Enable PR CI for external contributors and split release workflow ([@ryz310](https://github.com/ryz310))
+- [#1157](https://github.com/ryz310/my_api_client/pull/1157) Fix Dependabot auto-merge workflow in non-checkout context ([@ryz310](https://github.com/ryz310))
+- [#1158](https://github.com/ryz310/my_api_client/pull/1158) Consolidate Dependabot config and remove redundant rails_app files ([@ryz310](https://github.com/ryz310))
+- [#1175](https://github.com/ryz310/my_api_client/pull/1175) Adjust Dependabot auto-merge conditions for rails_app ([@ryz310](https://github.com/ryz310))
+- [#1177](https://github.com/ryz310/my_api_client/pull/1177) Add runbook for Dependabot PR auto-merge workflow ([@ryz310](https://github.com/ryz310))
+- [#1178](https://github.com/ryz310/my_api_client/pull/1178) Refine dependabot auto-merge runbook procedure ([@ryz310](https://github.com/ryz310))
+- [#1179](https://github.com/ryz310/my_api_client/pull/1179) docs: clarify Dependabot rebase retry procedure ([@ryz310](https://github.com/ryz310))
+- [#1180](https://github.com/ryz310/my_api_client/pull/1180) docs: complete README WIP sections and refine wording ([@ryz310](https://github.com/ryz310))
+- [#1181](https://github.com/ryz310/my_api_client/pull/1181) Consolidate README docs and remove README.jp.md ([@ryz310](https://github.com/ryz310))
+- [#1187](https://github.com/ryz310/my_api_client/pull/1187) Split Dependabot auto-merge logic by ecosystem ([@ryz310](https://github.com/ryz310))
+
 ## v1.3.1 (Jun 10, 2025)
 
 ### Misc
@@ -411,10 +464,8 @@ See: https://github.com/ryz310/my_api_client/blob/master/lib/my_api_client/defau
 ### Feature
 
 - [#220](https://github.com/ryz310/my_api_client/pull/220) Pageable HTTP request ([@ryz310](https://github.com/ryz310))
-
   - Add `#pageable_get` method (alias: `#pget`)
   - For example:
-
     - API client definition
 
       ```ruby

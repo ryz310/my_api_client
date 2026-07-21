@@ -12,7 +12,7 @@ if defined?(Bugsnag)
           described_class.new(params, 'error message')
           expect(Bugsnag).to have_received(:leave_breadcrumb).with(
             'MyApiClient::Error occurred',
-            { a: '1', b: '{:c=>2, :d=>3}' },
+            metadata,
             Bugsnag::Breadcrumbs::ERROR_BREADCRUMB_TYPE
           )
         end

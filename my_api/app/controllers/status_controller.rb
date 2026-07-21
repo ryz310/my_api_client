@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
-# THe status API
+# Status endpoint that echoes requested HTTP status code.
 class StatusController < ApplicationController
-  # GET status/:status
+  # GET /status/:status
   def show
     status = params[:status].to_i
-    render status:,
-           json: { message: "You requested status code: #{status}" }
+    render status:, json: { message: "You requested status code: #{status}" }
   end
 end
