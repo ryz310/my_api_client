@@ -24,6 +24,15 @@ sed -n '1,260p' AGENTS.md
 ## Auto-merge workflow policy
 - Keep `package-ecosystem` decisions separated in `.github/workflows/dependabot-auto-merge.yml`.
 - Apply independent conditions for each ecosystem to avoid cross-ecosystem condition mixing.
+- For `bundler` ecosystem auto-merge:
+  - Verification apps (`rails_app/*` and `my_api`) are always auto-merged regardless of update type
+    (including major), because bundle update failures there do not affect the published gem and are
+    gated by CI/branch protection.
+  - Exception: a major update of the `rails` gem itself under `rails_app/*` is NOT auto-merged,
+    because a Rails major bump is treated as an explicit support-matrix decision that requires manual
+    review. Other gems' major updates under `rails_app/*` are still auto-merged.
+  - The gem itself (root `Gemfile`) is auto-merged only for `direct:development` dependencies on
+    non-major updates (patch/minor).
 - For `github-actions` ecosystem auto-merge, require all of the following:
   - GitHub official actions only (`actions/*` or `github/*`)
   - non-major updates only (patch/minor)
