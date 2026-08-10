@@ -32,6 +32,7 @@
 - Check other workflows under `.github/workflows/` for fixed Ruby versions and align them when support policy changes.
 - Update supported versions in:
   - `README.md`
+  - `AGENTS.md` (`Development Version Policy` baseline line)
 - Keep development baseline files aligned:
   - `.ruby-version`
   - `Dockerfile` (`ARG RUBY_VERSION`)
