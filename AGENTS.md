@@ -115,6 +115,8 @@
 
 ## CHANGELOG Organization Rule
 
+- Do NOT add `CHANGELOG.md` entries in individual feature/fix PRs.
+  Entries are compiled and added at gem release time, not per-PR.
 - Follow the format of past versions in `CHANGELOG.md`.
 - Use `-` for bullet list items (not `*`).
 - Categorize entries under these headings, keeping only the headings that have entries (omit empty ones):
