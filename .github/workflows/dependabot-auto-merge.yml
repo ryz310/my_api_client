@@ -7,14 +7,15 @@ on:
       - reopened
       - synchronize
 
-permissions:
-  contents: write
-  pull-requests: write
+permissions: {}
 
 jobs:
   enable-automerge-bundler:
     if: ${{ github.actor == 'dependabot[bot]' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:
       - name: Fetch Dependabot metadata
@@ -81,6 +82,9 @@ jobs:
   enable-automerge-github-actions:
     if: ${{ github.actor == 'dependabot[bot]' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:
       - name: Fetch Dependabot metadata
