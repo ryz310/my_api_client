@@ -5,18 +5,21 @@
 - Always create a new branch from `master`.
 - Before creating a branch, update local `master` with the latest commits from `origin`.
 - After updating local `master`, reload and re-read `AGENTS.md` before starting any new task.
-- Example flow:
+- Use a branch prefix that matches the agent tool in use:
+  - Codex: `codex/<new-branch-name>`
+  - Claude Code: `claude/<new-branch-name>`
+- Example flow (replace `<prefix>` with the prefix for your tool):
   1. `git checkout master`
   2. `git fetch origin`
   3. `git pull --ff-only origin master`
   4. Re-open `AGENTS.md` and confirm instructions
-  5. `git checkout -b codex/<new-branch-name>`
+  5. `git checkout -b <prefix>/<new-branch-name>`
 
 ## Development Version Policy
 
 - In development environments, always use the oldest versions among currently supported Ruby and Rails.
-- Current baseline: Ruby 3.2 and Rails 7.2.
-- Patch versions may be updated to the latest available releases within the selected baseline (e.g., Ruby 3.2.x and Rails 7.2.x).
+- Current baseline: Ruby 3.3 and Rails 7.2.
+- Patch versions may be updated to the latest available releases within the selected baseline (e.g., Ruby 3.3.x and Rails 7.2.x).
 - When updating support policy, also update `.ruby-version`, `Dockerfile` (`ARG RUBY_VERSION` and `BUNDLE_GEMFILE`), and development Dockerfiles under `rails_app/`.
 
 ## Support Matrix Update Procedure
@@ -32,15 +35,25 @@
 - Check other workflows under `.github/workflows/` for fixed Ruby versions and align them when support policy changes.
 - Update supported versions in:
   - `README.md`
+  - `AGENTS.md` (`Development Version Policy` baseline line)
 - Keep development baseline files aligned:
   - `.ruby-version`
   - `Dockerfile` (`ARG RUBY_VERSION`)
   - `rails_app/*/Dockerfile` (`ARG RUBY_VERSION`) for supported Rails verification apps
+  - `rails_app/*/.ruby-version` for supported Rails verification apps (Dependabot
+    reads the per-directory `.ruby-version` to resolve the path gem; a stale value
+    breaks `@dependabot rebase` with "can't resolve your Ruby dependency files")
+  - Before commit, list every `.ruby-version` in the repo and confirm each matches
+    the intended baseline:
+    `find . -name .ruby-version | xargs -I{} sh -c 'echo "{}: $(cat {})"'`
 - Keep verification assets aligned with supported Rails:
   - remove unsupported `gemfiles/rails_*.gemfile`
   - remove unsupported `rails_app/rails_*` directories
   - keep only supported Rails verification app directories
-- Validate before commit:
+- Validate before commit. A support matrix change affects config files
+  (e.g. `.rubocop.yml` `TargetRubyVersion`, gemspec constraints) that break
+  lint/specs even without any `.rb` change, so always run all three below
+  regardless of the general Validation Rule:
   - `docker run --rm -v "$PWD":/app -w /app my_api_client-dev bundle exec rspec`
   - `docker run --rm -v "$PWD":/app -w /app my_api_client-dev bundle exec rubocop`
   - `docker run --rm -v "$PWD":/app -w /app my_api_client-dev bundle exec rake build`
@@ -101,6 +114,7 @@
 ## Pull Request Description Rule
 
 - In PR descriptions, include a `Purpose of this change` section that explains why the change is needed, not only what changed.
+- Write PR titles and descriptions in English to keep them consistent across the repository.
 
 ## GitHub CLI Body Safety
 
@@ -109,12 +123,19 @@
   - Use plain text without backticks in inline `--body`.
   - Write the body to a temporary file and pass it via file-based options (or equivalent safe method) to prevent shell command substitution.
 
+## GitHub Actions Pinning Policy
+
+- Pin third-party actions to a full commit SHA with a version comment (e.g. `uses: ruby/setup-ruby@<sha> # v1.321.0`) to satisfy zizmor `unpinned-uses`.
+- GitHub-owned actions (`actions/*`, `github/*`, `rubygems/*`, `dependabot/*`) may stay ref-pinned; Dependabot (`github-actions`) keeps the pins and version comments updated.
+
 ## Runbook
 
 - Dependabot PR review and auto-merge operation steps are documented in `docs/runbooks/dependabot_pr_auto_merge.md`.
 
 ## CHANGELOG Organization Rule
 
+- Do NOT add `CHANGELOG.md` entries in individual feature/fix PRs.
+  Entries are compiled and added at gem release time, not per-PR.
 - Follow the format of past versions in `CHANGELOG.md`.
 - Use `-` for bullet list items (not `*`).
 - Categorize entries under these headings, keeping only the headings that have entries (omit empty ones):

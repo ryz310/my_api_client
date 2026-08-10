@@ -18,10 +18,12 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      # rubocop_challenger pushes a branch and opens a pull request,
+      # so the checkout credentials must persist for the git push.
+      - uses: actions/checkout@v7 # zizmor: ignore[artipacked]
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
         with:
           ruby-version: '4.0'
 

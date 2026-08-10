@@ -1,4 +1,7 @@
 version: 2
+# cooldown: defer version bumps until a release has aged, reducing the risk of
+# adopting a compromised or broken version right after publication. Longer for
+# higher-impact bumps (major > minor > patch).
 updates:
 - package-ecosystem: bundler
   directory: "/"
@@ -6,6 +9,11 @@ updates:
     interval: weekly
     time: "08:00"
     timezone: Asia/Tokyo
+  cooldown:
+    default-days: 7
+    semver-major-days: 14
+    semver-minor-days: 7
+    semver-patch-days: 3
   open-pull-requests-limit: 10
   assignees:
   - ryz310
@@ -21,6 +29,11 @@ updates:
     interval: weekly
     time: "08:00"
     timezone: Asia/Tokyo
+  cooldown:
+    default-days: 7
+    semver-major-days: 14
+    semver-minor-days: 7
+    semver-patch-days: 3
   open-pull-requests-limit: 10
   assignees:
   - ryz310
@@ -32,6 +45,11 @@ updates:
     interval: weekly
     time: "08:00"
     timezone: Asia/Tokyo
+  cooldown:
+    default-days: 7
+    semver-major-days: 14
+    semver-minor-days: 7
+    semver-patch-days: 3
   open-pull-requests-limit: 10
   assignees:
   - ryz310
@@ -43,6 +61,11 @@ updates:
     interval: weekly
     time: "08:00"
     timezone: Asia/Tokyo
+  cooldown:
+    default-days: 7
+    semver-major-days: 14
+    semver-minor-days: 7
+    semver-patch-days: 3
   open-pull-requests-limit: 10
   assignees:
   - ryz310
@@ -54,6 +77,11 @@ updates:
     interval: weekly
     time: "08:00"
     timezone: Asia/Tokyo
+  cooldown:
+    default-days: 7
+    semver-major-days: 14
+    semver-minor-days: 7
+    semver-patch-days: 3
   open-pull-requests-limit: 10
   assignees:
   - ryz310
@@ -65,6 +93,11 @@ updates:
     interval: weekly
     time: "08:00"
     timezone: Asia/Tokyo
+  cooldown:
+    default-days: 7
+    semver-major-days: 14
+    semver-minor-days: 7
+    semver-patch-days: 3
   open-pull-requests-limit: 10
   assignees:
   - ryz310
@@ -76,6 +109,11 @@ updates:
     interval: weekly
     time: "08:00"
     timezone: Asia/Tokyo
+  cooldown:
+    default-days: 7
+    semver-major-days: 14
+    semver-minor-days: 7
+    semver-patch-days: 3
   open-pull-requests-limit: 10
   assignees:
   - ryz310
@@ -88,6 +126,11 @@ updates:
     day: monday
     time: "08:00"
     timezone: Asia/Tokyo
+  cooldown:
+    default-days: 7
+    semver-major-days: 14
+    semver-minor-days: 7
+    semver-patch-days: 3
   open-pull-requests-limit: 10
   assignees:
   - ryz310
@@ -100,6 +143,11 @@ updates:
     day: monday
     time: "08:00"
     timezone: Asia/Tokyo
+  cooldown:
+    default-days: 7
+    semver-major-days: 14
+    semver-minor-days: 7
+    semver-patch-days: 3
   open-pull-requests-limit: 10
   assignees:
   - ryz310

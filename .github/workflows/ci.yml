@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby_version: ['3.2', '3.3', '3.4', '4.0']
+        ruby_version: ['3.3', '3.4', '4.0']
         rails_version: ['7.2', '8.0', '8.1']
         bundler_option:
           - name: with_integrations
@@ -28,10 +28,12 @@ jobs:
             with: ""
             without: integrations
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Set up Ruby ${{ matrix.ruby_version }}
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
         with:
           ruby-version: ${{ matrix.ruby_version }}
           bundler-cache: false
@@ -92,16 +94,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby_version: ['3.2', '3.3', '3.4', '4.0']
+        ruby_version: ['3.3', '3.4', '4.0']
         rails_version: ['7.2', '8.0', '8.1']
     defaults:
       run:
         working-directory: rails_app/rails_${{ matrix.rails_version }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Set up Ruby ${{ matrix.ruby_version }}
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
         with:
           ruby-version: ${{ matrix.ruby_version }}
           bundler-cache: false
@@ -141,7 +145,9 @@ jobs:
     name: integration_api_via_docker_compose
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Build and start my_api
         run: docker compose up -d --build my_api
@@ -184,7 +190,9 @@ jobs:
     name: my_api_request_specs_via_docker_compose
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Build and start my_api
         run: docker compose up -d --build my_api
@@ -220,10 +228,12 @@ jobs:
   rubocop:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
         with:
           ruby-version: '4.0'
           bundler-cache: false
@@ -240,10 +250,12 @@ jobs:
   yardoc:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
         with:
           ruby-version: '4.0'
           bundler-cache: false
@@ -279,10 +291,12 @@ jobs:
     env:
       QLTY_COVERAGE_TOKEN: ${{ secrets.QLTY_COVERAGE_TOKEN }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
         with:
           ruby-version: '4.0'
           bundler-cache: false
@@ -323,7 +337,7 @@ jobs:
 
       - name: Upload coverage to Qlty
         if: ${{ env.QLTY_COVERAGE_TOKEN != '' && hashFiles('coverage/coverage.json') != '' }}
-        uses: qltysh/qlty-action/coverage@v2
+        uses: qltysh/qlty-action/coverage@08a0a862c159eae9b9003081da6663d96efef637 # v2.3.0
         with:
           token: ${{ env.QLTY_COVERAGE_TOKEN }}
           files: coverage/coverage.json
