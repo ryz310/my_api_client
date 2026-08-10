@@ -2,44 +2,30 @@
 
 ## v2.1.0 (Aug 11, 2026)
 
-### Feature
-### Bugfix
 ### Security
-### Breaking Change
-### Rubocop Challenge
+
+- [#1335](https://github.com/ryz310/my_api_client/pull/1335) Pin third-party actions to commit SHA ([@ryz310](https://github.com/ryz310))
+- [#1337](https://github.com/ryz310/my_api_client/pull/1337) Scope Dependabot auto-merge permissions per job ([@ryz310](https://github.com/ryz310))
+- [#1338](https://github.com/ryz310/my_api_client/pull/1338) Use non-spoofable actor check for Dependabot auto-merge ([@ryz310](https://github.com/ryz310))
+- [#1339](https://github.com/ryz310/my_api_client/pull/1339) Use pull_request trigger for Dependabot auto-merge ([@ryz310](https://github.com/ryz310))
+- [#1340](https://github.com/ryz310/my_api_client/pull/1340) Disable credential persistence on checkout (zizmor artipacked) ([@ryz310](https://github.com/ryz310))
+
 ### Dependabot
+
+- [#1237](https://github.com/ryz310/my_api_client/pull/1237) Bump dependabot/fetch-metadata from 2 to 3 ([@ryz310](https://github.com/ryz310))
+- [#1291](https://github.com/ryz310/my_api_client/pull/1291) Bump actions/checkout from 6 to 7 ([@ryz310](https://github.com/ryz310))
+- [#1317](https://github.com/ryz310/my_api_client/pull/1317) Bump simplecov from 0.22.0 to 1.0.3 ([@ryz310](https://github.com/ryz310))
+- [#1323](https://github.com/ryz310/my_api_client/pull/1323) Bump activesupport from 8.1.3 to 8.1.3.1 ([@ryz310](https://github.com/ryz310))
+- [#1329](https://github.com/ryz310/my_api_client/pull/1329) Bump json from 2.21.1 to 2.21.2 ([@ryz310](https://github.com/ryz310))
+
 ### Misc
 
-* [#1320](https://github.com/ryz310/my_api_client/pull/1320) build(deps): bump activestorage from 8.1.3 to 8.1.3.1 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#1319](https://github.com/ryz310/my_api_client/pull/1319) build(deps-dev): update simplecov requirement from = 0.22.0 to = 1.0.3 in /rails_app/rails_8.0 ([@ryz310](https://github.com/ryz310))
-* [#1317](https://github.com/ryz310/my_api_client/pull/1317) build(deps-dev): update simplecov requirement from = 0.22.0 to = 1.0.3 ([@ryz310](https://github.com/ryz310))
-* [#1220](https://github.com/ryz310/my_api_client/pull/1220) build(deps): bump action_text-trix from 2.1.17 to 2.1.18 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#1321](https://github.com/ryz310/my_api_client/pull/1321) build(deps): bump rails from 8.1.3 to 8.1.3.1 in /rails_app/rails_8.1 ([@ryz310](https://github.com/ryz310))
-* [#1325](https://github.com/ryz310/my_api_client/pull/1325) build(deps): bump rails from 8.0.5 to 8.0.5.1 in /rails_app/rails_8.0 ([@ryz310](https://github.com/ryz310))
-* [#1329](https://github.com/ryz310/my_api_client/pull/1329) build(deps): bump json from 2.21.1 to 2.21.2 ([@ryz310](https://github.com/ryz310))
-* [#1328](https://github.com/ryz310/my_api_client/pull/1328) build(deps): bump rails from 7.2.3.1 to 7.2.3.2 in /rails_app/rails_7.2 ([@ryz310](https://github.com/ryz310))
-* [#1323](https://github.com/ryz310/my_api_client/pull/1323) build(deps): bump activesupport from 8.1.3 to 8.1.3.1 ([@ryz310](https://github.com/ryz310))
-* [#1330](https://github.com/ryz310/my_api_client/pull/1330) chore: add dependency cooldown to Gemfile and Dependabot ([@ryz310](https://github.com/ryz310))
-* [#1331](https://github.com/ryz310/my_api_client/pull/1331) ci: always auto-merge verification app dependabot PRs (except rails major) ([@ryz310](https://github.com/ryz310))
-* [#1324](https://github.com/ryz310/my_api_client/pull/1324) build(deps-dev): bump simplecov from 0.22.0 to 1.0.3 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#1313](https://github.com/ryz310/my_api_client/pull/1313) build(deps): bump websocket-driver from 0.8.0 to 0.8.2 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#1291](https://github.com/ryz310/my_api_client/pull/1291) build(deps): bump actions/checkout from 6 to 7 ([@ryz310](https://github.com/ryz310))
-* [#1237](https://github.com/ryz310/my_api_client/pull/1237) build(deps): bump dependabot/fetch-metadata from 2 to 3 ([@ryz310](https://github.com/ryz310))
-* [#1332](https://github.com/ryz310/my_api_client/pull/1332) ci: drop Ruby 3.2 support (EOL) ([@ryz310](https://github.com/ryz310))
-* [#1272](https://github.com/ryz310/my_api_client/pull/1272) build(deps): bump puma from 7.2.0 to 8.0.2 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#1334](https://github.com/ryz310/my_api_client/pull/1334) docs: require English for PR titles and descriptions ([@ryz310](https://github.com/ryz310))
-* [#1278](https://github.com/ryz310/my_api_client/pull/1278) build(deps): bump net-imap from 0.6.3 to 0.6.4.1 in /my_api ([@ryz310](https://github.com/ryz310))
-* [#1336](https://github.com/ryz310/my_api_client/pull/1336) docs: use tool-specific branch prefix in branch creation rule ([@ryz310](https://github.com/ryz310))
-* [#1335](https://github.com/ryz310/my_api_client/pull/1335) ci: pin third-party actions to commit SHA ([@ryz310](https://github.com/ryz310))
-* [#1338](https://github.com/ryz310/my_api_client/pull/1338) ci: use non-spoofable actor check for dependabot auto-merge ([@ryz310](https://github.com/ryz310))
-* [#1337](https://github.com/ryz310/my_api_client/pull/1337) ci: scope dependabot auto-merge permissions per job ([@ryz310](https://github.com/ryz310))
-* [#1339](https://github.com/ryz310/my_api_client/pull/1339) ci: use pull_request trigger for dependabot auto-merge ([@ryz310](https://github.com/ryz310))
-* [#1340](https://github.com/ryz310/my_api_client/pull/1340) ci: disable credential persistence on checkout (zizmor artipacked) ([@ryz310](https://github.com/ryz310))
-* [#1341](https://github.com/ryz310/my_api_client/pull/1341) fix: align rails_app .ruby-version with Ruby 3.3 baseline ([@ryz310](https://github.com/ryz310))
-* [#1274](https://github.com/ryz310/my_api_client/pull/1274) build(deps): bump puma from 7.2.0 to 8.0.2 in /rails_app/rails_7.2 ([@ryz310](https://github.com/ryz310))
-* [#1293](https://github.com/ryz310/my_api_client/pull/1293) build(deps): bump cgi from 0.5.1 to 0.5.2 in /rails_app/rails_8.0 ([@ryz310](https://github.com/ryz310))
-* [#1273](https://github.com/ryz310/my_api_client/pull/1273) build(deps): bump puma from 7.2.0 to 8.0.2 in /rails_app/rails_8.0 ([@ryz310](https://github.com/ryz310))
-* [#1275](https://github.com/ryz310/my_api_client/pull/1275) build(deps): bump puma from 7.2.0 to 8.0.2 in /rails_app/rails_8.1 ([@ryz310](https://github.com/ryz310))
+- [#1330](https://github.com/ryz310/my_api_client/pull/1330) Add dependency cooldown to Gemfile and Dependabot ([@ryz310](https://github.com/ryz310))
+- [#1331](https://github.com/ryz310/my_api_client/pull/1331) Always auto-merge verification app Dependabot PRs (except rails major) ([@ryz310](https://github.com/ryz310))
+- [#1332](https://github.com/ryz310/my_api_client/pull/1332) Drop Ruby 3.2 support (EOL) ([@ryz310](https://github.com/ryz310))
+- [#1334](https://github.com/ryz310/my_api_client/pull/1334) Require English for PR titles and descriptions ([@ryz310](https://github.com/ryz310))
+- [#1336](https://github.com/ryz310/my_api_client/pull/1336) Use tool-specific branch prefix in branch creation rule ([@ryz310](https://github.com/ryz310))
+- [#1341](https://github.com/ryz310/my_api_client/pull/1341) Align rails_app .ruby-version with Ruby 3.3 baseline ([@ryz310](https://github.com/ryz310))
 
 ## v2.0.0 (Jul 21, 2026)
 
