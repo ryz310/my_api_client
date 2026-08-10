@@ -105,6 +105,7 @@
 ## Pull Request Description Rule
 
 - In PR descriptions, include a `Purpose of this change` section that explains why the change is needed, not only what changed.
+- Write PR titles and descriptions in English to keep them consistent across the repository.
 
 ## GitHub CLI Body Safety
 
