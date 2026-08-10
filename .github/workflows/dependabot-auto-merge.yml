@@ -23,8 +23,56 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Enable auto-merge for bundler patch/minor updates (rails_app or direct development)
-        if: ${{ steps.metadata.outputs.package-ecosystem == 'bundler' && (steps.metadata.outputs.update-type == 'version-update:semver-patch' || steps.metadata.outputs.update-type == 'version-update:semver-minor') && (contains(github.event.pull_request.head.ref, '/rails_app/') || steps.metadata.outputs.dependency-type == 'direct:development') }}
+      - name: Validate bundler update safety
+        id: guard
+        if: ${{ steps.metadata.outputs.package-ecosystem == 'bundler' }}
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          UPDATE_TYPE: ${{ steps.metadata.outputs.update-type }}
+          DEPENDENCY_TYPE: ${{ steps.metadata.outputs.dependency-type }}
+          DEPENDENCY_NAME: ${{ steps.metadata.outputs.dependency-name }}
+          DEPENDENCY_NAMES: ${{ steps.metadata.outputs.dependency-names }}
+        run: |
+          set -euo pipefail
+
+          safe=false
+
+          deps="$DEPENDENCY_NAMES"
+          if [[ -z "$deps" ]]; then
+            deps="$DEPENDENCY_NAME"
+          fi
+
+          rails_involved=false
+          while IFS= read -r dep; do
+            dep="$(echo "$dep" | xargs)"
+            [[ -z "$dep" ]] && continue
+            if [[ "$dep" == "rails" ]]; then
+              rails_involved=true
+            fi
+          done < <(echo "$deps" | tr ',' '\n')
+
+          if [[ "$HEAD_REF" == *"/rails_app/"* ]]; then
+            # Verification Rails apps: always auto-merge, except a major bump of the rails gem itself.
+            if [[ "$UPDATE_TYPE" == "version-update:semver-major" && "$rails_involved" == "true" ]]; then
+              echo "Skip auto-merge: major update of the rails gem in a rails_app verification app."
+              safe=false
+            else
+              safe=true
+            fi
+          elif [[ "$HEAD_REF" == *"/my_api/"* ]]; then
+            # Verification API app: always auto-merge regardless of update type.
+            safe=true
+          elif [[ ("$UPDATE_TYPE" == "version-update:semver-patch" || "$UPDATE_TYPE" == "version-update:semver-minor") && "$DEPENDENCY_TYPE" == "direct:development" ]]; then
+            # The gem itself (root Gemfile): only direct development patch/minor updates.
+            safe=true
+          else
+            echo "Skip auto-merge: gem update does not match auto-merge policy ($UPDATE_TYPE, $DEPENDENCY_TYPE)."
+          fi
+
+          echo "safe=$safe" >> "$GITHUB_OUTPUT"
+
+      - name: Enable auto-merge for safe bundler updates
+        if: ${{ steps.metadata.outputs.package-ecosystem == 'bundler' && steps.guard.outputs.safe == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
