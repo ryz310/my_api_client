@@ -16,7 +16,7 @@ It is primarily designed for Ruby on Rails, but it also works in other environme
 
 ## Supported Versions
 
-- Ruby 3.2, 3.3, 3.4, 4.0
+- Ruby 3.3, 3.4, 4.0
 - Rails 7.2, 8.0, 8.1
 
 ## Installation

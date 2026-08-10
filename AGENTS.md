@@ -15,8 +15,8 @@
 ## Development Version Policy
 
 - In development environments, always use the oldest versions among currently supported Ruby and Rails.
-- Current baseline: Ruby 3.2 and Rails 7.2.
-- Patch versions may be updated to the latest available releases within the selected baseline (e.g., Ruby 3.2.x and Rails 7.2.x).
+- Current baseline: Ruby 3.3 and Rails 7.2.
+- Patch versions may be updated to the latest available releases within the selected baseline (e.g., Ruby 3.3.x and Rails 7.2.x).
 - When updating support policy, also update `.ruby-version`, `Dockerfile` (`ARG RUBY_VERSION` and `BUNDLE_GEMFILE`), and development Dockerfiles under `rails_app/`.
 
 ## Support Matrix Update Procedure
@@ -32,6 +32,7 @@
 - Check other workflows under `.github/workflows/` for fixed Ruby versions and align them when support policy changes.
 - Update supported versions in:
   - `README.md`
+  - `AGENTS.md` (`Development Version Policy` baseline line)
 - Keep development baseline files aligned:
   - `.ruby-version`
   - `Dockerfile` (`ARG RUBY_VERSION`)
@@ -40,7 +41,10 @@
   - remove unsupported `gemfiles/rails_*.gemfile`
   - remove unsupported `rails_app/rails_*` directories
   - keep only supported Rails verification app directories
-- Validate before commit:
+- Validate before commit. A support matrix change affects config files
+  (e.g. `.rubocop.yml` `TargetRubyVersion`, gemspec constraints) that break
+  lint/specs even without any `.rb` change, so always run all three below
+  regardless of the general Validation Rule:
   - `docker run --rm -v "$PWD":/app -w /app my_api_client-dev bundle exec rspec`
   - `docker run --rm -v "$PWD":/app -w /app my_api_client-dev bundle exec rubocop`
   - `docker run --rm -v "$PWD":/app -w /app my_api_client-dev bundle exec rake build`
