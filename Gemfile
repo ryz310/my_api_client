@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-source 'https://rubygems.org'
+# cooldown: skip gem versions published within the last 7 days to reduce the
+# risk of pulling in a compromised or broken release right after publication.
+source 'https://rubygems.org', cooldown: 7
 
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
