@@ -5,12 +5,15 @@
 - Always create a new branch from `master`.
 - Before creating a branch, update local `master` with the latest commits from `origin`.
 - After updating local `master`, reload and re-read `AGENTS.md` before starting any new task.
-- Example flow:
+- Use a branch prefix that matches the agent tool in use:
+  - Codex: `codex/<new-branch-name>`
+  - Claude Code: `claude/<new-branch-name>`
+- Example flow (replace `<prefix>` with the prefix for your tool):
   1. `git checkout master`
   2. `git fetch origin`
   3. `git pull --ff-only origin master`
   4. Re-open `AGENTS.md` and confirm instructions
-  5. `git checkout -b codex/<new-branch-name>`
+  5. `git checkout -b <prefix>/<new-branch-name>`
 
 ## Development Version Policy
 
