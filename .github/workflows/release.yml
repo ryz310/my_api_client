@@ -18,7 +18,9 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      # rubygems/release-gem runs `rake release`, which pushes the git tag,
+      # so the checkout credentials must persist for this release job.
+      - uses: actions/checkout@v7 # zizmor: ignore[artipacked]
         with:
           fetch-depth: 0
           ref: ${{ github.ref_name }}
