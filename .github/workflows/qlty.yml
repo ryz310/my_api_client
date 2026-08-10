@@ -1,0 +1,39 @@
+name: qlty
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  security-events: write # Required to upload SARIF results to code scanning
+
+jobs:
+  qlty-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history so qlty can diff against the base branch
+
+      - name: Install Qlty CLI
+        uses: qltysh/qlty-action/install@v2
+
+      # Analyze only files changed in the PR and fail on medium+ findings.
+      # --sarif writes machine-readable results to stdout; the file is produced
+      # before the non-zero exit so the upload step (if: always()) still runs.
+      - name: Run qlty check (diff, fail on medium+)
+        run: |
+          qlty check \
+            --upstream "origin/${{ github.base_ref }}" \
+            --level medium \
+            --fail-level medium \
+            --sarif \
+            --no-upgrade-check > qlty.sarif
+
+      - name: Upload SARIF to code scanning
+        if: always()
+        continue-on-error: true # Do not mask the gate result if upload is unavailable
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: qlty.sarif
