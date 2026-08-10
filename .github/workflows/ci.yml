@@ -29,6 +29,8 @@ jobs:
             without: integrations
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Set up Ruby ${{ matrix.ruby_version }}
         uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
@@ -99,6 +101,8 @@ jobs:
         working-directory: rails_app/rails_${{ matrix.rails_version }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Set up Ruby ${{ matrix.ruby_version }}
         uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
@@ -142,6 +146,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Build and start my_api
         run: docker compose up -d --build my_api
@@ -185,6 +191,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Build and start my_api
         run: docker compose up -d --build my_api
@@ -221,6 +229,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
@@ -241,6 +251,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
@@ -280,6 +292,8 @@ jobs:
       QLTY_COVERAGE_TOKEN: ${{ secrets.QLTY_COVERAGE_TOKEN }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
