@@ -41,7 +41,10 @@
   - remove unsupported `gemfiles/rails_*.gemfile`
   - remove unsupported `rails_app/rails_*` directories
   - keep only supported Rails verification app directories
-- Validate before commit:
+- Validate before commit. A support matrix change affects config files
+  (e.g. `.rubocop.yml` `TargetRubyVersion`, gemspec constraints) that break
+  lint/specs even without any `.rb` change, so always run all three below
+  regardless of the general Validation Rule:
   - `docker run --rm -v "$PWD":/app -w /app my_api_client-dev bundle exec rspec`
   - `docker run --rm -v "$PWD":/app -w /app my_api_client-dev bundle exec rubocop`
   - `docker run --rm -v "$PWD":/app -w /app my_api_client-dev bundle exec rake build`
