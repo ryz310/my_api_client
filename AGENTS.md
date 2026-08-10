@@ -40,6 +40,12 @@
   - `.ruby-version`
   - `Dockerfile` (`ARG RUBY_VERSION`)
   - `rails_app/*/Dockerfile` (`ARG RUBY_VERSION`) for supported Rails verification apps
+  - `rails_app/*/.ruby-version` for supported Rails verification apps (Dependabot
+    reads the per-directory `.ruby-version` to resolve the path gem; a stale value
+    breaks `@dependabot rebase` with "can't resolve your Ruby dependency files")
+  - Before commit, list every `.ruby-version` in the repo and confirm each matches
+    the intended baseline:
+    `find . -name .ruby-version | xargs -I{} sh -c 'echo "{}: $(cat {})"'`
 - Keep verification assets aligned with supported Rails:
   - remove unsupported `gemfiles/rails_*.gemfile`
   - remove unsupported `rails_app/rails_*` directories
