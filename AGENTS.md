@@ -114,6 +114,11 @@
   - Use plain text without backticks in inline `--body`.
   - Write the body to a temporary file and pass it via file-based options (or equivalent safe method) to prevent shell command substitution.
 
+## GitHub Actions Pinning Policy
+
+- Pin third-party actions to a full commit SHA with a version comment (e.g. `uses: ruby/setup-ruby@<sha> # v1.321.0`) to satisfy zizmor `unpinned-uses`.
+- GitHub-owned actions (`actions/*`, `github/*`, `rubygems/*`, `dependabot/*`) may stay ref-pinned; Dependabot (`github-actions`) keeps the pins and version comments updated.
+
 ## Runbook
 
 - Dependabot PR review and auto-merge operation steps are documented in `docs/runbooks/dependabot_pr_auto_merge.md`.
