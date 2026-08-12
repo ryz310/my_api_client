@@ -26,10 +26,16 @@ jobs:
           ref: ${{ github.ref_name }}
 
       - name: Set up Ruby
+        # bundler-cache is disabled to avoid a cache-poisoning attack surface:
+        # this workflow publishes a gem, so a poisoned dependency cache could
+        # contaminate the released artifact.
         uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
         with:
           ruby-version: '4.0'
-          bundler-cache: true
+          bundler-cache: false
+
+      - name: Install dependencies
+        run: bundle install
 
       - name: Release gem via Trusted Publishing
         uses: rubygems/release-gem@v1
