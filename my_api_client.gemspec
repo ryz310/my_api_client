@@ -39,7 +39,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop-rake'
   spec.add_development_dependency 'rubocop-rspec'
   spec.add_development_dependency 'rubocop-rspec_rails'
-  spec.add_development_dependency 'simplecov', '1.0.3'
+  spec.add_development_dependency 'simplecov', '1.1.1'
   spec.add_development_dependency 'webmock'
   spec.add_development_dependency 'yard'
   spec.metadata = {
