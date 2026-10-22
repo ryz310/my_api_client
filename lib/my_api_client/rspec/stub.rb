@@ -4,9 +4,9 @@ module MyApiClient
   # Test helper module for RSpec
   module Stub
     ERROR_MESSAGE =
-      'If you use the `raise` option as an error instance, the `response` option ' \
-      'is ignored. If you want to use both options, you need to specify the ' \
-      '`raise` option as an error class.'
+      'If you use the `raise` option as an error instance, the `response`, ' \
+      '`status_code` and `headers` options are ignored. If you want to use them, ' \
+      'you need to specify the `raise` option as an error class.'
 
     # Stubs all instance of arbitrary MyApiClient class.
     # And returns a stubbed arbitrary MyApiClient instance.
@@ -124,7 +124,8 @@ module MyApiClient
     # @option options [Integer] :status_code Stubbed status code (defaults to 400).
     # @option options [Hash] :headers
     #   Stubbed response headers. Keys are looked up case-insensitively like real
-    #   response headers, so prefer String keys (e.g. `'X-Request-Id'`).
+    #   response headers and values are converted to Strings, so prefer String keys
+    #   (e.g. `'X-Request-Id'`).
     # @return [MyApiClient::Error] Processed exception.
     # @raise [RuntimeError] Unsupported error class was set.
     def process_raise_option(options)
@@ -132,7 +133,7 @@ module MyApiClient
       when Class
         build_stubbed_error(*options.values_at(:raise, :response, :status_code, :headers))
       when MyApiClient::Error
-        raise ERROR_MESSAGE if options[:response].present?
+        raise ERROR_MESSAGE if options.values_at(:response, :status_code, :headers).any?(&:present?)
 
         options[:raise]
       else

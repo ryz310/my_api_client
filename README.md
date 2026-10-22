@@ -684,7 +684,9 @@ rescue MyApiClient::Error => e
 end
 ```
 
-Stubbed headers are looked up case-insensitively, like real response headers. Use String keys for header names.
+Stubbed headers behave like real response headers: names are looked up case-insensitively and values are converted to Strings. Use String keys for header names, because Symbol keys are rewritten (e.g. `:retry_after` becomes `'Retry-After'`).
+
+If the `raise` option is an error instance, `response`, `status_code`, and `headers` cannot be combined with it. Pass an error class instead.
 
 #### `pageable` option
 

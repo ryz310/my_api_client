@@ -260,9 +260,27 @@ RSpec.describe MyApiClient::Stub do
 
         it 'stubs to raise error set in `raise`' do
           expect { api_client.request(user_id: 1) }
-            .to raise_error(/the `response` option is ignored/)
+            .to raise_error(MyApiClient::Stub::ERROR_MESSAGE)
           expect { api_client.request_all }
-            .to raise_error(/the `response` option is ignored/)
+            .to raise_error(MyApiClient::Stub::ERROR_MESSAGE)
+        end
+      end
+
+      context 'with MyApiClient::Error instance and `status_code` or `headers` options' do
+        let(:api_client) do
+          error = MyApiClient::ServerError.new
+          stub_api_client(
+            example_api_client,
+            request: { raise: error, status_code: 404 },
+            request_all: { raise: error, headers: { 'X-Request-Id' => '123' } }
+          )
+        end
+
+        it 'stubs to raise error set in `raise`' do
+          expect { api_client.request(user_id: 1) }
+            .to raise_error(MyApiClient::Stub::ERROR_MESSAGE)
+          expect { api_client.request_all }
+            .to raise_error(MyApiClient::Stub::ERROR_MESSAGE)
         end
       end
 
