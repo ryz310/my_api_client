@@ -87,7 +87,11 @@ api_client.get_users #=> #<Sawyer::Resource>
 
 Next, define `#initialize` to set values such as an access token or API key. You can omit it if you do not need any instance state.
 
+`MyApiClient::Base` intentionally does not define `#initialize`, so a class that directly inherits from it does not need to call `super()` from its own `#initialize`. If you inherit from another application-specific client class, follow that parent class's initialization contract.
+
 Then define methods such as `#get_users` and `#post_user`. Inside those methods, call HTTP helpers like `#get` and `#post`. You can also use `#patch`, `#put`, and `#delete`.
+
+Without a block, these HTTP helpers return the response body as a `Sawyer::Resource`. With a block, they yield the full `Sawyer::Response` and return the block's result. See [RSpec](#rspec) for the request and error-handling test helpers provided by this gem.
 
 ### Pagination
 
@@ -260,6 +264,8 @@ Also, `retry_on` is defined by default for `MyApiClient::NetworkError`.
 
 Both can be overridden, so define `error_handling` as needed.
 
+If more than one error handler matches a response, the handler defined last takes precedence. Handlers defined in a subclass are evaluated before inherited handlers, so a subclass can override a built-in handler with a more specific rule.
+
 They are defined [here](https://github.com/ryz310/my_api_client/blob/master/lib/my_api_client/default_error_handlers.rb).
 
 #### Use Symbol
@@ -342,6 +348,8 @@ end
 ```
 
 When an API request is executed many times, network errors can occur. Sometimes the network is unavailable for a long time, but often the error is temporary. In MyApiClient, network-related exceptions are wrapped as `MyApiClient::NetworkError`. Using `retry_on`, you can handle such exceptions and retry requests with configurable wait time and attempt count, similar to `ActiveJob`.
+
+`attempts` is the number of retries after the initial request, not the total number of requests. For example, `attempts: 0` sends at most one request, while `attempts: 3` sends at most four requests.
 
 `retry_on MyApiClient::NetworkError` is enabled by default, so you do not need to define it unless you want custom `wait` or `attempts` values.
 
