@@ -434,8 +434,7 @@ MyApiClient wraps this logger with `MyApiClient::Request::Logger` and prefixes m
 
 ```text
 API request `GET https://example.com/v1/users`: "Start"
-API request `GET https://example.com/v1/users`: "Duration 100.0 msec"
-API request `GET https://example.com/v1/users`: "Success (200)"
+API request `GET https://example.com/v1/users`: "Success (200) in 100.0 msec"
 ```
 
 On failure, it logs:

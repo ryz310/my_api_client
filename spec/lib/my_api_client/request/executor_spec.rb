@@ -90,8 +90,7 @@ RSpec.describe MyApiClient::Request::Executor do
       it 'logs the API request flow as successful' do
         execute
         expect(request_logger).to have_received(:info).with('Start').ordered
-        expect(request_logger).to have_received(:info).with('Duration 100.0 msec').ordered
-        expect(request_logger).to have_received(:info).with('Success (200)').ordered
+        expect(request_logger).to have_received(:info).with('Success (200) in 100.0 msec').ordered
       end
 
       it 'returns the API response' do
@@ -113,8 +112,8 @@ RSpec.describe MyApiClient::Request::Executor do
       it 'logs the API request flow as failure' do
         safe_execution
         expect(request_logger).to have_received(:info).with('Start').ordered
-        expect(request_logger).to have_received(:info).with('Duration 100.0 msec').ordered
-        expect(request_logger).to have_received(:warn).with('Failure (MyApiClient::Error)').ordered
+        expect(request_logger).to have_received(:warn)
+          .with('Failure (MyApiClient::Error) in 100.0 msec').ordered
       end
 
       it 'runs the found error handler with integration parameters and logger instance' do
@@ -140,7 +139,6 @@ RSpec.describe MyApiClient::Request::Executor do
       it 'logs the API request flow as network error' do
         safe_execution
         expect(request_logger).to have_received(:info).with('Start').ordered
-        expect(request_logger).not_to have_received(:info).with(/Duration/)
         expect(request_logger).to have_received(:warn).with('Failure (Net::OpenTimeout)').ordered
       end
 
