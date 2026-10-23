@@ -670,7 +670,7 @@ stub_api_client_all(ExampleApiClient, request: { raise: MyApiClient::Error })
 expect { ExampleApiClient.new.request(user_id: 1) }.to raise_error(MyApiClient::Error)
 ```
 
-You can combine `raise`, `response`, and `status_code`:
+You can combine `raise`, `response`, `status_code`, and `headers`:
 
 ```ruby
 stub_api_client_all(
@@ -679,16 +679,22 @@ stub_api_client_all(
     raise: MyApiClient::Error,
     response: { message: 'error' },
     status_code: 429,
+    headers: { 'Retry-After' => '60' },
   }
 )
 
 begin
   ExampleApiClient.new.request(user_id: 1)
 rescue MyApiClient::Error => e
-  e.params.response.data.to_h # => { message: "error" }
-  e.params.response.status    # => 429
+  e.params.response.data.to_h              # => { message: "error" }
+  e.params.response.status                 # => 429
+  e.params.response.headers['retry-after'] # => "60"
 end
 ```
+
+Stubbed headers behave like real response headers: names are looked up case-insensitively and values are converted to Strings. Use String keys for header names, because Symbol keys are rewritten (e.g. `:retry_after` becomes `'Retry-After'`).
+
+If the `raise` option is an error instance, `response`, `status_code`, and `headers` cannot be combined with it. Pass an error class instead.
 
 #### `pageable` option
 

@@ -4,9 +4,9 @@ module MyApiClient
   # Test helper module for RSpec
   module Stub
     ERROR_MESSAGE =
-      'If you use the `raise` option as an error instance, the `response` option ' \
-      'is ignored. If you want to use both options, you need to specify the ' \
-      '`raise` option as an error class.'
+      'If you use the `raise` option as an error instance, the `response`, ' \
+      '`status_code` and `headers` options are ignored. If you want to use them, ' \
+      'you need to specify the `raise` option as an error class.'
 
     # Stubs all instance of arbitrary MyApiClient class.
     # And returns a stubbed arbitrary MyApiClient instance.
@@ -22,13 +22,14 @@ module MyApiClient
     #       pageable: [ { id: 1 }, { id: 2 }]              # for `#pageable_get`.
     #     },
     #     get_user: { response: { id: 1 } },               # Returns an arbitrary response.
-    #     post_users: { id: 1 },                           # You can ommit `response` keyword.
+    #     post_users: { id: 1 },                           # You can omit `response` keyword.
     #     patch_user: ->(params) { { id: params[:id] } },  # Returns calculated result as response.
     #     put_user: { raise: MyApiClient::ClientError }    # Raises an arbitrary error.
     #     delete_user: {
     #       raise: MyApiClient::ClientError,
-    #       response: { errors: [{ code: 10 }] },          # You can stub response and statu code
+    #       response: { errors: [{ code: 10 }] },          # You can stub response and status code
     #       status_code: 429,                              # with an arbitrary error.
+    #       headers: { 'X-Request-Id' => '123' },          # You can also stub response headers.
     #     }
     #   )
     #   response = ExampleApiClient.new.get_user(id: 123)
@@ -54,13 +55,14 @@ module MyApiClient
     #       pageable: [ { id: 1 }, { id: 2 }]              # for `#pageable_get`.
     #     },
     #     get_user: { response: { id: 1 } },               # Returns an arbitrary response.
-    #     post_users: { id: 1 },                           # You can ommit `response` keyword.
+    #     post_users: { id: 1 },                           # You can omit `response` keyword.
     #     patch_user: ->(params) { { id: params[:id] } },  # Returns calculated result as response.
     #     put_user: { raise: MyApiClient::ClientError }    # Raises an arbitrary error.
     #     delete_user: {
     #       raise: MyApiClient::ClientError,
     #       response: { errors: [{ code: 10 }] },          # You can stub response and status code
     #       status_code: 403,                              # with exception.
+    #       headers: { 'X-Request-Id' => '123' },          # You can also stub response headers.
     #     }
     #   )
     #   response = api_client.get_user(id: 123)
@@ -82,13 +84,13 @@ module MyApiClient
       end
     end
 
-    def generate_stubbed_response(options, *request) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    def generate_stubbed_response(options, *request) # rubocop:disable Metrics/MethodLength
       case options
       when Proc
         stub_as_resource(options.call(*request))
       when Hash
         if options[:raise]
-          raise process_raise_option(options[:raise], options[:response], options[:status_code])
+          raise process_raise_option(options)
         elsif options[:response]
           stub_as_resource(options[:response])
         elsif options[:pageable].is_a?(Enumerable)
@@ -113,37 +115,47 @@ module MyApiClient
 
     # Provides a shorthand for `raise` option.
     # `MyApiClient::Error` requires `MyApiClient::Params::Params` instance on
-    # initialize, but it makes trubolesome. `MyApiClient::NetworkError` is more.
+    # initialize, but it makes troublesome. `MyApiClient::NetworkError` is more.
     # If given a error instance, it will return raw value without processing.
     #
-    # @param exception [Clsas, MyApiClient::Error] Processing target.
-    # @param response [Hash] describe_response_here
-    # @param status_code [Integer] describe_status_code_here
+    # @param options [Hash] Stubbing options.
+    # @option options [Class, MyApiClient::Error] :raise Processing target.
+    # @option options [Hash] :response Stubbed response body.
+    # @option options [Integer] :status_code Stubbed status code (defaults to 400).
+    # @option options [Hash] :headers
+    #   Stubbed response headers. Keys are looked up case-insensitively like real
+    #   response headers and values are converted to Strings, so prefer String keys
+    #   (e.g. `'X-Request-Id'`).
     # @return [MyApiClient::Error] Processed exception.
     # @raise [RuntimeError] Unsupported error class was set.
-    def process_raise_option(exception, response, status_code)
-      case exception
+    def process_raise_option(options)
+      case options[:raise]
       when Class
-        params = MyApiClient::Params::Params.new(nil, stub_as_response(response, status_code))
-        if exception == MyApiClient::NetworkError
-          exception.new(params, Net::OpenTimeout.new)
-        else
-          exception.new(params)
-        end
+        build_stubbed_error(*options.values_at(:raise, :response, :status_code, :headers))
       when MyApiClient::Error
-        raise ERROR_MESSAGE if response.present?
+        raise ERROR_MESSAGE if options.values_at(:response, :status_code, :headers).any?(&:present?)
 
-        exception
+        options[:raise]
       else
-        raise "Unsupported error class was set: #{exception.inspect}"
+        raise "Unsupported error class was set: #{options[:raise].inspect}"
       end
     end
 
-    def stub_as_response(params, status_code)
+    def build_stubbed_error(exception, response, status_code, headers)
+      stubbed_response = stub_as_response(response, status_code, headers)
+      params = MyApiClient::Params::Params.new(nil, stubbed_response)
+      if exception == MyApiClient::NetworkError
+        exception.new(params, Net::OpenTimeout.new)
+      else
+        exception.new(params)
+      end
+    end
+
+    def stub_as_response(params, status_code, headers = nil)
       instance_double(
         Sawyer::Response,
         status: status_code.presence || 400,
-        headers: {},
+        headers: Faraday::Utils::Headers.new(headers),
         data: stub_as_resource(params),
         body: params.to_json,
         timing: 0.123
