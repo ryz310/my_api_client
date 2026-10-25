@@ -1,0 +1,4 @@
+interface:
+  display_name: "Gem Release"
+  short_description: "Prepare and resume my_api_client gem releases safely"
+  default_prompt: "Use $gem-release to prepare or resume a my_api_client release within the authorized scope."
