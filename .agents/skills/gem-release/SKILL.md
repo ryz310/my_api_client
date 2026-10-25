@@ -1,6 +1,6 @@
 ---
 name: gem-release
-description: Prepare, review, resume, or publish a my_api_client gem release using gem_comet and its update/release PR workflow. Use for ryz310/my_api_client releases, including Docker execution and partial-failure recovery; ordinary Dependabot maintenance is outside this skill.
+description: Prepare, review, resume, or publish a my_api_client gem release using gem_comet, finishing with a GitHub Release draft. Use for ryz310/my_api_client releases, including Docker execution and partial-failure recovery; ordinary Dependabot maintenance is outside this skill.
 ---
 
 # Gem Release
@@ -15,7 +15,7 @@ Report only the missing credential name or authentication mechanism, where it mu
 
 ## Scope and authorization
 
-Translate the user's request into preparation, PR merge, and publication scope. “Start a release” normally means create reviewable update and release PRs. Merging into the configured release branch triggers publication; creating a PR does not. Do not enable auto-merge on the release PR as part of preparation.
+Translate the user's request into preparation, PR merge, and publication scope. “Start a release” normally means create reviewable update and release PRs. Merging into the configured release branch triggers publication; creating a PR does not. Do not enable auto-merge on the release PR as part of preparation. A full authorized release ends with creating a GitHub Release draft for review; publishing that GitHub Release is a separate action and is not part of draft creation.
 
 Reuse authorization already given for the relevant actions; do not request it again. This skill adds no blanket approval requirement. Return a decision to the user when version policy, a compatibility change, or an external action is outside the authorized scope. Authorization for unrelated Dependabot merges does not itself authorize publishing a gem.
 
@@ -70,5 +70,6 @@ For preparation-only requests, leave both PRs unmerged and report their URLs, va
 2. Confirm the base branch contains the intended version and finalized CHANGELOG. The release PR follows that branch; wait for its updated-head CI rather than reusing checks from before the version bump.
 3. Confirm the release PR's exact head and approved publication scope, then merge into the publication branch. Do not also manually dispatch the workflow or run `rake release` unless recovery requires it and it is authorized.
 4. Observe the release workflow, pushed tag, and published RubyGems version. Do not equate PR merge or workflow dispatch with successful publication. If partially published, inspect existing artifacts before retrying; do not overwrite/delete a published version or move its tag as an automatic recovery step.
+5. As the final release step, create or reuse a GitHub Release **draft** for the verified existing version tag, following the [Release draft procedure](references/execution-and-recovery.md#create-the-final-github-release-draft). Use the finalized CHANGELOG entry for its title and body, matching the repository's previous Release style. Verify `draft: true`, report its URL, and leave it unpublished. Preparation-only runs stop at their PR handoff; they do not publish the gem or create this final artifact early.
 
 At a completion point, offer a proportionate KPT in the conversation only. Propose durable procedural improvements in this skill, not a growing release checklist in `AGENTS.md`; edit guidance only within the user's request.
