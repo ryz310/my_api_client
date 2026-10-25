@@ -111,6 +111,14 @@
 - Do not add language-specific README copies (for example `README.jp.md`).
 - For Japanese reading support, rely on browser translation features instead of maintaining duplicate files.
 
+## Documentation and Code Conflicts
+
+- When documentation describing implementation conventions disagrees with the existing code, check the relevant code and tests and follow the established code conventions unless the task explicitly changes them. Do not rewrite working code solely to match stale documentation.
+- This rule does not override explicit user requirements or repository policies, including security, supported versions, compatibility, branching, validation, and releases. If it is unclear whether the documentation is stale or the code is defective, present the evidence and ask the user before changing the disputed behavior.
+- In the final reply, list each documentation/code inconsistency encountered within the task scope, with file references, the convention followed, and whether the documentation was corrected or remains unresolved. A repository-wide consistency audit is not required unless requested.
+
+Adapted from [Stale Instruction Files Override the Code in Coding Agents: A One-Sentence Fix, Section 4](https://arxiv.org/html/2610.30571v1#S4). The study tested a user-level instruction on synthetic Python projects; this repository applies a scoped version locally.
+
 ## Pull Request Description Rule
 
 - In PR descriptions, include a `Purpose of this change` section that explains why the change is needed, not only what changed.
