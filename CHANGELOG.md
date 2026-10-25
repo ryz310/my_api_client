@@ -1,5 +1,37 @@
 # Change log
 
+## v2.2.0 (Oct 25, 2026)
+
+### Feature
+
+- [#1405](https://github.com/ryz310/my_api_client/pull/1405) Allow stubbing response headers with the `headers` option when `raise` is an error class ([@okumud](https://github.com/okumud))
+- [#1406](https://github.com/ryz310/my_api_client/pull/1406) Include request duration in success or failure log lines instead of a separate `Duration` line. Update log parsers or alerts that depend on the previous format ([@okumud](https://github.com/okumud))
+
+### Bugfix
+
+- [#1405](https://github.com/ryz310/my_api_client/pull/1405) Reject `status_code` and `headers` options alongside an error instance instead of silently ignoring them. Pass an error class when combining these options; specs matching `MyApiClient::Stub::ERROR_MESSAGE` must also account for its updated text ([@okumud](https://github.com/okumud))
+
+### Security
+
+- [#1344](https://github.com/ryz310/my_api_client/pull/1344) Disable Bundler caching in the release workflow to prevent cache poisoning ([@ryz310](https://github.com/ryz310))
+- [#1345](https://github.com/ryz310/my_api_client/pull/1345) Pin rubygems/release-gem to a commit SHA ([@ryz310](https://github.com/ryz310))
+
+### Dependabot
+
+- [#1392](https://github.com/ryz310/my_api_client/pull/1392) Bump activesupport from 8.1.3.1 to 8.1.4 ([@ryz310](https://github.com/ryz310))
+- [#1371](https://github.com/ryz310/my_api_client/pull/1371) Bump faraday from 2.14.3 to 2.14.4 ([@ryz310](https://github.com/ryz310))
+- [#1396](https://github.com/ryz310/my_api_client/pull/1396) Bump simplecov from 1.0.3 to 1.3.2 ([@ryz310](https://github.com/ryz310))
+- [#1355](https://github.com/ryz310/my_api_client/pull/1355) Bump rubocop-performance from 1.26.1 to 1.27.0 ([@ryz310](https://github.com/ryz310))
+- [#1395](https://github.com/ryz310/my_api_client/pull/1395) Bump rubocop-rspec_rails from 2.32.0 to 2.33.0 ([@ryz310](https://github.com/ryz310))
+- [#1399](https://github.com/ryz310/my_api_client/pull/1399) Bump webmock from 3.26.2 to 3.31.0 ([@ryz310](https://github.com/ryz310))
+- [#1400](https://github.com/ryz310/my_api_client/pull/1400) Bump ruby/setup-ruby from 1.321.0 to 1.334.0 ([@ryz310](https://github.com/ryz310))
+- [#1350](https://github.com/ryz310/my_api_client/pull/1350) Bump rubygems/release-gem from 1.4.0 to 1.4.1 ([@ryz310](https://github.com/ryz310))
+- [#1383](https://github.com/ryz310/my_api_client/pull/1383) Bump qltysh/qlty-action/coverage from 2.3.0 to 2.5.0 ([@ryz310](https://github.com/ryz310))
+
+### Misc
+
+- [#1375](https://github.com/ryz310/my_api_client/pull/1375) Clarify API client integration behavior ([@ryz310](https://github.com/ryz310))
+
 ## v2.1.0 (Aug 11, 2026)
 
 ### Security
