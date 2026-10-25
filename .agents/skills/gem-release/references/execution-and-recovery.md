@@ -6,7 +6,7 @@ Read this when preparing a runtime, adapting gem_comet, or resuming a release. N
 
 Run this gate immediately when starting or resuming release execution, before the environment setup and release steps below. Only minimal read-only configuration inspection and credential checks belong before it passes.
 
-1. Identify the selected authentication path and required credentials from the request and current configuration. For gem_comet/pr_comet preparation, confirm the required GitHub authentication can be supplied to the actual tool process (normally `GITHUB_ACCESS_TOKEN`) and that Git push authentication is available. An existing authorized GitHub CLI credential bridge can satisfy this requirement; anonymous repository access or a connected tool that cannot authenticate gem_comet cannot. Do not silently substitute an unrelated credential source or merely assume a host credential reaches Docker.
+1. Identify the selected authentication path and required credentials from the request and current configuration. For gem_comet/pr_comet preparation, confirm the required GitHub authentication can be supplied to the actual tool process (normally `GITHUB_ACCESS_TOKEN`) and that Git push authentication is available. A full release also requires authenticated access with repository contents-write permission for the final GitHub Release draft. An existing authorized GitHub CLI credential bridge can satisfy this requirement; anonymous repository access or a connected tool that cannot authenticate gem_comet cannot. Do not silently substitute an unrelated credential source or merely assume a host credential reaches Docker.
 2. Check presence/nonemptiness without printing values, then validate the selected authentication with a read-only authenticated request. Verify applicable repository access through non-secret permission metadata where available. Test the intended container/process boundary with a minimal check if Docker will be used; do not install gem_comet or run release preparation to perform this check. Do not print successful response payloads containing private information or expose a credential through command arguments, logs, environment dumps, or persistent files.
 3. For publication, distinguish GitHub Actions Trusted Publishing/OIDC from local API-key publishing. The Trusted Publishing path does not require a local RubyGems API key. Verify its non-secret workflow/configuration evidence and required provisioned authentication mechanism; do not attempt to read remote secret values or demand unrelated keys such as coverage tokens. If the configured path actually requires a provisioned secret and its availability cannot be established safely, stop and report that it is unverified. Token issuance during a later OIDC workflow is not itself a missing local secret.
 4. On any missing, empty, inaccessible, invalid, or unverified required credential, end release execution immediately. Do not continue tool installation, branch updates, CHANGELOG work, partial preparation, GitHub mutations, or other release steps. A runner or script implementing this gate must return nonzero on failure. Report the credential/mechanism name and configuration location without its value; ask for configuration outside chat, not disclosure. Network/tool errors that prevent verification are an unverified gate, not proof that the credential is absent.
@@ -55,6 +55,7 @@ After each mutating stage, inspect actual state before proceeding:
 | Release PR | Existing/open PR from configured base to publication branch |
 | Validation | Successful required checks on the final relevant SHA |
 | Publication | Workflow result, tag SHA, RubyGems version |
+| Final Release draft | Matching existing tag, CHANGELOG title/body, draft URL and `draft: true` |
 
 Record this in the chat or PR description as appropriate; do not commit a per-run state file or credentials to the project. Follow the repository's file-based body safety rules if using `gh` for Markdown descriptions.
 
@@ -94,6 +95,30 @@ CHANGELOG completion rule: after editing the release entry, reviewing it against
 6. If a stage fails again for the same reason after a targeted repair, stop automatic retries at that stage. Diagnose from non-secret evidence, explain what remains, and ask only for the missing decision or authority. Continue independent authorized work when it does not depend on the failed stage.
 
 For publication failures, inspect whether the gem or tag already exists before considering a retry. Creating release PRs, merging them, dispatching a workflow, and publishing are distinct states. Never automatically yank a gem, reuse a published version, force-update a release tag, or bypass branch protection.
+
+## Create the final GitHub Release draft
+
+This is the final step of a full authorized release, after the gem is published and the existing version tag is verified. Editing this skill does not create a live Release draft. A preparation-only request still ends with the PR handoff. If this step fails after gem publication, report the published gem/tag and incomplete draft stage; retry only draft creation after diagnosing the failure, never the gem publication workflow.
+
+Use [v2.1.0](https://github.com/ryz310/my_api_client/releases/tag/v2.1.0) as the formatting reference, not as a fixed version or a source of old release notes:
+
+- Its title is `v2.1.0 (Aug 11, 2026)`, matching the CHANGELOG version heading without the `## ` prefix.
+- Its body starts with category headings such as `### Security` and contains that version's CHANGELOG entries with PR and contributor links. It does not include the CHANGELOG's document heading, version heading, or previous versions.
+
+Procedure:
+
+1. Confirm the successful publication workflow, intended version, and remote tag SHA. Read `CHANGELOG.md` from that tag's commit, not from an unrelated working branch. The selected version heading and gem version must agree. Use the release date already recorded in that heading rather than substituting the draft creation date.
+2. Extract only that version's section, ending before the next level-two version heading. Use the heading text as the Release title and the remaining category content as the body. Retain the finalized category order, bullets, links, and compatibility notes. Do not use automatically generated GitHub notes in place of the reviewed CHANGELOG or append a second copy of the entries. Write the body to a temporary Markdown file outside the repository.
+3. Check authenticated release listings for the exact tag, including drafts; checking only the latest published Release does not detect an existing draft. Reuse and report a matching draft. Preserve existing human edits; do not overwrite its title/body without reviewing the differences and the authorized update scope. If a published Release already exists for that tag, report the existing artifact instead of creating a duplicate or converting it back to draft.
+4. For a missing Release, create it explicitly as a draft using the existing verified tag. With GitHub CLI, use the equivalent of the following command, supplying the verified tag, reviewed title, and temporary body-file path:
+
+   ```sh
+   gh release create "$release_tag" --repo ryz310/my_api_client \
+     --verify-tag --draft --title "$release_title" --notes-file "$release_notes_file"
+   ```
+
+   `--verify-tag` prevents this operation from implicitly creating a tag at a default branch tip. Do not create or move a tag as a shortcut, attach arbitrary build artifacts, or mark a stable version as a prerelease. For an actual prerelease version, use the intended prerelease setting explicitly. Use the connected GitHub API when it provides equivalent existing-tag and draft safeguards.
+5. Read back the resulting Release: confirm the intended tag and SHA, title, body, prerelease setting, and `draft: true`. Include its URL in the final handoff, clearly distinguishing RubyGems publication from the still-unpublished GitHub Release. Never clear the draft flag or publish it as part of this step.
 
 ## Propose upstream issues
 
