@@ -2,6 +2,16 @@
 
 Read this when preparing a runtime, adapting gem_comet, or resuming a release. No command in this reference is an instruction to mutate GitHub without the user's relevant authorization.
 
+## Credential gate before release work
+
+Run this gate immediately when starting or resuming release execution, before the environment setup and release steps below. Only minimal read-only configuration inspection and credential checks belong before it passes.
+
+1. Identify the selected authentication path and required credentials from the request and current configuration. For gem_comet/pr_comet preparation, confirm the required GitHub authentication can be supplied to the actual tool process (normally `GITHUB_ACCESS_TOKEN`) and that Git push authentication is available. An existing authorized GitHub CLI credential bridge can satisfy this requirement; anonymous repository access or a connected tool that cannot authenticate gem_comet cannot. Do not silently substitute an unrelated credential source or merely assume a host credential reaches Docker.
+2. Check presence/nonemptiness without printing values, then validate the selected authentication with a read-only authenticated request. Verify applicable repository access through non-secret permission metadata where available. Test the intended container/process boundary with a minimal check if Docker will be used; do not install gem_comet or run release preparation to perform this check. Do not print successful response payloads containing private information or expose a credential through command arguments, logs, environment dumps, or persistent files.
+3. For publication, distinguish GitHub Actions Trusted Publishing/OIDC from local API-key publishing. The Trusted Publishing path does not require a local RubyGems API key. Verify its non-secret workflow/configuration evidence and required provisioned authentication mechanism; do not attempt to read remote secret values or demand unrelated keys such as coverage tokens. If the configured path actually requires a provisioned secret and its availability cannot be established safely, stop and report that it is unverified. Token issuance during a later OIDC workflow is not itself a missing local secret.
+4. On any missing, empty, inaccessible, invalid, or unverified required credential, end release execution immediately. Do not continue tool installation, branch updates, CHANGELOG work, partial preparation, GitHub mutations, or other release steps. A runner or script implementing this gate must return nonzero on failure. Report the credential/mechanism name and configuration location without its value; ask for configuration outside chat, not disclosure. Network/tool errors that prevent verification are an unverified gate, not proof that the credential is absent.
+5. After configuration is corrected, rerun the gate before resuming from existing release state. This credential-specific stop takes precedence over guidance elsewhere to continue independent work after a failure. Passing the gate verifies prerequisites, not permission to perform actions beyond the user's authorized scope.
+
 ## Preflight the actual execution environment
 
 Prefer an installed Ruby matching the repository development baseline. If the host shim points to an uninstalled Ruby, use the repository's Docker development image. Read the current baseline and image configuration; do not bake a Ruby patch version into this skill.
@@ -11,7 +21,7 @@ Before mounting the working checkout for mutation, verify these inside the inten
 - `ruby --version`, `gem_comet version`, and the selected Bundler/Gemfile.
 - Git can see the expected repository and branch, and its effective `user.name` and `user.email` are nonempty. Some pr_comet versions read `git config` and override `GIT_AUTHOR_*` with empty values. Passing only author environment variables is therefore insufficient. Configure the container's Git identity or explicitly pass the identity to the tool, then verify it.
 - The effective Git status matches the host. Host global excludes do not automatically exist in Docker. Inspect specific mismatches with `git check-ignore -v`; provide the relevant ignore rules to the container. Do not delete existing `.DS_Store`, tmp directories, or user files to manufacture a clean checkout, or add broad ignore patterns that conceal release edits.
-- Required Git/API authentication is available without printing it. Verify access through a read-only repository request. Do not read or display `.envrc`, credential stores, or tokens as diagnostic content.
+- The immediate credential gate has passed for this execution environment. Recheck it if the authentication path or environment changes. Do not read or display `.envrc`, credential stores, or tokens as diagnostic content.
 
 Install gem_comet into an isolated temporary tool directory when needed, not into the product Gemfile. Keep temporary adapters, tool gems, and validation fixtures outside the repository. The installed gem's source is authoritative for the code that will execute; its repository master may differ.
 

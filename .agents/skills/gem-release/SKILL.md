@@ -7,6 +7,12 @@ description: Prepare, review, resume, or publish a my_api_client gem release usi
 
 Operate on `ryz310/my_api_client`. Read the current checkout's `AGENTS.md`, README Deployment section, `.gem_comet.yml`, and release workflow before acting. These are authoritative for current repository rules; this skill supplies execution and recovery guidance.
 
+## Immediate credential gate
+
+At the start of every release execution or resume, identify the authentication required by the requested actions using only minimal read-only configuration inspection, then check its availability before any other release work. Follow the [credential gate procedure](references/execution-and-recovery.md#credential-gate-before-release-work). If a required credential is missing, empty, inaccessible in the intended execution environment, invalid, or cannot be verified, stop the skill immediately. Do not switch/update branches, install tools, edit files, generate release artifacts, commit/push, create/update PRs, merge, or dispatch publishing while blocked. Do not continue independent release work or retry the full release command to discover credentials later.
+
+Report only the missing credential name or authentication mechanism, where it must be configured, and that release work has stopped. Ask the user to configure it through the appropriate environment or service; never request the secret value in chat. Resume only after it is configured and this gate passes again. This gate does not execute when merely creating, editing, or explaining this skill. Do not require unrelated secrets for an offline review or a publishing mechanism that does not use them.
+
 ## Scope and authorization
 
 Translate the user's request into preparation, PR merge, and publication scope. “Start a release” normally means create reviewable update and release PRs. Merging into the configured release branch triggers publication; creating a PR does not. Do not enable auto-merge on the release PR as part of preparation.
