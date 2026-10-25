@@ -126,7 +126,8 @@
 ## GitHub Actions Pinning Policy
 
 - Pin third-party actions to a full commit SHA with a version comment (e.g. `uses: ruby/setup-ruby@<sha> # v1.321.0`) to satisfy zizmor `unpinned-uses`.
-- GitHub-owned actions (`actions/*`, `github/*`, `rubygems/*`, `dependabot/*`) may stay ref-pinned; Dependabot (`github-actions`) keeps the pins and version comments updated.
+- GitHub-owned actions (`actions/*`, `github/*`, `dependabot/*`) may stay ref-pinned; Dependabot (`github-actions`) keeps the pins and version comments updated.
+- Third-party actions outside those GitHub-owned orgs (e.g. `ruby/*`, `rubygems/*`) must be SHA-pinned; zizmor `unpinned-uses` flags them otherwise. Dependabot still keeps the SHA pins and version comments updated.
 
 ## Runbook
 

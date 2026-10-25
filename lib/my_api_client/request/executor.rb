@@ -32,13 +32,13 @@ module MyApiClient
       def call
         request_logger.info('Start')
         response = api_request
-        request_logger.info("Duration #{response.timing.in_milliseconds} msec")
+        duration = " in #{response.timing.in_milliseconds} msec"
         verify(response)
       rescue MyApiClient::Error => e
-        request_logger.warn("Failure (#{e.message})")
+        request_logger.warn("Failure (#{e.message})#{duration}")
         raise
       else
-        request_logger.info("Success (#{response.status})")
+        request_logger.info("Success (#{response.status})#{duration}")
         response
       end
 
