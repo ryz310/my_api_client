@@ -140,6 +140,7 @@ Adapted from [Stale Instruction Files Override the Code in Coding Agents: A One-
 ## Runbook
 
 - Dependabot PR review and auto-merge operation steps are documented in `docs/runbooks/dependabot_pr_auto_merge.md`.
+- For agent review and sequential merge decisions, use `.agents/skills/dependabot-maintenance/SKILL.md`.
 
 ## CHANGELOG Organization Rule
 

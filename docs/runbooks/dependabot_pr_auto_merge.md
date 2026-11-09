@@ -1,18 +1,21 @@
 # Dependabot PR Review and Auto-Merge Runbook
 
 ## Purpose
-This runbook standardizes how to review Dependabot pull requests for GitHub Actions updates and safely enable auto-merge.
+
+This runbook documents the existing auto-merge policy and command procedures for reviewing, refreshing, and merging Dependabot updates. Use the [Dependabot Maintenance skill](../../.agents/skills/dependabot-maintenance/SKILL.md) for agent review decisions, sequential execution, and reporting.
 
 ## Scope
-- Target: PRs created by Dependabot that update GitHub Actions versions (for example, `actions/upload-artifact`).
-- Primary workflow file in this repository: `.github/workflows/ci.yml`.
+
+- Target: Dependabot PRs for Bundler dependencies and GitHub Actions, including root dependencies and verification apps.
+- Relevant configuration: `.github/dependabot.yml`, `.github/workflows/ci.yml`, and `.github/workflows/dependabot-auto-merge.yml`.
 - This runbook is for PR operation only, so creating a dedicated local work branch is normally unnecessary.
 
 ## Prerequisites
+
 - `gh` CLI is authenticated and can access `ryz310/my_api_client`.
-- You have permission to comment on and merge PRs.
-- Branch protection rules and required checks are configured on GitHub.
-- Before starting the runbook, update local `master` and re-read `AGENTS.md`.
+- For execution, confirm permission to comment on and merge PRs and authorization covering the requested actions. A review-only request does not authorize writes.
+- Inspect the branch protection or rulesets and required checks currently applied on GitHub. Do not bypass them.
+- Before execution, update local `master` and re-read `AGENTS.md`. Preserve user changes; review-only work need not switch the user's branch.
 
 ```bash
 git checkout master
@@ -22,10 +25,11 @@ sed -n '1,260p' AGENTS.md
 ```
 
 ## Auto-merge workflow policy
+
 - Keep `package-ecosystem` decisions separated in `.github/workflows/dependabot-auto-merge.yml`.
 - Apply independent conditions for each ecosystem to avoid cross-ecosystem condition mixing.
 - For `bundler` ecosystem auto-merge:
-  - Verification apps (`rails_app/*` and `my_api`) are always auto-merged regardless of update type
+  - Verification apps (`rails_app/*` and `my_api`) are eligible regardless of update type
     (including major), because bundle update failures there do not affect the published gem and are
     gated by CI/branch protection.
   - Exception: a major update of the `rails` gem itself under `rails_app/*` is NOT auto-merged,
@@ -38,85 +42,95 @@ sed -n '1,260p' AGENTS.md
   - non-major updates only (patch/minor)
   - no changes related to `permissions` or `pull_request_target`
 - CI pass/fail gating is controlled by branch protection and required checks on GitHub.
+- These are the existing workflow's eligibility rules, not a blanket prohibition on individually reviewed merges authorized by the user. Do not change automation policy or supported versions as part of routine PR operation.
 
 ## Step-by-step
+
 1. Open PR metadata and changed files.
 
 ```bash
-gh pr view <PR_NUMBER> --json number,title,author,baseRefName,headRefName,files,body
+gh pr view <PR_NUMBER> --json number,title,author,baseRefName,baseRefOid,headRefName,headRefOid,mergeStateStatus,files,body,autoMergeRequest
 ```
 
 2. Validate that the PR is in scope.
-- Confirm `author.login` is `app/dependabot`.
-- Confirm changed files are GitHub Actions workflow/dependabot update files and the update target is GitHub Actions.
-- If either condition is not met, stop this runbook and notify the user that manual review is required.
 
-3. Review the exact diff and identify action version changes.
+- Confirm the Dependabot author (`app/dependabot` in `gh pr view`, or `dependabot[bot]` in REST API responses).
+- Confirm the dependency update matches the requested Bundler or GitHub Actions scope and inspect any additional changes.
+- Preserve explicit holds. Leave out-of-scope PRs untouched and report them; continue independent in-scope work.
+
+3. Review the exact diff and identify all dependency changes, including related lockfile updates.
 
 ```bash
 gh pr diff <PR_NUMBER>
 ```
 
 4. Summarize impact from the diff and release notes.
-- Explain what functional changes are introduced by each action version bump.
-- Explain whether existing workflows are affected (runtime requirements, minimum runner version, breaking changes, behavior changes such as credential handling).
-- For major version updates, verify compatibility notes in the official release notes.
-- Post this summary to the user and ask for explicit approval to proceed.
 
-5. Only after user approval, enable auto-merge.
-- Use repository default merge method unless there is an explicit instruction to force squash merge.
+- For Bundler, check required Ruby/Rails versions, dependency constraints, APIs, and behavior used by this repository.
+- For Actions, check runtime and runner requirements, inputs, credential handling, and any permissions or trigger changes.
+- Verify compatibility notes for major updates and any behavior changes regardless of version type.
+- Share material impact with the user. Reuse an existing instruction to review and merge compatible PRs; do not ask for approval again for each PR. Without merge authorization, stop at the review result. Skip unresolved compatibility/support decisions and report the evidence.
+
+5. Refresh an outdated PR before merging or creating an auto-merge reservation.
+
+- For `BEHIND`, use the [refresh and recovery procedure](#refresh-and-recovery) below, then inspect the new head, diff, and checks.
+- Wait for required checks and relevant tests/builds on the current head. Recheck the target branch immediately before merging; a concurrent merge may require another refresh and validation.
+- Use the repository's usual merge method unless the user specifies another. Match the reviewed head SHA and never use `--admin` to bypass checks.
+- Process one PR through confirmed merge before starting the next. Do not create reservations for the whole batch.
+
+For the usual merge-commit method, after validation:
 
 ```bash
-gh pr merge <PR_NUMBER> --auto
-# Optional (only when squash is explicitly required):
-# gh pr merge <PR_NUMBER> --auto --squash
+gh pr merge <PR_NUMBER> --merge --match-head-commit <REVIEWED_HEAD_SHA>
+# When auto-merge is requested, reserve only this reviewed PR:
+# gh pr merge <PR_NUMBER> --auto --merge --match-head-commit <REVIEWED_HEAD_SHA>
+# Use --squash instead of --merge only when explicitly requested.
 ```
 
-6. Check merge state.
+6. Verify the outcome before moving to the next PR.
 
 ```bash
-gh pr view <PR_NUMBER> --json state,mergeStateStatus,autoMergeRequest
+gh pr view <PR_NUMBER> --json state,headRefOid,baseRefOid,mergeStateStatus,statusCheckRollup,autoMergeRequest,mergedAt,mergeCommit
 ```
 
-7. If `mergeStateStatus` is `BEHIND`, post a Dependabot rebase comment (also only after user approval from Step 4).
+- Confirm `MERGED` and the merge commit. An enabled auto-merge request or queue entry is still pending.
+- If the head changed or the merge was refused, inspect the current state before deciding the next action.
+- Refresh the PR inventory at the end to account for newly arrived or unprocessed updates in the requested scope.
+
+## Refresh and recovery
+
+Use necessary Dependabot commands within authorized maintenance. Start with rebase when the PR is behind:
 
 ```bash
 gh pr comment <PR_NUMBER> --body "@dependabot rebase"
 ```
 
-8. Re-check status until the branch is up to date and required checks pass.
-- After posting `@dependabot rebase`, wait 1 minute before retrying.
-- If rebase has not started after 1 minute (for example, `mergeStateStatus` is still `BEHIND`), post `@dependabot rebase` again.
-- Retry comment posting up to 2 times in total. If it is still `BEHIND` after the second retry, stop and escalate for manual follow-up.
-- Run each command step-by-step and inspect output after each `gh pr view` call before deciding the next action.
+- Wait at least 1 minute before considering another command. Inspect state, head/base SHAs, checks, and Bot replies first; commands can take several minutes, so do not repost while a refresh is progressing.
+- Send at most two rebase comments per PR during a maintenance run (initial request plus one retry). If no progress occurs, inspect the cause rather than retrying indefinitely.
+- If rebase cannot resolve a conflict or the dependency update needs regeneration, consider `@dependabot recreate`. It overwrites edits to the PR: inspect the current head, diff, commit authors, and any human changes first. Use it only when no changes requiring preservation will be lost; otherwise skip and report the decision needed.
+- Send at most one recreate comment per PR during a maintenance run. If it does not resolve the problem, stop refresh commands for that PR and continue independent PRs.
+- After any refresh, inspect the actual resulting diff and wait for CI on the new head. A successful command acknowledgement is not validation.
 
 ```bash
-# Check current state
-gh pr view <PR_NUMBER> --json state,mergeStateStatus,statusCheckRollup,autoMergeRequest
-
-# If mergeStateStatus is BEHIND, wait 1 minute
-sleep 60
-
-# Re-check after waiting
-gh pr view <PR_NUMBER> --json state,mergeStateStatus,statusCheckRollup,autoMergeRequest
-
-# If still BEHIND, post @dependabot rebase (up to 2 retries total)
-# gh pr comment <PR_NUMBER> --body "@dependabot rebase"
+# Inspect state before choosing a recovery action:
+gh pr view <PR_NUMBER> --json state,headRefOid,baseRefOid,mergeStateStatus,statusCheckRollup,autoMergeRequest,comments
+# Only after the edit-preservation checks above, if regeneration is needed:
+# gh pr comment <PR_NUMBER> --body "@dependabot recreate"
 ```
 
+See [GitHub's command reference](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-pull-request-comment-commands) for other commands. Verify their effects and authorization before using them; routine skipping does not authorize ignore commands.
+
 ## Done criteria
-- `autoMergeRequest` is enabled.
-- `mergeStateStatus` is not `BEHIND`.
-- Required CI checks are green.
-- PR is merged automatically, or clearly waiting only on pending required checks.
-- The user-approved impact summary is recorded in the operation log/comment thread.
+
+- Each requested PR is either confirmed merged after validation, or explicitly reported as skipped/closed or requiring a decision, with a reason.
+- Pending CI or auto-merge reservations are reported as pending, never as merged.
+- The impact summary and verification results are recorded in the conversation unless the user requested another destination.
+- Coverage collation, artifact preservation, and actual Qlty upload outcomes are distinguished; inspect individual steps rather than inferring delivery from a green job.
 
 ## Failure handling
-- If rebase does not start, wait 1 minute, confirm `mergeStateStatus` is still `BEHIND`, then re-run comment (up to 2 retries total):
-  - `@dependabot rebase`
-- Execute checks and retries sequentially (check -> wait -> re-check -> comment) rather than chaining commands without inspection.
-- If it is still `BEHIND` after 2 retries, stop automated retries and notify the user for manual follow-up.
-- If checks fail, inspect failing jobs and decide:
-  - fix in a follow-up PR, or
-  - close/ignore that update version with Dependabot commands.
-- If the update introduces breaking changes, disable auto-merge and switch to manual review with explicit test evidence.
+
+- Execute checks and recovery sequentially, inspecting each result. Apply the limits above rather than retrying indefinitely.
+- If checks fail, inspect the failing jobs and report whether the evidence points to the dependency update or its execution environment. Skip unresolved updates; a follow-up fix, close, or ignore action needs authorization covering that action.
+- If a PR is rejected or introduces unresolved breaking changes, remove auto-merge reservations created by this maintenance run. Report reservations from other actors/workflows and any remaining risk instead of silently altering unrelated automation.
+- If Dependabot closes a PR as no longer needed, compare the actual version on `master`, successor PRs, and cooldown settings before describing it as updated. Distinguish observed facts from inferred causes.
+- For Dependabot-triggered PR runs, ordinary Actions secrets are unavailable; Dependabot secrets are used instead. A guarded Qlty upload skip does not establish a normal-PR token failure. Do not bypass checks or copy secrets as a workaround. See [GitHub's restrictions](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-on-actions#restrictions-when-dependabot-triggers-events).
