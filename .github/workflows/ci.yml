@@ -279,9 +279,10 @@ jobs:
     name: upload-coverage
     environment: coverage
     # This job runs on pull_request as well.
-    # On fork-based pull requests, secrets are unavailable, so the Qlty upload
-    # step is skipped by its token guard. On same-repository pull requests,
-    # QLTY_COVERAGE_TOKEN is available and upload can run.
+    # Fork-based pull requests cannot access ordinary Actions secrets.
+    # Dependabot-triggered runs use Dependabot secrets instead of Actions secrets.
+    # Other same-repository PRs can use the configured Actions/environment token.
+    # The token guard skips only the Qlty upload when no token is available.
     needs:
       - build_gem
       - verify_generator
